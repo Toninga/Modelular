@@ -1,6 +1,6 @@
-using Modelular.Editor;
 
-namespace Modelular.Modifiers
+
+namespace Modelular.Runtime
 {
     [ModelularInterface(60)]
     public class AttachModifierStack : Modifier

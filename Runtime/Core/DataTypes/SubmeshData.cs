@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Modelular.Data
+namespace Modelular.Runtime
 {
 
     public struct SubmeshData

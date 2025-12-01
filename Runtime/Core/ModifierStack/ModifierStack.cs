@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
-using Modelular.Data;
+using Modelular.Runtime;
 using System;
 
-namespace Modelular.Modifiers
+namespace Modelular.Runtime
 {
 
     public class ModifierStack

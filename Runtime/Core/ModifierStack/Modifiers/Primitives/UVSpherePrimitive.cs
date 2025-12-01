@@ -1,10 +1,7 @@
-using Modelular.Data;
-using Modelular.Editor;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
-namespace Modelular.Modifiers.Primitives
+namespace Modelular.Runtime
 {
     [ModelularInterface(0)]
     public class UVSpherePrimitive : Modifier, IPrimitiveModifier

@@ -1,10 +1,6 @@
 using UnityEngine;
-using Modelular.Modifiers.Primitives;
-using Modelular.Modifiers;
-using Modelular.Selection;
 
-
-namespace Modelular.Editor.Modifiers
+namespace Modelular.Runtime
 {
 
     //[CreateAssetMenu(fileName = "UVTilingOffset", menuName = "Modellular/UVTiling Offset")]
@@ -26,12 +22,12 @@ namespace Modelular.Editor.Modifiers
 
         public UVTilingOffsetModel()
         {
-            underlyingModifier = new Modelular.Modifiers.UVTilingOffset();
+            underlyingModifier = new Modelular.Runtime.UVTilingOffset();
         }
 
         public override void ApplyParameters()
         {
-            var target = (underlyingModifier as Modelular.Modifiers.UVTilingOffset);
+            var target = (underlyingModifier as Modelular.Runtime.UVTilingOffset);
             target.Tiling = Tiling;
             target.Offset = Offset;
             //[SetProperty]

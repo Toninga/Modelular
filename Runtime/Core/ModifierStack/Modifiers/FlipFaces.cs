@@ -1,9 +1,6 @@
-using Modelular.Data;
-using Modelular.Editor;
-using System.Collections.Generic;
-using UnityEngine;
 
-namespace Modelular.Modifiers
+
+namespace Modelular.Runtime
 {
     [ModelularInterface(20)]
     public class FlipFaces : Modifier

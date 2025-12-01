@@ -1,10 +1,5 @@
-using UnityEngine;
-using Modelular.Modifiers.Primitives;
-using Modelular.Modifiers;
-using Modelular.Selection;
 
-
-namespace Modelular.Editor.Modifiers
+namespace Modelular.Runtime
 {
 
     //[CreateAssetMenu(fileName = "AttachModifierStack", menuName = "Modellular/Attach Modifier Stack")]
@@ -24,12 +19,12 @@ namespace Modelular.Editor.Modifiers
 
         public AttachModifierStackModel()
         {
-            underlyingModifier = new Modelular.Modifiers.AttachModifierStack();
+            underlyingModifier = new Modelular.Runtime.AttachModifierStack();
         }
 
         public override void ApplyParameters()
         {
-            var target = (underlyingModifier as Modelular.Modifiers.AttachModifierStack);
+            var target = (underlyingModifier as Modelular.Runtime.AttachModifierStack);
             target.LinkedMesh = LinkedMesh;
             //[SetProperty]
         }

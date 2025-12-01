@@ -1,10 +1,9 @@
-using Modelular.Data;
-using Modelular.Selection;
+using Modelular.Runtime;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Modelular.Modifiers
+namespace Modelular.Runtime
 {
 
     public class StackElement

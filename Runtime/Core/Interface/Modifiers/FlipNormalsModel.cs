@@ -1,10 +1,7 @@
-using UnityEngine;
-using Modelular.Modifiers.Primitives;
-using Modelular.Modifiers;
-using Modelular.Selection;
+using Modelular.Runtime;
 
 
-namespace Modelular.Editor.Modifiers
+namespace Modelular.Runtime
 {
 
     //[CreateAssetMenu(fileName = "FlipNormals", menuName = "Modellular/Flip Normals")]
@@ -22,12 +19,12 @@ namespace Modelular.Editor.Modifiers
 
         public FlipNormalsModel()
         {
-            underlyingModifier = new Modelular.Modifiers.FlipNormals();
+            underlyingModifier = new Modelular.Runtime.FlipNormals();
         }
 
         public override void ApplyParameters()
         {
-            var target = (underlyingModifier as Modelular.Modifiers.FlipNormals);
+            var target = (underlyingModifier as Modelular.Runtime.FlipNormals);
             //[SetProperty]
         }
 

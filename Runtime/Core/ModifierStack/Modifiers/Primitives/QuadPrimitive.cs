@@ -1,8 +1,6 @@
-using Modelular.Data;
-using Modelular.Editor;
 using UnityEngine;
 
-namespace Modelular.Modifiers.Primitives
+namespace Modelular.Runtime
 {
     [ModelularInterface(0)]
     public class QuadPrimitive : Modifier, IPrimitiveModifier

@@ -2,7 +2,7 @@
 
 using UnityEngine;
 
-namespace Modelular.Modifiers.Primitives
+namespace Modelular.Runtime
 {
     public interface IPrimitiveModifier
     {

@@ -2,7 +2,7 @@
 
 using System;
 
-namespace Modelular.Editor
+namespace Modelular.Runtime
 {
     [System.AttributeUsage(AttributeTargets.Class)]
     public class ModelularInterfaceAttribute : Attribute

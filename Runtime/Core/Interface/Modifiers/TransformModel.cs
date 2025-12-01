@@ -1,10 +1,6 @@
 using UnityEngine;
-using Modelular.Modifiers.Primitives;
-using Modelular.Modifiers;
-using Modelular.Selection;
 
-
-namespace Modelular.Editor.Modifiers
+namespace Modelular.Runtime
 {
 
     //[CreateAssetMenu(fileName = "Transform", menuName = "Modellular/Transform")]
@@ -28,12 +24,12 @@ namespace Modelular.Editor.Modifiers
 
         public TransformModel()
         {
-            underlyingModifier = new Modelular.Modifiers.Transform();
+            underlyingModifier = new Modelular.Runtime.Transform();
         }
 
         public override void ApplyParameters()
         {
-            var target = (underlyingModifier as Modelular.Modifiers.Transform);
+            var target = (underlyingModifier as Modelular.Runtime.Transform);
             target.Position = Position;
             target.Rotation = Rotation;
             target.Scale = Scale;

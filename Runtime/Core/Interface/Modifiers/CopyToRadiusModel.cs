@@ -1,10 +1,5 @@
-using UnityEngine;
-using Modelular.Modifiers.Primitives;
-using Modelular.Modifiers;
-using Modelular.Selection;
 
-
-namespace Modelular.Editor.Modifiers
+namespace Modelular.Runtime
 {
 
     //[CreateAssetMenu(fileName = "CopyToRadius", menuName = "Modellular/Copy To Radius")]
@@ -30,12 +25,12 @@ namespace Modelular.Editor.Modifiers
 
         public CopyToRadiusModel()
         {
-            underlyingModifier = new Modelular.Modifiers.CopyToRadius();
+            underlyingModifier = new Modelular.Runtime.CopyToRadius();
         }
 
         public override void ApplyParameters()
         {
-            var target = (underlyingModifier as Modelular.Modifiers.CopyToRadius);
+            var target = (underlyingModifier as Modelular.Runtime.CopyToRadius);
             target.Count = Count;
             target.Radius = Radius;
             target.Arc01 = Arc01;

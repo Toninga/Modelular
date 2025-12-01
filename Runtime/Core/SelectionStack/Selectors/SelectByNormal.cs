@@ -1,9 +1,9 @@
-using Modelular.Data;
-using Modelular.Modifiers;
+using Modelular.Runtime;
+using Modelular.Runtime;
 using UnityEngine;
 
 
-namespace Modelular.Selection
+namespace Modelular.Runtime
 {
 
     public class SelectByNormal : Modifier, ISelector

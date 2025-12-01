@@ -1,10 +1,7 @@
 using UnityEngine;
-using Modelular.Modifiers.Primitives;
-using Modelular.Modifiers;
-using Modelular.Selection;
 
 
-namespace Modelular.Editor.Modifiers
+namespace Modelular.Runtime
 {
 
     //[CreateAssetMenu(fileName = "CylinderPrimitive", menuName = "Modellular/Cylinder Primitive")]
@@ -38,12 +35,12 @@ namespace Modelular.Editor.Modifiers
 
         public CylinderPrimitiveModel()
         {
-            underlyingModifier = new Modelular.Modifiers.Primitives.CylinderPrimitive();
+            underlyingModifier = new Modelular.Runtime.CylinderPrimitive();
         }
 
         public override void ApplyParameters()
         {
-            var target = (underlyingModifier as Modelular.Modifiers.Primitives.CylinderPrimitive);
+            var target = (underlyingModifier as Modelular.Runtime.CylinderPrimitive);
             target.Color = Color;
             target.OutputSelectionGroup = OutputSelectionGroup;
             target.Height = Height;

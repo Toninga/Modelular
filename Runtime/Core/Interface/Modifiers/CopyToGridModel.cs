@@ -1,10 +1,7 @@
 using UnityEngine;
-using Modelular.Modifiers.Primitives;
-using Modelular.Modifiers;
-using Modelular.Selection;
 
 
-namespace Modelular.Editor.Modifiers
+namespace Modelular.Runtime
 {
 
     //[CreateAssetMenu(fileName = "CopyToGrid", menuName = "Modellular/Copy To Grid")]
@@ -30,12 +27,12 @@ namespace Modelular.Editor.Modifiers
 
         public CopyToGridModel()
         {
-            underlyingModifier = new Modelular.Modifiers.CopyToGrid();
+            underlyingModifier = new Modelular.Runtime.CopyToGrid();
         }
 
         public override void ApplyParameters()
         {
-            var target = (underlyingModifier as Modelular.Modifiers.CopyToGrid);
+            var target = (underlyingModifier as Modelular.Runtime.CopyToGrid);
             target.Count = Count;
             target.Distance = Distance;
             target.CenterMode = CenterMode;

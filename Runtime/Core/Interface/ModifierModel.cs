@@ -1,8 +1,7 @@
-using Modelular.Modifiers;
 using UnityEngine;
 
 
-namespace Modelular.Editor.Modifiers
+namespace Modelular.Runtime
 {
     public abstract class ModifierModel : ScriptableObject
     {

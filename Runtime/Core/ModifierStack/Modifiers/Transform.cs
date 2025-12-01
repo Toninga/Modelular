@@ -1,7 +1,6 @@
-using Modelular.Editor;
 using UnityEngine;
 
-namespace Modelular.Modifiers
+namespace Modelular.Runtime
 {
     [ModelularInterface(-1)]
     public class Transform : Modifier

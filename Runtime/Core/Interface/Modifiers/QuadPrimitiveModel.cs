@@ -1,10 +1,7 @@
 using UnityEngine;
-using Modelular.Modifiers.Primitives;
-using Modelular.Modifiers;
-using Modelular.Selection;
 
 
-namespace Modelular.Editor.Modifiers
+namespace Modelular.Runtime
 {
 
     //[CreateAssetMenu(fileName = "QuadPrimitive", menuName = "Modellular/Quad Primitive")]
@@ -28,12 +25,12 @@ namespace Modelular.Editor.Modifiers
 
         public QuadPrimitiveModel()
         {
-            underlyingModifier = new Modelular.Modifiers.Primitives.QuadPrimitive();
+            underlyingModifier = new Modelular.Runtime.QuadPrimitive();
         }
 
         public override void ApplyParameters()
         {
-            var target = (underlyingModifier as Modelular.Modifiers.Primitives.QuadPrimitive);
+            var target = (underlyingModifier as Modelular.Runtime.QuadPrimitive);
             target.Color = Color;
             target.OutputSelectionGroup = OutputSelectionGroup;
             target.Size = Size;

@@ -1,6 +1,6 @@
 using System;
 
-namespace Modelular.Data
+namespace Modelular.Runtime
 {
 
     [Flags] public enum EVertexFlags

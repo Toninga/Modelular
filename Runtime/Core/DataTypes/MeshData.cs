@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Modelular.Data
+namespace Modelular.Runtime
 {
 
     public struct MeshData

@@ -1,9 +1,7 @@
-using Modelular.Data;
-using Modelular.Editor;
-using Modelular.Selection;
+using Modelular.Runtime;
 using UnityEngine;
 
-namespace Modelular.Modifiers
+namespace Modelular.Runtime
 {
     [ModelularInterface()]
     public class SelectByColor : Modifier, ISelector

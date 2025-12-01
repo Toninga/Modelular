@@ -1,8 +1,7 @@
-using Modelular.Data;
-using Modelular.Editor;
+using Modelular.Runtime;
 using UnityEngine;
 
-namespace Modelular.Modifiers
+namespace Modelular.Runtime
 {
     [ModelularInterface(20)]
     public class SetColor : Modifier

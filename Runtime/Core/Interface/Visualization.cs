@@ -1,12 +1,11 @@
 
 
-using Modelular.Data;
-using Modelular.Utils;
+using Modelular.Runtime;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-namespace Modelular.Editor
+namespace Modelular.Runtime
 {
     public static class Visualization
     {

@@ -1,4 +1,4 @@
-namespace Modelular.Selection
+namespace Modelular.Runtime
 {
     public enum ESelectionTarget
     {

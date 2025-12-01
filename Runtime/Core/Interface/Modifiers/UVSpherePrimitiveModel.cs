@@ -1,10 +1,7 @@
 using UnityEngine;
-using Modelular.Modifiers.Primitives;
-using Modelular.Modifiers;
-using Modelular.Selection;
 
 
-namespace Modelular.Editor.Modifiers
+namespace Modelular.Runtime
 {
 
     //[CreateAssetMenu(fileName = "UVSpherePrimitive", menuName = "Modellular/UVSphere Primitive")]
@@ -34,12 +31,12 @@ namespace Modelular.Editor.Modifiers
 
         public UVSpherePrimitiveModel()
         {
-            underlyingModifier = new Modelular.Modifiers.Primitives.UVSpherePrimitive();
+            underlyingModifier = new Modelular.Runtime.UVSpherePrimitive();
         }
 
         public override void ApplyParameters()
         {
-            var target = (underlyingModifier as Modelular.Modifiers.Primitives.UVSpherePrimitive);
+            var target = (underlyingModifier as Modelular.Runtime.UVSpherePrimitive);
             target.Color = Color;
             target.OutputSelectionGroup = OutputSelectionGroup;
             target.Radius = Radius;

@@ -1,6 +1,6 @@
 {
     "name": "Modelular",
-    "rootNamespace": "com.tonindf.modelular",
+    "rootNamespace": "Modelular.Runtime",
     "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],

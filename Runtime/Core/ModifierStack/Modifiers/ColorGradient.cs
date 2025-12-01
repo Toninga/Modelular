@@ -1,9 +1,6 @@
-using Modelular.Data;
-using Modelular.Editor;
-using Modelular.Selection;
 using UnityEngine;
 
-namespace Modelular.Modifiers
+namespace Modelular.Runtime
 {
     [ModelularInterface()]
     public class ColorGradient : Modifier

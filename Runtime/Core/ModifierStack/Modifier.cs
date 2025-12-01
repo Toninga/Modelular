@@ -1,5 +1,5 @@
 
-namespace Modelular.Modifiers
+namespace Modelular.Runtime
 {
 
     public abstract class Modifier

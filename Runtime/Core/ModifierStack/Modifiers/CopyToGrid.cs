@@ -1,9 +1,7 @@
-using Modelular.Data;
-using Modelular.Editor;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Modelular.Modifiers
+namespace Modelular.Runtime
 {
     [ModelularInterface(60)]
     public class CopyToGrid : Modifier

@@ -1,8 +1,7 @@
-using Modelular.Editor;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Modelular.Modifiers
+namespace Modelular.Runtime
 {
     public class AutoMaterial : Modifier
     {

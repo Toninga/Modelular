@@ -1,9 +1,7 @@
-using Modelular.Data;
-using Modelular.Editor;
-using System.Collections.Generic;
+using Modelular.Runtime;
 using UnityEngine;
 
-namespace Modelular.Modifiers
+namespace Modelular.Runtime
 {
     [ModelularInterface(80)]
     public class UVTilingOffset : Modifier

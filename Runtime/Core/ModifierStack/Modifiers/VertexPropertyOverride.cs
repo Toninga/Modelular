@@ -1,7 +1,6 @@
-using Modelular.Data;
-using Modelular.Utils;
+using Modelular.Runtime;
 
-namespace Modelular.Modifiers
+namespace Modelular.Runtime
 {
     public class VertexPropertyOverride : Modifier
     {

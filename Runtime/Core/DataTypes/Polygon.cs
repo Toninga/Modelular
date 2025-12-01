@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
-namespace Modelular.Data
+namespace Modelular.Runtime
 {
     public struct Polygon
     {

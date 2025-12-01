@@ -1,9 +1,7 @@
-using JetBrains.Annotations;
 using System;
-using Unity.VisualScripting;
 using UnityEngine;
 
-namespace Modelular.Data
+namespace Modelular.Runtime
 {
     [System.Serializable]
     public struct Vertex

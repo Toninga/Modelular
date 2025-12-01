@@ -1,6 +1,6 @@
 
 
-namespace Modelular.Selection
+namespace Modelular.Runtime
 
 {
     public interface ISelector

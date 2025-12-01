@@ -1,10 +1,7 @@
 using UnityEngine;
-using Modelular.Modifiers.Primitives;
-using Modelular.Modifiers;
-using Modelular.Selection;
 
 
-namespace Modelular.Editor.Modifiers
+namespace Modelular.Runtime
 {
 
     //[CreateAssetMenu(fileName = "SelectByColor", menuName = "Modellular/Select By Color")]
@@ -30,12 +27,12 @@ namespace Modelular.Editor.Modifiers
 
         public SelectByColorModel()
         {
-            underlyingModifier = new Modelular.Modifiers.SelectByColor();
+            underlyingModifier = new Modelular.Runtime.SelectByColor();
         }
 
         public override void ApplyParameters()
         {
-            var target = (underlyingModifier as Modelular.Modifiers.SelectByColor);
+            var target = (underlyingModifier as Modelular.Runtime.SelectByColor);
             target.OutputSelectionGroup = OutputSelectionGroup;
             target.SelectionOperand = SelectionOperand;
             target.Color = Color;

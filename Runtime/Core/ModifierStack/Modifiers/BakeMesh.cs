@@ -1,8 +1,6 @@
-using Modelular.Data;
-using Modelular.Utils;
 using UnityEngine;
 
-namespace Modelular.Modifiers
+namespace Modelular.Runtime
 {
     public class BakeMesh : Modifier
     {

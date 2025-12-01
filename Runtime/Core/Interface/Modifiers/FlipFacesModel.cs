@@ -1,10 +1,7 @@
 using UnityEngine;
-using Modelular.Modifiers.Primitives;
-using Modelular.Modifiers;
-using Modelular.Selection;
 
 
-namespace Modelular.Editor.Modifiers
+namespace Modelular.Runtime
 {
 
     //[CreateAssetMenu(fileName = "FlipFaces", menuName = "Modellular/Flip Faces")]
@@ -22,12 +19,12 @@ namespace Modelular.Editor.Modifiers
 
         public FlipFacesModel()
         {
-            underlyingModifier = new Modelular.Modifiers.FlipFaces();
+            underlyingModifier = new Modelular.Runtime.FlipFaces();
         }
 
         public override void ApplyParameters()
         {
-            var target = (underlyingModifier as Modelular.Modifiers.FlipFaces);
+            var target = (underlyingModifier as Modelular.Runtime.FlipFaces);
             //[SetProperty]
         }
 

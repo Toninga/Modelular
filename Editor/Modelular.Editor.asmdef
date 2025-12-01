@@ -1,6 +1,6 @@
 {
     "name": "Modelular.Editor",
-    "rootNamespace": "",
+    "rootNamespace": "Modelular.Editor",
     "references": [
         "GUID:21b0c8d1703a94250bfac916590cea4f",
         "GUID:c29f3a05993e04e45b98a02584f2682f"

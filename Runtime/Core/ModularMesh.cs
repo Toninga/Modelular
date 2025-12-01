@@ -1,12 +1,8 @@
-
-using Modelular.Editor.Modifiers;
-using Modelular.Modifiers;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-using Modelular.Editor;
 
-namespace Modelular
+namespace Modelular.Runtime
 {
     [ExecuteAlways]
     [RequireComponent(typeof(MeshFilter))]

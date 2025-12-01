@@ -1,10 +1,7 @@
 using UnityEngine;
-using Modelular.Modifiers.Primitives;
-using Modelular.Modifiers;
-using Modelular.Selection;
 
 
-namespace Modelular.Editor.Modifiers
+namespace Modelular.Runtime
 {
 
     //[CreateAssetMenu(fileName = "ColorGradient", menuName = "Modellular/Color Gradient")]
@@ -26,12 +23,12 @@ namespace Modelular.Editor.Modifiers
 
         public ColorGradientModel()
         {
-            underlyingModifier = new Modelular.Modifiers.ColorGradient();
+            underlyingModifier = new Modelular.Runtime.ColorGradient();
         }
 
         public override void ApplyParameters()
         {
-            var target = (underlyingModifier as Modelular.Modifiers.ColorGradient);
+            var target = (underlyingModifier as Modelular.Runtime.ColorGradient);
             target.ColorA = ColorA;
             target.ColorB = ColorB;
             //[SetProperty]
