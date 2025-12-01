@@ -1,6 +1,6 @@
 {
   "name": "com.tonindf.modelular",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "displayName": "Modelular",
   "description": "A tool for procedural modeling inside the editor and at runtime",
   "unity": "6000.2",

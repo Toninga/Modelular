@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Modelular.Runtime
 {
-    [ModelularInterface(-1)]
+    [ModelularInterface("Transform", -1)]
     public class Transform : Modifier
     {
         public Vector3 Position { get; set; }

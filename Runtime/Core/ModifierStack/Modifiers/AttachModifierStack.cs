@@ -2,7 +2,7 @@
 
 namespace Modelular.Runtime
 {
-    [ModelularInterface(60)]
+    [ModelularInterface("Utility/Attach modifier stack", 60)]
     public class AttachModifierStack : Modifier
     {
         #region Properties

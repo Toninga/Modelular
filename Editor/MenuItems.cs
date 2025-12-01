@@ -9,13 +9,7 @@ namespace Modelular.Editor
 
     public class MenuItems
     {
-        [MenuItem("GameObject/Modellular/Empty", priority =20)]
-        public static void CreateEmptyModellularMesh(MenuCommand menuCommand)
-        {
-            GameObject obj = new GameObject("Modellular mesh", typeof(ModularMesh));
-
-            SetupHierarchy(obj, menuCommand);
-        }
+        
 
         [MenuItem("Assets/Create/Modellular/New modifier script", false, 80)]
         public static void CreateModifierScript()
@@ -53,25 +47,6 @@ namespace Modelular.Editor
             string content = ((TextAsset)boilerplate).text;
             return content;
         }
-        /// <summary>
-        /// Source : 
-        /// https://github.com/Maraakis/ChristinaCreatesGames/blob/main/Addin%20Menu%20Items%20to%20the%20right%20click%20menu/CreateFromHierarchyMenu_AdvancedButton.cs
-        /// </summary>
-        /// <param name="menuCommand"></param>
-        private static void SetupHierarchy(GameObject instance, MenuCommand menuCommand)
-            {
-                GameObject parent = UnityEditor.Selection.activeGameObject;
-
-                if (menuCommand.context as GameObject != null)
-                    parent = menuCommand.context as GameObject;
-
-
-                if (parent != null)
-                    GameObjectUtility.SetParentAndAlign(instance, parent);
-
-                UnityEditor.Selection.activeGameObject = instance;
-
-            }
 
         // I used ChatGPT for this, sorry father for I have sinned
         public class CreateModifierScriptAction : EndNameEditAction

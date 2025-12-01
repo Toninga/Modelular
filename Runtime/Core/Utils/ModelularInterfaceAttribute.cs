@@ -8,8 +8,10 @@ namespace Modelular.Runtime
     public class ModelularInterfaceAttribute : Attribute
     {
         public int Priority { get; set; }
-        public ModelularInterfaceAttribute(int priority=1000)
+        public string ItemName { get; set; }
+        public ModelularInterfaceAttribute(string itemName="", int priority=1000)
         {
+            ItemName = itemName;
             Priority = priority;
         }
     }

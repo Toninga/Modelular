@@ -1,9 +1,8 @@
-using Modelular.Runtime;
 using UnityEngine;
 
 namespace Modelular.Runtime
 {
-    [ModelularInterface(80)]
+    [ModelularInterface("UV/Tiling and offset", 80)]
     public class UVTilingOffset : Modifier
     {
         [ModelularDefaultValue("Vector2.one")]

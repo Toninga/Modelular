@@ -2,7 +2,7 @@
 
 namespace Modelular.Runtime
 {
-    [ModelularInterface(20)]
+    [ModelularInterface("Normals/Flip normals", 20)]
     public class FlipNormals : Modifier
     {
         public override StackElement Bake(StackElement previousResult)

@@ -1,9 +1,8 @@
-using Modelular.Runtime;
 using UnityEngine;
 
 namespace Modelular.Runtime
 {
-    [ModelularInterface(20)]
+    [ModelularInterface("Color/Set color", 20)]
     public class SetColor : Modifier
     {
         #region Properties

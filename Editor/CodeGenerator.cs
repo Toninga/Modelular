@@ -7,18 +7,24 @@ using System.IO;
 using System.Reflection;
 using Unity.VisualScripting;
 using UnityEditor;
+using UnityEngine;
+using static Codice.Client.BaseCommands.Import.Commit;
 
 namespace Modelular.Editor
 {
     public static class CodeGenerator
     {
-        public static string GeneratedModelPath = "Assets/Packages/Modelular/Core/Interface/Modifiers";
-        public static string ModelListPath = "Assets/Packages/Modelular/Core/Interface";
+        public static string PackagePath => GetPackagePath();
+        private static string DefaultPackagePath = "Assets/Packages/Modelular";
+        private static string BoilerplatePath = "Editor/Boilerplate";
+        private static string GeneratedModels = "Runtime/Generated/Modifiers";
+        //private static string GeneratedMeshes = "Runtime/Generated/Meshes";
 
 
         [MenuItem("Modelular/Refresh assembly")]
         public static void RegenerateModels()
         {
+            GetPackagePath();
 
             Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
 
@@ -35,8 +41,8 @@ namespace Modelular.Editor
                         {
                             if (attr is ModelularInterfaceAttribute modAttr)
                             {
-                                string model = GenerateModifierInterface(type);
-                                TrySaveToFile(GeneratedModelPath, type.Name + "Model.cs", model);
+                                string model = GenerateModifierModel(type);
+                                TrySaveToFile(Path.Combine(PackagePath, GeneratedModels), type.Name + "Model.cs", model);
                                 if (!modifiers.ContainsKey(modAttr.Priority))
                                     modifiers[modAttr.Priority] = new ();
                                 modifiers[modAttr.Priority].Add(type);
@@ -48,26 +54,25 @@ namespace Modelular.Editor
             }
 
             // Sort all the types by their priority
-            List<Type> types = new();
-            List<int> priorities = new();
-            foreach (int priority in modifiers.Keys)
-                priorities.Add(priority);
-            priorities.Sort();
-            foreach (int priority in  priorities)
-                types.AddRange(modifiers[priority]);
+            var sortedTypes = SortTypesByPriority(modifiers);
 
-            SetupModelList(ModelListPath, "ModifierModelList.cs", types);
+            var modelList = GenerateModelList(PackagePath, "ModifierModelList.cs", sortedTypes);
+            TrySaveToFile(Path.Combine(PackagePath, GeneratedModels), "ModifierModelList.cs", modelList);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
-            UnityEngine.Debug.Log("[Modelular] : Complementary modifier files were successfully generated.");
+            SetupIcons();
         }
         public static string GetPackagePath()
         {
+            string result = DefaultPackagePath;
             var info = UnityEditor.PackageManager.PackageInfo.FindForAssembly(typeof(CodeGenerator).Assembly);
-            return info.resolvedPath;
+            if (info != null)
+                result = info.resolvedPath;
+            UnityEngine.Debug.Log("Package path is " + result);
+            return result;
         }
 
-        private static void SetupModelList(string path, string name, List<Type> modifiers)
+        private static string GenerateModelList(string path, string name, List<Type> modifiers)
         {
             string content = GetModelListBoilerplate();
 
@@ -76,38 +81,84 @@ namespace Modelular.Editor
             {
                 if (!content.Contains(modifier.Name))
                 {
-                    content = content.Replace("//[EnumElement]", modifier.Name + ",\n        //[EnumElement]");
-                    content = content.Replace("//[TypeMatching]", "_typeMatching.Add(EModellularModifier." + modifier.Name + ",                         typeof(" + modifier.Name + "Model));\r\n            //[TypeMatching]");
+                    content = content.Replace("//[PathMatching]", "ModifierPaths[\"CLASSNAME\"] = typeof(CLASSNAMEMODEL);\r\n            //[PathMatching]");
+                    content = content.Replace("CLASSNAMEMODEL", modifier.Name + "Model");
+                    if (modifier.HasAttribute(typeof(ModelularInterfaceAttribute)))
+                    {
+                        string itemName = modifier.GetAttribute<ModelularInterfaceAttribute>().ItemName;
+                        if (!string.IsNullOrEmpty(itemName))
+                            content = content.Replace("CLASSNAME", itemName);
+                        else
+                            content = content.Replace("CLASSNAME", modifier.Name);
+                    }
+                    else
+                        content = content.Replace("CLASSNAME", modifier.Name);
+
                 }
             }
-            
-            
-            TrySaveToFile(path, name, content);
+
+
+            return content;
         }
 
-        private static void TrySaveToFile(string path, string name, string content)
+        private static void SetupIcons()
+        {
+            Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
+
+            foreach (Assembly assembly in assemblies)
+            {
+                foreach (Type type in assembly.GetTypes())
+                {
+                    if (type.IsSubclassOf(typeof(ModifierModel)))
+                    {
+                        Debug.Log("[Modelular] : Modifier model found : " + type.Name);
+                        var decoy = ScriptableObject.CreateInstance(type);
+                        if (EditorGUIUtility.GetIconForObject(decoy) != null)
+                        {
+                            UnityEngine.Debug.Log("[Modelular] : Icon found on modifier model : " + type.Name);
+
+                        }
+                        else
+                        {
+                            UnityEngine.Debug.Log("[Modelular] : Icon NOT found on modifier model : " + type.Name);
+                            if (AssetDatabase.AssetPathExists(Path.Combine(PackagePath, "Editor/Icons", "CustomModifier.png")))
+                            {
+                                Debug.Log("[Modelular] : Custom modifier icon found");
+                                Texture2D icon = AssetDatabase.LoadAssetAtPath(Path.Combine(PackagePath, "Editor/Icons", "CustomModifier.png"), typeof(Texture2D)) as Texture2D;
+                                if (icon != null)
+                                {
+                                    Debug.Log("[Modelular] : Custom modifier icon loaded successfully - Trying to assign it");
+                                    EditorGUIUtility.SetIconForObject(decoy, icon);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private static bool TrySaveToFile(string path, string name, string content)
         {
             if (AssetDatabase.AssetPathExists(path))
             {
-                if (true || AssetDatabase.AssetPathExists(path + "/" + name))
+                using (var text = File.CreateText(Path.Combine(path, name)))
                 {
-                    using (var text = File.CreateText(path + "/" + name))
-                    {
-                        text.WriteLine(content);
-                    }
+                    text.WriteLine(content);
                 }
+                return true;
             }
             else
             {
                 UnityEngine.Debug.LogWarning("[Modellular] : Couldn't refresh the modifier database because the package was either moved or modified. Expected path : " + path);
+                return false;
             }
         }
-        public static string GenerateModifierInterface(Type modifier)
+        public static string GenerateModifierModel(Type modifier)
         {
             string boilerplate = GetModelBoilerplate();
 
             boilerplate = boilerplate.Replace("CLASSNAMEMODEL", modifier.Name + "Model");
-            boilerplate = boilerplate.Replace("CLASSNAMEWITHSPACES", InsertSpaces(modifier.Name));
+            boilerplate = boilerplate.Replace("CLASSNAMEWITHSPACES", InsertSpacesBetweenWords(modifier.Name));
             boilerplate = boilerplate.Replace("CLASSNAMEWITHNAMESPACE", modifier.Namespace + "." + modifier.Name);
             boilerplate = boilerplate.Replace("CLASSNAME", modifier.Name);
 
@@ -153,7 +204,7 @@ namespace Modelular.Editor
                 default: return type;
             }
         }
-        private static string InsertSpaces(string text)
+        private static string InsertSpacesBetweenWords(string text)
         {
             string result = "";
             for (int i = 0; i < text.Length; i++)
@@ -167,12 +218,28 @@ namespace Modelular.Editor
 
         private static string GetModelBoilerplate()
         {
-            return "using UnityEngine;\r\nusing Modellular.Modifiers.Primitives;\r\nusing Modellular.Modifiers;\r\nusing Modellular.Selection;\r\n\r\n\r\nnamespace Modellular.Editor.Modifiers\r\n{\r\n\r\n    //[CreateAssetMenu(fileName = \"CLASSNAME\", menuName = \"Modellular/CLASSNAMEWITHSPACES\")]\r\n    public class CLASSNAMEMODEL : ModifierModel\r\n    {\r\n        #region Fields\r\n\r\n        //[Field]\r\n\r\n        // Replicated fields for change detection\r\n        private bool _enabled;\r\n        //[ReplicatedField]\r\n\r\n        #endregion\r\n\r\n        public CLASSNAMEMODEL()\r\n        {\r\n            underlyingModifier = new CLASSNAMEWITHNAMESPACE();\r\n        }\r\n\r\n        public override void ApplyParameters()\r\n        {\r\n            var target = (underlyingModifier as CLASSNAMEWITHNAMESPACE);\r\n            //[SetProperty]\r\n        }\r\n\r\n        public override bool DetectChanges()\r\n        {\r\n            // Insert here the comparison for all properties that should be change-checked\r\n            if \r\n            (\r\n                enabled != _enabled ||\r\n                //[ChangeCheck]\r\n                false\r\n            )\r\n            {\r\n                hasChanged = true;\r\n            }\r\n\r\n            // Reset the mirrored fields\r\n            _enabled = enabled;\r\n            //[ReplicatedFieldReset]\r\n\r\n            return hasChanged;\r\n        }\r\n    }\r\n\r\n}";
+            string path = Path.Combine(GetPackagePath(), BoilerplatePath, "ModifierModelBoilerplate.txt");
+            string content = File.ReadAllText(path);
+            return content;
         }
 
         private static string GetModelListBoilerplate()
         {
-            return "using Modellular.Editor.Modifiers;\r\nusing System.Collections.Generic;\r\nusing UnityEngine;\r\n\r\nnamespace Modellular.Editor\r\n{\r\n    public enum EModellularModifier\r\n    {\r\n        //[EnumElement]\r\n    }\r\n\r\n    public static class ModifierModelList\r\n    {\r\n        private static Dictionary<EModellularModifier, System.Type> _typeMatching = new();\r\n        static ModifierModelList()\r\n        {\r\n            //[TypeMatching]\r\n        }\r\n        public static ModifierModel GetNewModifier(EModellularModifier modifier)\r\n        {\r\n\r\n            if (_typeMatching.TryGetValue(modifier, out System.Type typeToCreate))\r\n            {\r\n                var instance = ScriptableObject.CreateInstance(typeToCreate) as ModifierModel;\r\n                return instance;\r\n            }\r\n            return null;\r\n        }\r\n    }\r\n}";
+            string path = Path.Combine(GetPackagePath(), BoilerplatePath, "ModifierModelListBoilerplate.txt");
+            string content = File.ReadAllText(path);
+            return content;
+        }
+
+        private static List<Type> SortTypesByPriority(Dictionary<int, List<Type>> modifiers)
+        {
+            List<Type> types = new();
+            List<int> priorities = new();
+            foreach (int priority in modifiers.Keys)
+                priorities.Add(priority);
+            priorities.Sort();
+            foreach (int priority in priorities)
+                types.AddRange(modifiers[priority]);
+            return types;
         }
     }
 

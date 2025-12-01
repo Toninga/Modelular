@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Modelular.Runtime
 {
-    [ModelularInterface()]
+    [ModelularInterface("Color/Color gradient")]
     public class ColorGradient : Modifier
     {
         #region Properties

@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Modelular.Runtime
 {
-    [ModelularInterface(60)]
+    [ModelularInterface("Copy/Copy to grid", 60)]
     public class CopyToGrid : Modifier
     {
         #region Properties

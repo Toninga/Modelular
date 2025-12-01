@@ -13,6 +13,7 @@ namespace Modelular.Runtime
         #region Properties
 
         public ModifierStack Stack => stack;
+        public List<ModifierModel> Modifiers = new();
 
         // Visualization
         public bool ShowVertices { get; set; }
@@ -30,6 +31,7 @@ namespace Modelular.Runtime
             public EColorCoding FaceDisplayMode { get; set; }
             public Color FaceColor { get; set; } = new Color(1f, 0.65f, 0f, 0.5f);
 
+        
         #endregion
         #region Fields
         [Header("Parameters")]
@@ -38,9 +40,6 @@ namespace Modelular.Runtime
         public EUpdateMode updateMode = EUpdateMode.OnChange;
 
         
-
-        //[NaughtyAttributes.Expandable]
-        public List<ModifierModel> modifiers = new();
 
         public double LastBakingTime;
 
@@ -75,7 +74,7 @@ namespace Modelular.Runtime
 
             // Retrieve the actual modifiers from the models
             underlyingModifiers.Clear();
-            foreach(ModifierModel model in modifiers)
+            foreach(ModifierModel model in Modifiers)
             {
                 if (model == null || !model.enabled)
                     continue;
@@ -105,7 +104,7 @@ namespace Modelular.Runtime
             
 
             LastBakingTime = EditorApplication.timeSinceStartup;
-            _lastKnownModifierCount = modifiers.Count;
+            _lastKnownModifierCount = Modifiers.Count;
 
         }
 
@@ -138,7 +137,7 @@ namespace Modelular.Runtime
 
                 if (!rebake)
                 {
-                    if (modifiers.Count != _lastKnownModifierCount)
+                    if (Modifiers.Count != _lastKnownModifierCount)
                     {
                         rebake = true;
                     }
@@ -146,7 +145,7 @@ namespace Modelular.Runtime
 
                 if (!rebake)
                 { 
-                    foreach(ModifierModel model in modifiers)
+                    foreach(ModifierModel model in Modifiers)
                     {
                         if (model == null)
                             continue;
@@ -175,13 +174,13 @@ namespace Modelular.Runtime
         }
         public void AddModifier<T>() where T : ModifierModel
         {
-            modifiers.Add(ScriptableObject.CreateInstance(typeof(T)) as ModifierModel);
+            Modifiers.Add(ScriptableObject.CreateInstance(typeof(T)) as ModifierModel);
         }
         public bool AddModifier(System.Type modifierModel)
         {
             if (modifierModel.IsSubclassOf(typeof(ModifierModel)))
             {
-                modifiers.Add(ScriptableObject.CreateInstance(modifierModel) as ModifierModel);
+                Modifiers.Add(ScriptableObject.CreateInstance(modifierModel) as ModifierModel);
                 return true;
             }
             return false;
@@ -189,7 +188,7 @@ namespace Modelular.Runtime
 
         public void ClearModifierStack()
         {
-            modifiers.Clear();
+            Modifiers.Clear();
         }
 
         #region Visualization

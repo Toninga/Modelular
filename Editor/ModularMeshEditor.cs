@@ -1,6 +1,10 @@
 using Modelular.Runtime;
+using System.Net;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UIElements;
+using static Codice.CM.WorkspaceServer.WorkspaceTreeDataStore;
 
 namespace Modelular.Editor
 {
@@ -11,9 +15,10 @@ namespace Modelular.Editor
         private string[] _tabs = { "General", "Modifiers", "Visualization" };
         private int _tabIndex = 1;
         private bool _requireSave;
+        private Vector2 _position = Vector2.zero;
+        private int _selectedModifier = 0;
         public override void OnInspectorGUI()
         {
-
             EditorGUI.BeginChangeCheck();
 
             ModularMesh data = (ModularMesh)target;
@@ -35,20 +40,6 @@ namespace Modelular.Editor
                     break;
             }
 
-            // Modifier list
-            SerializedObject obj = new SerializedObject(data);
-            EditorGUILayout.PropertyField(obj.FindProperty("modifiers"));
-
-
-            GUILayout.Space(15);
-
-            GUIStyle categoryStyle = EditorStyles.boldLabel;
-
-        
-
-        
-
-            obj.ApplyModifiedProperties();
         }
 
         private void DrawGeneralTab(ModularMesh data)
@@ -59,6 +50,60 @@ namespace Modelular.Editor
 
         private void DrawModifiersTab(ModularMesh data)
         {
+
+            GUIStyle darkBackground = new GUIStyle();
+            darkBackground.normal.background = MakeTex(1, 1, new Color(0.16f, 0.16f, 0.16f, 1f));
+            _position = GUILayout.BeginScrollView(_position, darkBackground, GUILayout.Height(200));
+            if (data.Modifiers != null && data.Modifiers.Count > _selectedModifier)
+            {
+                var modifier = data.Modifiers[_selectedModifier];
+                SerializedObject obj = new SerializedObject(modifier);
+
+                string name = modifier.GetType().Name;
+                name = name.Replace("Model", "");
+                GUILayout.Label(name, EditorStyles.boldLabel);
+                EditorGUILayout.BeginHorizontal();
+                EditorGUILayout.Space();
+
+                if (EditorGUIUtility.GetIconForObject(modifier))
+                {
+                    var icon = EditorGUIUtility.GetIconForObject(modifier);
+                    if (icon != null)
+                    {
+                        Rect position = new Rect(3,EditorGUIUtility.singleLineHeight+  3,24,24);
+                        if (icon.alphaIsTransparency)
+                        {
+                            GUI.DrawTexture(position, icon);
+                            //EditorGUI.DrawTextureTransparent(position, icon);
+                        }
+                        else
+                        {
+                            EditorGUI.DrawPreviewTexture(position, icon);
+                        }
+
+                        EditorGUILayout.Space(20);
+                    }
+                }
+                EditorGUILayout.Space();
+                EditorGUILayout.EndHorizontal();
+
+                obj.UpdateIfRequiredOrScript();
+                SerializedProperty iterator = obj.GetIterator();
+                bool enterChildren = true;
+                while (iterator.NextVisible(enterChildren))
+                {
+                    if ("m_Script" != iterator.propertyPath)
+                    {
+                        EditorGUILayout.PropertyField(iterator, true);
+                    }
+
+                    enterChildren = false;
+                }
+
+                obj.ApplyModifiedProperties();
+            }
+            GUILayout.EndScrollView();
+
             GUILayout.Label("Last baked " + Mathf.Round((float)(EditorApplication.timeSinceStartup - data.LastBakingTime)) + "s ago", EditorStyles.boldLabel);
 
 
@@ -91,6 +136,7 @@ namespace Modelular.Editor
 
             GUILayout.Space(15);
 
+            GUILayout.BeginHorizontal();
             // ADD MODIFIER button
             GUILayout.ExpandWidth(true);
             Undo.RecordObject(data, "Add modifier");
@@ -104,8 +150,56 @@ namespace Modelular.Editor
                 }
 
                 menu.ShowAsContext();
-            
             }
+            if (GUILayout.Button("Delete selected modifier"))
+            {
+                if (_selectedModifier < data.Modifiers.Count)
+                {
+                    data.Modifiers.RemoveAt(_selectedModifier);
+                }
+            }
+
+            GUILayout.EndHorizontal();
+
+
+            GUIStyle greyBackground = new GUIStyle();
+            greyBackground.normal.background = MakeTex(1, 1, new Color(0.18f, 0.18f, 0.18f, 1f));
+            GUILayout.BeginVertical(greyBackground);
+            for (int i = 0; i < data.Modifiers.Count; i++)
+            {
+                var modifier = data.Modifiers[i];
+                if (modifier != null)
+                {
+                    string name = modifier.GetType().Name;
+                    name = name.Replace("Model", "");
+
+                    GUIStyle style;
+                    if (_selectedModifier == i)
+                    {
+                        style = new GUIStyle(EditorStyles.boldLabel);
+                        style.normal.textColor = new Color(1f, 0.76f, 0f, 1f);
+                        style.hover.textColor = new Color(1f, 0.85f, 0.5f, 1f);
+                    }
+                    else
+                    {
+                        style = new GUIStyle(EditorStyles.label);
+                        style.normal.textColor = Color.white;
+                    }
+
+                    if (GUILayout.Button(name, style))
+                    {
+                        _selectedModifier = i;
+                    }
+                }
+            }
+            GUILayout.EndVertical();
+
+            // Modifier list
+            /*
+            SerializedObject obj = new SerializedObject(data);
+            EditorGUILayout.PropertyField(obj.FindProperty("Modifiers"));
+            obj.ApplyModifiedProperties();
+            */
         }
 
         private void DrawVisualizationTab(ModularMesh data)
@@ -156,7 +250,28 @@ namespace Modelular.Editor
         {
             data.AddModifier(modifierType);
             data.ApplyModifierStack();
+            _selectedModifier = data.Modifiers.Count - 1;
         }
+        private Texture2D MakeTex(int width, int height, Color col)
+        {
+            Color[] pix = new Color[width * height];
+
+            for (int i = 0; i < pix.Length; i++)
+                pix[i] = col;
+
+            Texture2D result = new Texture2D(width, height);
+            result.SetPixels(pix);
+            result.Apply();
+
+            return result;
+        }
+
+
+        // #########################################################################################################
+        // #####################################        NAUGHTY ATTRIBUTES      ####################################
+        // #########################################################################################################
+
+        
     }
 
 }

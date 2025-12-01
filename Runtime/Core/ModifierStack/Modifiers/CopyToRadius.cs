@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Modelular.Runtime
 {
-    [ModelularInterface(60)]
+    [ModelularInterface("Copy/Copy to radius", 60)]
     public class CopyToRadius : Modifier
     {
         // TODO : Add a mode with a fixed angle offset
