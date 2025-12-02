@@ -1,12 +1,12 @@
-\# Modelular
+# Modelular
 
 
 
-\[Modelular logo](./Editor/Icons/Modelular\_logo.png)
+[Modelular logo](./Editor/Icons/Modelular\_logo.png)
 
 
 
-\## Introduction
+## Introduction
 
 
 
