@@ -9,6 +9,7 @@ namespace Modelular.Runtime
 		public Color Color = Color.white;
         public string OutputSelectionGroup;
         public Vector3 Size = Vector3.one;
+        public bool IgnoreVertexLimits;
         //[Field]
 
 		// Replicated fields for change detection
@@ -16,6 +17,7 @@ namespace Modelular.Runtime
 		private Color _color;
         private string _outputSelectionGroup;
         private Vector3 _size;
+        private bool _ignoreVertexLimits;
         //[ReplicatedField]
 
 		#endregion
@@ -29,6 +31,7 @@ namespace Modelular.Runtime
 			target.Color = Color;
             target.OutputSelectionGroup = OutputSelectionGroup;
             target.Size = Size;
+            target.IgnoreVertexLimits = IgnoreVertexLimits;
             //[SetProperty]
 		}
 		public override bool DetectChanges()
@@ -40,6 +43,7 @@ namespace Modelular.Runtime
 			 _color != Color ||
                  _outputSelectionGroup != OutputSelectionGroup ||
                  _size != Size ||
+                 _ignoreVertexLimits != IgnoreVertexLimits ||
                 //[ChangeCheck]
 			false
 			)
@@ -51,6 +55,7 @@ namespace Modelular.Runtime
 			 _color = Color;
              _outputSelectionGroup = OutputSelectionGroup;
              _size = Size;
+             _ignoreVertexLimits = IgnoreVertexLimits;
             //[ReplicatedFieldReset]
 
 			return hasChanged;

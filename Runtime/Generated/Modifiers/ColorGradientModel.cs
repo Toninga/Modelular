@@ -8,12 +8,14 @@ namespace Modelular.Runtime
 
 		public Color ColorA;
         public Color ColorB = Color.white;
+        public bool IgnoreVertexLimits;
         //[Field]
 
 		// Replicated fields for change detection
 		private bool _enabled;
 		private Color _colorA;
         private Color _colorB;
+        private bool _ignoreVertexLimits;
         //[ReplicatedField]
 
 		#endregion
@@ -26,6 +28,7 @@ namespace Modelular.Runtime
 			var target = (underlyingModifier as Modelular.Runtime.ColorGradient);
 			target.ColorA = ColorA;
             target.ColorB = ColorB;
+            target.IgnoreVertexLimits = IgnoreVertexLimits;
             //[SetProperty]
 		}
 		public override bool DetectChanges()
@@ -36,6 +39,7 @@ namespace Modelular.Runtime
 			enabled != _enabled ||
 			 _colorA != ColorA ||
                  _colorB != ColorB ||
+                 _ignoreVertexLimits != IgnoreVertexLimits ||
                 //[ChangeCheck]
 			false
 			)
@@ -46,6 +50,7 @@ namespace Modelular.Runtime
 			_enabled = enabled;
 			 _colorA = ColorA;
              _colorB = ColorB;
+             _ignoreVertexLimits = IgnoreVertexLimits;
             //[ReplicatedFieldReset]
 
 			return hasChanged;

@@ -8,12 +8,14 @@ namespace Modelular.Runtime
 
 		public Vector2 Tiling = Vector2.one;
         public Vector2 Offset;
+        public bool IgnoreVertexLimits;
         //[Field]
 
 		// Replicated fields for change detection
 		private bool _enabled;
 		private Vector2 _tiling;
         private Vector2 _offset;
+        private bool _ignoreVertexLimits;
         //[ReplicatedField]
 
 		#endregion
@@ -26,6 +28,7 @@ namespace Modelular.Runtime
 			var target = (underlyingModifier as Modelular.Runtime.UVTilingOffset);
 			target.Tiling = Tiling;
             target.Offset = Offset;
+            target.IgnoreVertexLimits = IgnoreVertexLimits;
             //[SetProperty]
 		}
 		public override bool DetectChanges()
@@ -36,6 +39,7 @@ namespace Modelular.Runtime
 			enabled != _enabled ||
 			 _tiling != Tiling ||
                  _offset != Offset ||
+                 _ignoreVertexLimits != IgnoreVertexLimits ||
                 //[ChangeCheck]
 			false
 			)
@@ -46,6 +50,7 @@ namespace Modelular.Runtime
 			_enabled = enabled;
 			 _tiling = Tiling;
              _offset = Offset;
+             _ignoreVertexLimits = IgnoreVertexLimits;
             //[ReplicatedFieldReset]
 
 			return hasChanged;

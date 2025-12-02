@@ -9,6 +9,7 @@ namespace Modelular.Runtime
 		public Vector3 Position;
         public Vector3 Rotation;
         public Vector3 Scale = Vector3.one;
+        public bool IgnoreVertexLimits;
         //[Field]
 
 		// Replicated fields for change detection
@@ -16,6 +17,7 @@ namespace Modelular.Runtime
 		private Vector3 _position;
         private Vector3 _rotation;
         private Vector3 _scale;
+        private bool _ignoreVertexLimits;
         //[ReplicatedField]
 
 		#endregion
@@ -29,6 +31,7 @@ namespace Modelular.Runtime
 			target.Position = Position;
             target.Rotation = Rotation;
             target.Scale = Scale;
+            target.IgnoreVertexLimits = IgnoreVertexLimits;
             //[SetProperty]
 		}
 		public override bool DetectChanges()
@@ -40,6 +43,7 @@ namespace Modelular.Runtime
 			 _position != Position ||
                  _rotation != Rotation ||
                  _scale != Scale ||
+                 _ignoreVertexLimits != IgnoreVertexLimits ||
                 //[ChangeCheck]
 			false
 			)
@@ -51,6 +55,7 @@ namespace Modelular.Runtime
 			 _position = Position;
              _rotation = Rotation;
              _scale = Scale;
+             _ignoreVertexLimits = IgnoreVertexLimits;
             //[ReplicatedFieldReset]
 
 			return hasChanged;

@@ -10,6 +10,7 @@ namespace Modelular.Runtime
         public ESelectionOperand SelectionOperand;
         public Color Color = Color.white;
         public float Tolerance01;
+        public bool IgnoreVertexLimits;
         //[Field]
 
 		// Replicated fields for change detection
@@ -18,6 +19,7 @@ namespace Modelular.Runtime
         private ESelectionOperand _selectionOperand;
         private Color _color;
         private float _tolerance01;
+        private bool _ignoreVertexLimits;
         //[ReplicatedField]
 
 		#endregion
@@ -32,6 +34,7 @@ namespace Modelular.Runtime
             target.SelectionOperand = SelectionOperand;
             target.Color = Color;
             target.Tolerance01 = Tolerance01;
+            target.IgnoreVertexLimits = IgnoreVertexLimits;
             //[SetProperty]
 		}
 		public override bool DetectChanges()
@@ -44,6 +47,7 @@ namespace Modelular.Runtime
                  _selectionOperand != SelectionOperand ||
                  _color != Color ||
                  _tolerance01 != Tolerance01 ||
+                 _ignoreVertexLimits != IgnoreVertexLimits ||
                 //[ChangeCheck]
 			false
 			)
@@ -56,6 +60,7 @@ namespace Modelular.Runtime
              _selectionOperand = SelectionOperand;
              _color = Color;
              _tolerance01 = Tolerance01;
+             _ignoreVertexLimits = IgnoreVertexLimits;
             //[ReplicatedFieldReset]
 
 			return hasChanged;

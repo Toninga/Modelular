@@ -22,7 +22,7 @@ namespace Modelular.Runtime
         public override StackElement Bake(StackElement previousResult)
         {
             int evc = ExpectedVertexCount(previousResult);
-            if (!IgnoreMaximumAllowedVertexCount)
+            if (!IgnoreVertexLimits)
                 GlobalSettings.DetectVertexCountLimitations(evc);
 
             var grid = MakeGrid(previousResult.Polygons);

@@ -12,6 +12,7 @@ namespace Modelular.Runtime
         public int HorizontalSubdivisions = 8;
         public int VerticalSubdivisions = 16;
         public string TargetSelectionSet;
+        public bool IgnoreVertexLimits;
         //[Field]
 
 		// Replicated fields for change detection
@@ -22,6 +23,7 @@ namespace Modelular.Runtime
         private int _horizontalSubdivisions;
         private int _verticalSubdivisions;
         private string _targetSelectionSet;
+        private bool _ignoreVertexLimits;
         //[ReplicatedField]
 
 		#endregion
@@ -38,6 +40,7 @@ namespace Modelular.Runtime
             target.HorizontalSubdivisions = HorizontalSubdivisions;
             target.VerticalSubdivisions = VerticalSubdivisions;
             target.TargetSelectionSet = TargetSelectionSet;
+            target.IgnoreVertexLimits = IgnoreVertexLimits;
             //[SetProperty]
 		}
 		public override bool DetectChanges()
@@ -52,6 +55,7 @@ namespace Modelular.Runtime
                  _horizontalSubdivisions != HorizontalSubdivisions ||
                  _verticalSubdivisions != VerticalSubdivisions ||
                  _targetSelectionSet != TargetSelectionSet ||
+                 _ignoreVertexLimits != IgnoreVertexLimits ||
                 //[ChangeCheck]
 			false
 			)
@@ -66,6 +70,7 @@ namespace Modelular.Runtime
              _horizontalSubdivisions = HorizontalSubdivisions;
              _verticalSubdivisions = VerticalSubdivisions;
              _targetSelectionSet = TargetSelectionSet;
+             _ignoreVertexLimits = IgnoreVertexLimits;
             //[ReplicatedFieldReset]
 
 			return hasChanged;

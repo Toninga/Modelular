@@ -10,6 +10,8 @@ namespace Modelular.Runtime
         public float Radius = 1f;
         public float Arc01 = 1f;
         public bool FaceNormal = true;
+        public EAxis Axis = EAxis.Y;
+        public bool IgnoreVertexLimits;
         //[Field]
 
 		// Replicated fields for change detection
@@ -18,6 +20,8 @@ namespace Modelular.Runtime
         private float _radius;
         private float _arc01;
         private bool _faceNormal;
+        private EAxis _axis;
+        private bool _ignoreVertexLimits;
         //[ReplicatedField]
 
 		#endregion
@@ -32,6 +36,8 @@ namespace Modelular.Runtime
             target.Radius = Radius;
             target.Arc01 = Arc01;
             target.FaceNormal = FaceNormal;
+            target.Axis = Axis;
+            target.IgnoreVertexLimits = IgnoreVertexLimits;
             //[SetProperty]
 		}
 		public override bool DetectChanges()
@@ -44,6 +50,8 @@ namespace Modelular.Runtime
                  _radius != Radius ||
                  _arc01 != Arc01 ||
                  _faceNormal != FaceNormal ||
+                 _axis != Axis ||
+                 _ignoreVertexLimits != IgnoreVertexLimits ||
                 //[ChangeCheck]
 			false
 			)
@@ -56,6 +64,8 @@ namespace Modelular.Runtime
              _radius = Radius;
              _arc01 = Arc01;
              _faceNormal = FaceNormal;
+             _axis = Axis;
+             _ignoreVertexLimits = IgnoreVertexLimits;
             //[ReplicatedFieldReset]
 
 			return hasChanged;

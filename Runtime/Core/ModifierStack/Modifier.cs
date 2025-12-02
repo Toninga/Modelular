@@ -4,7 +4,7 @@ namespace Modelular.Runtime
 
     public abstract class Modifier
     {
-        public bool IgnoreMaximumAllowedVertexCount { get; set; }
+        public bool IgnoreVertexLimits { get; set; }
         public abstract StackElement Bake(StackElement previousResult);
     }
 

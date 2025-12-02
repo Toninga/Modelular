@@ -87,7 +87,7 @@ namespace Modelular.Runtime
                     continue;
                 model.ApplyParameters();
                 model.SetDirty(false);
-                model.underlyingModifier.IgnoreMaximumAllowedVertexCount = IgnoreMaximumAllowedVertexCount;
+                model.underlyingModifier.IgnoreVertexLimits = IgnoreMaximumAllowedVertexCount;
                 underlyingModifiers.Add(model.underlyingModifier);
             }
 

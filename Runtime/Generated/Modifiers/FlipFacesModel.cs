@@ -6,11 +6,13 @@ namespace Modelular.Runtime
 	{
 		#region Fields
 
-		//[Field]
+		public bool IgnoreVertexLimits;
+        //[Field]
 
 		// Replicated fields for change detection
 		private bool _enabled;
-		//[ReplicatedField]
+		private bool _ignoreVertexLimits;
+        //[ReplicatedField]
 
 		#endregion
 		public FlipFacesModel()
@@ -20,7 +22,8 @@ namespace Modelular.Runtime
 		public override void ApplyParameters()
 		{
 			var target = (underlyingModifier as Modelular.Runtime.FlipFaces);
-			//[SetProperty]
+			target.IgnoreVertexLimits = IgnoreVertexLimits;
+            //[SetProperty]
 		}
 		public override bool DetectChanges()
 		{
@@ -28,7 +31,8 @@ namespace Modelular.Runtime
 			if
 			(
 			enabled != _enabled ||
-			//[ChangeCheck]
+			 _ignoreVertexLimits != IgnoreVertexLimits ||
+                //[ChangeCheck]
 			false
 			)
 			{
@@ -36,7 +40,8 @@ namespace Modelular.Runtime
 			}
 			// Reset the mirrored fields
 			_enabled = enabled;
-			//[ReplicatedFieldReset]
+			 _ignoreVertexLimits = IgnoreVertexLimits;
+            //[ReplicatedFieldReset]
 
 			return hasChanged;
 		}

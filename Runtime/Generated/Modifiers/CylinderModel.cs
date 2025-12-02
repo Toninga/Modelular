@@ -14,6 +14,7 @@ namespace Modelular.Runtime
         public int VerticalSubdivisions = 16;
         public bool GenerateCaps = true;
         public bool GenerateShell = true;
+        public bool IgnoreVertexLimits;
         //[Field]
 
 		// Replicated fields for change detection
@@ -26,6 +27,7 @@ namespace Modelular.Runtime
         private int _verticalSubdivisions;
         private bool _generateCaps;
         private bool _generateShell;
+        private bool _ignoreVertexLimits;
         //[ReplicatedField]
 
 		#endregion
@@ -44,6 +46,7 @@ namespace Modelular.Runtime
             target.VerticalSubdivisions = VerticalSubdivisions;
             target.GenerateCaps = GenerateCaps;
             target.GenerateShell = GenerateShell;
+            target.IgnoreVertexLimits = IgnoreVertexLimits;
             //[SetProperty]
 		}
 		public override bool DetectChanges()
@@ -60,6 +63,7 @@ namespace Modelular.Runtime
                  _verticalSubdivisions != VerticalSubdivisions ||
                  _generateCaps != GenerateCaps ||
                  _generateShell != GenerateShell ||
+                 _ignoreVertexLimits != IgnoreVertexLimits ||
                 //[ChangeCheck]
 			false
 			)
@@ -76,6 +80,7 @@ namespace Modelular.Runtime
              _verticalSubdivisions = VerticalSubdivisions;
              _generateCaps = GenerateCaps;
              _generateShell = GenerateShell;
+             _ignoreVertexLimits = IgnoreVertexLimits;
             //[ReplicatedFieldReset]
 
 			return hasChanged;

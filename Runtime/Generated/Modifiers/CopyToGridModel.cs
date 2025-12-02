@@ -10,6 +10,7 @@ namespace Modelular.Runtime
         public Vector3 Distance = Vector3.one;
         public ECenterMode CenterMode = ECenterMode.Centered;
         public EGridLayoutMode GridLayout = EGridLayoutMode.FixedSize;
+        public bool IgnoreVertexLimits;
         //[Field]
 
 		// Replicated fields for change detection
@@ -18,6 +19,7 @@ namespace Modelular.Runtime
         private Vector3 _distance;
         private ECenterMode _centerMode;
         private EGridLayoutMode _gridLayout;
+        private bool _ignoreVertexLimits;
         //[ReplicatedField]
 
 		#endregion
@@ -32,6 +34,7 @@ namespace Modelular.Runtime
             target.Distance = Distance;
             target.CenterMode = CenterMode;
             target.GridLayout = GridLayout;
+            target.IgnoreVertexLimits = IgnoreVertexLimits;
             //[SetProperty]
 		}
 		public override bool DetectChanges()
@@ -44,6 +47,7 @@ namespace Modelular.Runtime
                  _distance != Distance ||
                  _centerMode != CenterMode ||
                  _gridLayout != GridLayout ||
+                 _ignoreVertexLimits != IgnoreVertexLimits ||
                 //[ChangeCheck]
 			false
 			)
@@ -56,6 +60,7 @@ namespace Modelular.Runtime
              _distance = Distance;
              _centerMode = CenterMode;
              _gridLayout = GridLayout;
+             _ignoreVertexLimits = IgnoreVertexLimits;
             //[ReplicatedFieldReset]
 
 			return hasChanged;

@@ -9,6 +9,7 @@ namespace Modelular.Runtime
 		public int MaterialIndex;
         public string PropertyName = "_MainTex";
         public Texture2D Texture;
+        public bool IgnoreVertexLimits;
         //[Field]
 
 		// Replicated fields for change detection
@@ -16,6 +17,7 @@ namespace Modelular.Runtime
 		private int _materialIndex;
         private string _propertyName;
         private Texture2D _texture;
+        private bool _ignoreVertexLimits;
         //[ReplicatedField]
 
 		#endregion
@@ -29,6 +31,7 @@ namespace Modelular.Runtime
 			target.MaterialIndex = MaterialIndex;
             target.PropertyName = PropertyName;
             target.Texture = Texture;
+            target.IgnoreVertexLimits = IgnoreVertexLimits;
             //[SetProperty]
 		}
 		public override bool DetectChanges()
@@ -40,6 +43,7 @@ namespace Modelular.Runtime
 			 _materialIndex != MaterialIndex ||
                  _propertyName != PropertyName ||
                  _texture != Texture ||
+                 _ignoreVertexLimits != IgnoreVertexLimits ||
                 //[ChangeCheck]
 			false
 			)
@@ -51,6 +55,7 @@ namespace Modelular.Runtime
 			 _materialIndex = MaterialIndex;
              _propertyName = PropertyName;
              _texture = Texture;
+             _ignoreVertexLimits = IgnoreVertexLimits;
             //[ReplicatedFieldReset]
 
 			return hasChanged;

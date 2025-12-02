@@ -47,7 +47,7 @@ namespace Modelular.Editor
             GUILayout.Space(10);
             data.UpdateMode = (ModularMesh.EUpdateMode)EditorGUILayout.EnumPopup("Update mode", data.UpdateMode);
             if (data.UpdateMode == ModularMesh.EUpdateMode.Manual)
-                data.IgnoreVertexLimits = EditorGUILayout.Toggle("Ignore maximum allowed vertex count", data.IgnoreVertexLimits);
+                data.IgnoreVertexLimits = EditorGUILayout.Toggle("Ignore vertex limits", data.IgnoreVertexLimits);
         }
 
         private void DrawModifiersTab(ModularMesh data)

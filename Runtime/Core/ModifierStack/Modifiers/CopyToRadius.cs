@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace Modelular.Runtime
 {
@@ -18,6 +19,8 @@ namespace Modelular.Runtime
 
         [ModelularDefaultValue("true")]
         public bool FaceNormal { get; set; } = true; // Not implemented
+        [ModelularDefaultValue("EAxis.Y")]
+        public EAxis Axis { get; set; } = EAxis.Y;
 
         #endregion
 
@@ -26,7 +29,7 @@ namespace Modelular.Runtime
         public override StackElement Bake(StackElement previousResult)
         {
             int evc = ExpectedVertexCount(previousResult);
-            if (!IgnoreMaximumAllowedVertexCount)
+            if (!IgnoreVertexLimits)
                 GlobalSettings.DetectVertexCountLimitations(evc);
 
             var radial = MakeRadialLayout(previousResult.Polygons);
@@ -43,11 +46,10 @@ namespace Modelular.Runtime
         {
             List<Polygon> result = new List<Polygon>();
 
-            
+            Arc01 = Mathf.Clamp01(Arc01);
 
             for (int i = 0; i < Count; i++)
             {
-                Arc01 = Mathf.Clamp01(Arc01);
                 float angle = i / (float)Count * 2 * Mathf.PI * Arc01;
 
                 List<Polygon> newObject = new List<Polygon>();
@@ -65,12 +67,21 @@ namespace Modelular.Runtime
 
         private Vector3 Offset(Vector3 p, float angle, float radius)
         {
-            p.x += radius;
-            return new Vector3(
-            (Mathf.Cos(angle) * p.x - (Mathf.Sin(angle) * p.z)),
-            p.y,
-            (Mathf.Sin(angle) * p.x + Mathf.Cos(angle) * p.z)
-            );
+            Vector3 result;
+            Vector3 dir = AxisUtility.GetAxisDirection(Axis);
+            Vector3 right = new Vector3(dir.y, dir.z, dir.x);
+            Quaternion rotator = Quaternion.Euler(dir * angle / Mathf.PI * 180);
+            if (FaceNormal)
+            {
+                p += right * radius;
+                result = rotator * p;
+            }
+            else
+            {
+                result = p + rotator * (right * radius);
+            }
+                return result;
+
         }
 
         #endregion

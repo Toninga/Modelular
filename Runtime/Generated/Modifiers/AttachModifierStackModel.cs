@@ -7,11 +7,13 @@ namespace Modelular.Runtime
 		#region Fields
 
 		public ModularMesh LinkedMesh;
+        public bool IgnoreVertexLimits;
         //[Field]
 
 		// Replicated fields for change detection
 		private bool _enabled;
 		private ModularMesh _linkedMesh;
+        private bool _ignoreVertexLimits;
         //[ReplicatedField]
 
 		#endregion
@@ -23,6 +25,7 @@ namespace Modelular.Runtime
 		{
 			var target = (underlyingModifier as Modelular.Runtime.AttachModifierStack);
 			target.LinkedMesh = LinkedMesh;
+            target.IgnoreVertexLimits = IgnoreVertexLimits;
             //[SetProperty]
 		}
 		public override bool DetectChanges()
@@ -32,6 +35,7 @@ namespace Modelular.Runtime
 			(
 			enabled != _enabled ||
 			 _linkedMesh != LinkedMesh ||
+                 _ignoreVertexLimits != IgnoreVertexLimits ||
                 //[ChangeCheck]
 			false
 			)
@@ -41,6 +45,7 @@ namespace Modelular.Runtime
 			// Reset the mirrored fields
 			_enabled = enabled;
 			 _linkedMesh = LinkedMesh;
+             _ignoreVertexLimits = IgnoreVertexLimits;
             //[ReplicatedFieldReset]
 
 			return hasChanged;
