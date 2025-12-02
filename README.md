@@ -9,6 +9,10 @@ It works both in the editor and at runtime, but lacks testing at the moment.
 It is developped in my free-time, and may or may not change in the future.
 You are free to use it as you wish, and I'd be happy to hear your feedbacks at the following address : antonin.delpias.faucher@gmail.com
 
+## Preview
+
+Not added yet :/
+
 ## Features [1.0.1]
 
 ### Primitives
