@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -24,9 +25,18 @@ namespace Modelular.Runtime
         #region Methods
         public override StackElement Bake(StackElement previousResult)
         {
+            int evc = ExpectedVertexCount(previousResult);
+            if (!IgnoreMaximumAllowedVertexCount)
+                GlobalSettings.DetectVertexCountLimitations(evc);
+
             var radial = MakeRadialLayout(previousResult.Polygons);
             previousResult.ReplacePolygons(radial);
             return previousResult;
+        }
+
+        private int ExpectedVertexCount(StackElement previousResult)
+        {
+            return previousResult.Vertices.Count * Count;
         }
 
         private List<Polygon> MakeRadialLayout(List<Polygon> mesh)

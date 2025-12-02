@@ -59,27 +59,8 @@ namespace Modelular.Runtime
 
         private Material MakeDefaultMaterial()
         {
-            // Find the current render pipeline
-            // NOTE : This can be upgraded with a shader supporting any SRP regardless of it's sub type
-            string path;
-            switch (Shader.globalRenderPipeline)
-            {
-                case "UniversalPipeline":
-                    path = "Modellular/URPStandard";
-                    break;
-                case "HDRenderPipeline":
-                    path = "Modellular/HDRPStandard";
-                    break;
-                case "":
-                    path = "Modellular/BuiltInStandard";
-                    break;
-                default:
-                    path = "Modellular/BuiltInStandard";
-                    break;
+            string path = "Modelular/Standard";
 
-            }
-            //Debug.Log("AutoMaterial : Current pipeline is '" + Shader.globalRenderPipeline + "' ; material path is '" + path + "'");
-            // Find the adequate material, or standard if no srp is found
             Shader shader = Shader.Find(path);
             if (shader == null)
                 throw new System.ArgumentException("No shader with the specified path could be found : " + path);
