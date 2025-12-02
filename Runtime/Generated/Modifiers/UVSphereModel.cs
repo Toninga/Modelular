@@ -9,7 +9,9 @@ namespace Modelular.Runtime
 		public Color Color = Color.white;
         public string OutputSelectionGroup;
         public float Radius = 0.5f;
+        [Min(1f)]
         public int HorizontalSubdivisions = 8;
+        [Min(3f)]
         public int VerticalSubdivisions = 16;
         public string TargetSelectionSet;
         public bool IgnoreVertexLimits;

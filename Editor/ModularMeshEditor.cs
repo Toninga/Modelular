@@ -153,14 +153,36 @@ namespace Modelular.Editor
 
                 menu.ShowAsContext();
             }
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal();
             if (GUILayout.Button("Delete selected modifier"))
             {
                 if (_selectedModifier < data.Modifiers.Count)
                 {
                     data.Modifiers.RemoveAt(_selectedModifier);
+                    if (_selectedModifier == data.Modifiers.Count)
+                        _selectedModifier = data.Modifiers.Count - 1;
                 }
             }
-
+            if (GUILayout.Button("Move up"))
+            {
+                if (_selectedModifier < data.Modifiers.Count && _selectedModifier > 0)
+                {
+                    data.Modifiers.Insert(_selectedModifier - 1, data.Modifiers[_selectedModifier]);
+                    data.Modifiers.RemoveAt(_selectedModifier + 1);
+                    _selectedModifier--;
+                }
+            }
+            if (GUILayout.Button("Move down"))
+            {
+                if (_selectedModifier < data.Modifiers.Count -1)
+                {
+                    data.Modifiers.Insert(_selectedModifier + 2, data.Modifiers[_selectedModifier]);
+                    data.Modifiers.RemoveAt(_selectedModifier);
+                    _selectedModifier++;
+                }
+            }
             GUILayout.EndHorizontal();
 
 
@@ -174,6 +196,7 @@ namespace Modelular.Editor
                 {
                     string name = modifier.GetType().Name;
                     name = name.Replace("Model", "");
+                    name = i.ToString() + ": " + name;
 
                     GUIStyle style;
                     if (_selectedModifier == i)

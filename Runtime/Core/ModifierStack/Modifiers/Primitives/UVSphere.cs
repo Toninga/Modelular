@@ -13,8 +13,10 @@ namespace Modelular.Runtime
         [ModelularDefaultValue("0.5f")]
         public float Radius { get; set; } = 0.5f;
         [ModelularDefaultValue("8")]
+        [Min(1)]
         public int HorizontalSubdivisions { get; set; } = 8;
         [ModelularDefaultValue("16")]
+        [Min(3)]
         public int VerticalSubdivisions { get; set; } = 16;
         public string TargetSelectionSet { get; set; }
         #endregion
@@ -39,6 +41,8 @@ namespace Modelular.Runtime
         /// <returns></returns>
         private List<Polygon> MakeUVSphere(float r, int hs, int vs)
         {
+            hs = hs + 1; // I don't know why, but hs is offset by one, and I don't have the patience to figure out why
+
             // Ensure a minimum set of subdivisions are used
             hs = Mathf.Max(hs, 1);
             vs = Mathf.Max(vs, 3);
