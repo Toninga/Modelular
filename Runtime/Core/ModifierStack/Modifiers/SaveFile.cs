@@ -43,11 +43,10 @@ namespace Modelular.Runtime
         /// <param name="optimizeMesh"></param>
         public bool SaveMesh(Mesh mesh, string name)
         {
-            Debug.Log("StackTrace");
             // Find the best target directory : The user's chosen path first, otherwise Modellular/Generated, otherwise the project root
             string finalDirectory = "";
-            string defaultDir = "Assets/Packages/Modellular/Generated";
-            string root = "Assets/";
+            string defaultDir = Hierarchy.GeneratedMeshesPath;
+            string root = Hierarchy.PackagePath;
             if (_lastPath != null || _lastPath != "")
             {
                 if (AssetDatabase.AssetPathExists(_lastPath))

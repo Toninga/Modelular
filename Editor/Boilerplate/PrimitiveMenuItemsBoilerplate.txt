@@ -1,0 +1,10 @@
+using Modelular.Runtime;
+using UnityEditor;
+
+namespace Modelular.Editor
+{
+    public class PrimitiveMenuItems
+    {
+        //[MenuItem]
+    }
+}

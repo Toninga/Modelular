@@ -17,7 +17,7 @@ namespace Modelular.Runtime
         public List<Vertex> Vertices => GetBakedVertices();
 
         public int WarningVertexCount { get; set; } = 50000;
-        public int ErrorVertexCount { get; set; } = 150000;
+        public int ErrorVertexCount { get; set; } = 300000;
         #endregion
 
         #region Events

@@ -1,5 +1,4 @@
 
-
 using Modelular.Runtime;
 using System;
 using System.Collections.Generic;
@@ -8,73 +7,106 @@ using System.Reflection;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
-using static Codice.Client.BaseCommands.Import.Commit;
 
 namespace Modelular.Editor
 {
     public static class CodeGenerator
     {
-        public static string PackagePath => GetPackagePath();
-        private static string DefaultPackagePath = "Assets/Packages/Modelular";
-        private static string BoilerplatePath = "Editor/Boilerplate";
-        private static string GeneratedModels = "Runtime/Generated/Modifiers";
-        //private static string GeneratedMeshes = "Runtime/Generated/Meshes";
+        public static string PackagePath => Hierarchy.PackagePath;
+        private static string BoilerplatePath => Hierarchy.BoilerplatePath;
+        private static string GeneratedModelsPath => Hierarchy.GeneratedModelsPath;
+        private static string EditorPath => Hierarchy.EditorPath;
+
+        private static string ModifierModelBoilerplate = "ModifierModelBoilerplate.txt";
+        private static string ModifierModelListBoilerplate = "ModifierModelListBoilerplate.txt";
+        private static string PrimitiveMenuItemsBoilerplate = "PrimitiveMenuItemsBoilerplate.txt";
 
 
-        [MenuItem("Modelular/Refresh assembly")]
-        public static void RegenerateModels()
+        /// <summary>
+        /// Regenerate scripts such as ModifierModels, the model list used for the "add modifier" button of the modular mesh component, or for the primitive menu items
+        /// </summary>
+        [MenuItem("Modelular/Refresh editor scripts")]
+        public static void RefreshModelularScripts()
         {
-            GetPackagePath();
-
             Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
 
             Dictionary<int, List<Type>> modifiers = new ();
+            List<Type> primitiveModels = new();
 
             foreach (Assembly assembly in assemblies)
             {
                 foreach (Type type in assembly.GetTypes())
                 {
-                    if (type.IsSubclassOf(typeof(Modifier)))
-                    {
-                        Attribute[] attrs = Attribute.GetCustomAttributes(type);
-                        foreach (Attribute attr in attrs)
-                        {
-                            if (attr is ModelularInterfaceAttribute modAttr)
-                            {
-                                string model = GenerateModifierModel(type);
-                                TrySaveToFile(Path.Combine(PackagePath, GeneratedModels), type.Name + "Model.cs", model);
-                                if (!modifiers.ContainsKey(modAttr.Priority))
-                                    modifiers[modAttr.Priority] = new ();
-                                modifiers[modAttr.Priority].Add(type);
-                                break;
-                            }
-                        }
-                    }
+                    TryGenerateModelForModifier(modifiers, type);
+                    DetectPrimitive(type, primitiveModels);
                 }
             }
 
             // Sort all the types by their priority
             var sortedTypes = SortTypesByPriority(modifiers);
 
-            var modelList = GenerateModelList(PackagePath, "ModifierModelList.cs", sortedTypes);
-            TrySaveToFile(Path.Combine(PackagePath, GeneratedModels), "ModifierModelList.cs", modelList);
+            var modelList = GenerateModelList(sortedTypes);
+            TrySaveToFile(GeneratedModelsPath, "ModifierModelList.cs", modelList);
+
+            var primitiveMenuItems = GenerateMenuItemsForPrimitives(primitiveModels);
+            TrySaveToFile(EditorPath, "PrimitiveMenuItems.cs", primitiveMenuItems);
+
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
             SetupIcons();
         }
-        public static string GetPackagePath()
+        /// <summary>
+        /// Check if the type is a ModifierModel whose modifier is a primitive. If so, appends it to the list
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="primitives"></param>
+        private static void DetectPrimitive(Type type, List<Type> primitives)
         {
-            string result = DefaultPackagePath;
-            var info = UnityEditor.PackageManager.PackageInfo.FindForAssembly(typeof(CodeGenerator).Assembly);
-            if (info != null)
-                result = info.resolvedPath;
-            UnityEngine.Debug.Log("Package path is " + result);
-            return result;
-        }
+            if (!type.IsSubclassOf(typeof(ModifierModel)))
+            {
+                return;
+            }
+            Debug.Log("Type " + type.Name + " is detected as a modifier model");
 
-        private static string GenerateModelList(string path, string name, List<Type> modifiers)
+            var decoy = ScriptableObject.CreateInstance(type) as ModifierModel;
+            if (decoy == null)
+                return;
+
+            if (typeof(IPrimitiveModifier).IsAssignableFrom(decoy.underlyingModifier.GetType()))
+            {
+                Debug.Log("Type " + type.Name + " is a PRIMITIVE model");
+                primitives.Add(type);
+            }
+        }
+        /// <summary>
+        /// Generate the text content for the script enabling menu items for all the modifiers implementing IPrimitiveModifier
+        /// </summary>
+        /// <param name="types"></param>
+        /// <returns></returns>
+        private static string GenerateMenuItemsForPrimitives(List<Type> types)
         {
-            string content = GetModelListBoilerplate();
+            string content = GetBoilerplate(PrimitiveMenuItemsBoilerplate);
+
+            foreach (var type in types)
+            {
+                var decoy = ScriptableObject.CreateInstance(type) as ModifierModel;
+                if (decoy == null)
+                    continue;
+                content = content.Replace("//[MenuItem]", "[MenuItem(\"GameObject/3D Object/Modelular/CLASSNAMEWITHSPACES\", priority = 1)]\r\n        public static void NewCLASSNAME(MenuCommand menuCommand) => ModelularMeshGenerator.New(menuCommand, typeof(CLASSNAMEMODEL));\r\n        //[MenuItem]");
+                content = content.Replace("CLASSNAMEMODEL", type.Name);
+                content = content.Replace("CLASSNAMEWITHSPACES", InsertSpacesBetweenWords( decoy.underlyingModifier.GetType().Name));
+                content = content.Replace("CLASSNAME", decoy.underlyingModifier.GetType().Name);
+            }
+            return content;
+        }
+        /// <summary>
+        /// Generate the text content for the model list
+        /// </summary>
+        /// <param name="modifiers"></param>
+        /// <returns></returns>
+        private static string GenerateModelList(List<Type> modifiers)
+        {
+            string content = GetBoilerplate(ModifierModelListBoilerplate);
 
             content = content.Replace("//[EnumElement]", "AddNewModifier" + ",\n        //[EnumElement]");
             foreach (var modifier in modifiers)
@@ -100,7 +132,62 @@ namespace Modelular.Editor
 
             return content;
         }
+        /// <summary>
+        /// Generate the text content of the model script based on a modifier type
+        /// </summary>
+        /// <param name="modifier"></param>
+        /// <returns></returns>
+        public static string GenerateModifierModel(Type modifier)
+        {
+            string boilerplate = GetBoilerplate(ModifierModelBoilerplate);
 
+            boilerplate = boilerplate.Replace("CLASSNAMEMODEL", modifier.Name + "Model");
+            boilerplate = boilerplate.Replace("CLASSNAMEWITHSPACES", InsertSpacesBetweenWords(modifier.Name));
+            boilerplate = boilerplate.Replace("CLASSNAMEWITHNAMESPACE", modifier.Namespace + "." + modifier.Name);
+            boilerplate = boilerplate.Replace("CLASSNAME", modifier.Name);
+
+
+
+            PropertyInfo[] properties = modifier.GetProperties();
+            foreach (var ppt in properties)
+            {
+                boilerplate = boilerplate.Replace("//[Field]", FieldFromProperty(ppt));
+                boilerplate = boilerplate.Replace("//[ReplicatedField]", ReplicatedFieldFromProperty(ppt));
+                boilerplate = boilerplate.Replace("//[SetProperty]", SetTargetProperty(ppt));
+                boilerplate = boilerplate.Replace("//[ChangeCheck]", ChangeCheck(ppt));
+                boilerplate = boilerplate.Replace("//[ReplicatedFieldReset]", ReplicatedFieldReset(ppt));
+            }
+            return boilerplate;
+        }
+        /// <summary>
+        /// Check if the type is a modifier that needs a model (scriptable object). If so, it generates it's content with GenerateModifierModel and saves it
+        /// </summary>
+        /// <param name="modifiers"></param>
+        /// <param name="type"></param>
+        private static void TryGenerateModelForModifier(Dictionary<int, List<Type>> modifiers, Type type)
+        {
+            if (type.IsSubclassOf(typeof(Modifier)))
+            {
+                Attribute[] attrs = Attribute.GetCustomAttributes(type);
+                foreach (Attribute attr in attrs)
+                {
+                    if (attr is ModelularInterfaceAttribute modAttr)
+                    {
+                        string model = GenerateModifierModel(type);
+                        TrySaveToFile(GeneratedModelsPath, type.Name + "Model.cs", model);
+
+                        if (!modifiers.ContainsKey(modAttr.Priority))
+                            modifiers[modAttr.Priority] = new();
+                        modifiers[modAttr.Priority].Add(type);
+
+                        break;
+                    }
+                }
+            }
+        }
+        /// <summary>
+        /// Setup the modelular icons on the scriptable objects to be shown in the inspector
+        /// </summary>
         private static void SetupIcons()
         {
             Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
@@ -136,7 +223,13 @@ namespace Modelular.Editor
                 }
             }
         }
-
+        /// <summary>
+        /// Saves the content at the specified path + name
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="name"></param>
+        /// <param name="content"></param>
+        /// <returns></returns>
         private static bool TrySaveToFile(string path, string name, string content)
         {
             if (AssetDatabase.AssetPathExists(path))
@@ -153,29 +246,7 @@ namespace Modelular.Editor
                 return false;
             }
         }
-        public static string GenerateModifierModel(Type modifier)
-        {
-            string boilerplate = GetModelBoilerplate();
-
-            boilerplate = boilerplate.Replace("CLASSNAMEMODEL", modifier.Name + "Model");
-            boilerplate = boilerplate.Replace("CLASSNAMEWITHSPACES", InsertSpacesBetweenWords(modifier.Name));
-            boilerplate = boilerplate.Replace("CLASSNAMEWITHNAMESPACE", modifier.Namespace + "." + modifier.Name);
-            boilerplate = boilerplate.Replace("CLASSNAME", modifier.Name);
-
-
-
-            PropertyInfo[] properties = modifier.GetProperties();
-            foreach (var ppt in properties)
-            {
-                boilerplate = boilerplate.Replace("//[Field]", FieldFromProperty(ppt));
-                boilerplate = boilerplate.Replace("//[ReplicatedField]", ReplicatedFieldFromProperty(ppt));
-                boilerplate = boilerplate.Replace("//[SetProperty]", SetTargetProperty(ppt));
-                boilerplate = boilerplate.Replace("//[ChangeCheck]", ChangeCheck(ppt));
-                boilerplate = boilerplate.Replace("//[ReplicatedFieldReset]", ReplicatedFieldReset(ppt));
-            }
-            return boilerplate;
-        }
-
+        // Formatting
         private static string FieldFromProperty(PropertyInfo propertyInfo)
         {
             string result = "public " + MatchPropertyType(propertyInfo.PropertyType.Name) + " " + propertyInfo.Name;
@@ -204,6 +275,11 @@ namespace Modelular.Editor
                 default: return type;
             }
         }
+        /// <summary>
+        /// Returns the same text but with spaces inserted before words : HelloWorld -> Hello World
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns></returns>
         private static string InsertSpacesBetweenWords(string text)
         {
             string result = "";
@@ -215,21 +291,19 @@ namespace Modelular.Editor
             }
             return result;
         }
-
-        private static string GetModelBoilerplate()
+        /// <summary>
+        /// Returns the content of the specified boilerplate text file. Boilerplate code should be stored in Editor/Boilerplate
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        private static string GetBoilerplate(string name)
         {
-            string path = Path.Combine(GetPackagePath(), BoilerplatePath, "ModifierModelBoilerplate.txt");
-            string content = File.ReadAllText(path);
+            string content = null;
+            string path = Path.Combine(BoilerplatePath, name);
+            if (AssetDatabase.AssetPathExists(path))
+                content = File.ReadAllText(path);
             return content;
         }
-
-        private static string GetModelListBoilerplate()
-        {
-            string path = Path.Combine(GetPackagePath(), BoilerplatePath, "ModifierModelListBoilerplate.txt");
-            string content = File.ReadAllText(path);
-            return content;
-        }
-
         private static List<Type> SortTypesByPriority(Dictionary<int, List<Type>> modifiers)
         {
             List<Type> types = new();
