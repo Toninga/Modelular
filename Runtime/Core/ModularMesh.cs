@@ -200,13 +200,13 @@ namespace Modelular.Runtime
         private void OnDrawGizmos()
         {
             if (ShowVertices)
-                Visualization.DrawVertices(stack.Output.Vertices, transform.position, VertexDisplaySize, VertexDisplayMode, VertexColor);
+                Visualization.DrawVertices(stack.Output.Vertices, transform, VertexDisplaySize, VertexDisplayMode, VertexColor);
             if (ShowVertexNumber)
-                Visualization.DrawVertexNumbers(stack.Output.Vertices, transform.position, VertexNumberDistance);
+                Visualization.DrawVertexNumbers(stack.Output.Vertices, transform, VertexNumberDistance);
             if (ShowFaces)
-                Visualization.DrawFaces(stack.Output.Polygons, transform.position, FaceDisplayMode, FaceColor);
+                Visualization.DrawFaces(stack.Output.Polygons, transform, FaceDisplayMode, FaceColor);
             if (ShowNormals)
-                Visualization.DrawNormals(stack.Output.Vertices, transform.position, NormalDisplaySize, NormalDisplayMode, NormalColor);
+                Visualization.DrawNormals(stack.Output.Vertices, transform, NormalDisplaySize, NormalDisplayMode, NormalColor);
         }
 #endif
 
