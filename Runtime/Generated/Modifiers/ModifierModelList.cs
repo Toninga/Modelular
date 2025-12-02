@@ -12,6 +12,7 @@ namespace Modelular.Editor
             ModifierPaths["Transform"] = typeof(TransformModel);
             ModifierPaths["Primitives/Cube"] = typeof(CubeModel);
             ModifierPaths["Primitives/Cylinder"] = typeof(CylinderModel);
+            ModifierPaths["Primitives/Ground"] = typeof(GroundModel);
             ModifierPaths["Primitives/Quad"] = typeof(QuadModel);
             ModifierPaths["Primitives/UV Sphere"] = typeof(UVSphereModel);
             ModifierPaths["Normals/Flip faces"] = typeof(FlipFacesModel);
@@ -23,6 +24,7 @@ namespace Modelular.Editor
             ModifierPaths["UV/Tiling and offset"] = typeof(UVTilingOffsetModel);
             ModifierPaths["Color/Color gradient"] = typeof(ColorGradientModel);
             ModifierPaths["SelectByColor"] = typeof(SelectByColorModel);
+            ModifierPaths["Material/SetTexture"] = typeof(SetTextureModel);
             //[PathMatching]
         }
     }

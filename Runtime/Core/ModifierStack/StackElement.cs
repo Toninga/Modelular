@@ -13,10 +13,16 @@ namespace Modelular.Runtime
         public List<Polygon> Polygons { get;} = new();
         public List<Vertex> Vertices { get; } = new();
         public Mesh Mesh { get; set; }
+        public ModifierStack Stack { get; set; }
+        public bool HasStackOwner => Stack != null;
         public Dictionary<string, SelectionStack> SelectionStacksByName { get; set; } = new();
 
         #region Methods
-
+        public StackElement() { }
+        public StackElement(ModifierStack owner)
+        {
+            Stack = owner;
+        }
         public void AddPolygons(List<Polygon> polygons, string targetSelectionGroup = default)
         {
             EnforceSelectionStack(targetSelectionGroup);
@@ -117,7 +123,6 @@ namespace Modelular.Runtime
             }
             return result;
         }
-
         public SelectionStack EnforceSelectionStack(string selectionName)
         {
             if (!string.IsNullOrEmpty(selectionName))
@@ -134,7 +139,6 @@ namespace Modelular.Runtime
                 return null;
             
         }
-
         public Bounds GetBoundingBox()
         {
             Bounds result = new Bounds();
@@ -149,6 +153,23 @@ namespace Modelular.Runtime
             }
             return result;
         }
+        public List<Material> FetchMaterials()
+        {
+            List<Material> result = new List<Material>();
+            if (HasStackOwner)
+            {
+                if (Stack.HasOwner)
+                {
+                    if (Stack.Owner.MeshRenderer != null)
+                    {
+                        foreach (Material m in Stack.Owner.MeshRenderer.sharedMaterials)
+                            result.Add(m);
+                    }
+                }
+            }
+            return result;
+        }
+        public void UpdateMaterials() => Materials = FetchMaterials();
         #endregion
     }
 

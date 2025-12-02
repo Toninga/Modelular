@@ -9,6 +9,8 @@ namespace Modelular.Runtime
     public class ModifierStack
     {
         #region Properties
+        public ModularMesh Owner { get; set; }
+        public bool HasOwner => Owner != null;
         public MeshData MeshData {  get; private set; }
         public List<Modifier> Modifiers => modifiers;
         protected List<Modifier> modifiers = new();
@@ -25,9 +27,14 @@ namespace Modelular.Runtime
         #endregion
 
         #region Methods
+        public ModifierStack() { }
+        public ModifierStack(ModularMesh owner)
+        {
+            Owner = owner;
+        }
         public StackElement CompileStack()
         {
-            StackElement current = new StackElement();
+            StackElement current = new StackElement(this);
             foreach (var modifier in modifiers)
             {
                 modifier.Bake(current);

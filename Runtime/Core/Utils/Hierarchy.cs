@@ -10,6 +10,7 @@ namespace Modelular.Runtime
         public static string GeneratedModelsPath => Path.Combine(PackagePath, "Runtime/Generated/Modifiers");
         public static string GeneratedMeshesPath => Path.Combine(PackagePath, "Runtime/Generated/Meshes");
         public static string EditorPath => Path.Combine(PackagePath, "Editor");
+        public static string TexturesPath => Path.Combine(PackagePath, "Runtime/Core/Graphics/Textures");
 
 
         /// <summary>

@@ -22,6 +22,9 @@ namespace Modelular.Runtime
         public override StackElement Bake(StackElement previousResult)
         {
             previousResult.AddPolygons(Make(Size), OutputSelectionGroup);
+            var mod = new SetColor();
+            mod.Color = Color;
+            mod.Bake(previousResult);
             return previousResult;
         }
 

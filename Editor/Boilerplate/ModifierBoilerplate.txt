@@ -1,9 +1,8 @@
-using Modellular.Data;
 using UnityEngine;
 
-namespace Modellular.Modifiers
+namespace Modelular.Runtime
 {
-    [ModellularInterface("#SCRIPTNAME#")]
+    [ModelularInterface("#SCRIPTNAME#")]
     public class #SCRIPTNAME# : Modifier
     {
         #region Properties

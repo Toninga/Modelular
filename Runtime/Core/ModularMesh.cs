@@ -14,6 +14,8 @@ namespace Modelular.Runtime
 
         public ModifierStack Stack => stack;
         public List<ModifierModel> Modifiers = new();
+        public MeshRenderer MeshRenderer => mRenderer;
+        public MeshFilter MeshFilter => mFilter;
 
         // Visualization
         public bool ShowVertices { get; set; }
@@ -71,6 +73,7 @@ namespace Modelular.Runtime
         {
             mRenderer = GetComponent<MeshRenderer>();
             mFilter = GetComponent<MeshFilter>();
+            stack.Owner = this;
 
             // Retrieve the actual modifiers from the models
             underlyingModifiers.Clear();

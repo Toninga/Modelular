@@ -70,7 +70,7 @@ namespace Modelular.Editor
                     var icon = EditorGUIUtility.GetIconForObject(modifier);
                     if (icon != null)
                     {
-                        Rect position = new Rect(3,EditorGUIUtility.singleLineHeight+  3,24,24);
+                        Rect position = new Rect(6,EditorGUIUtility.singleLineHeight+  3,24,24);
                         if (icon.alphaIsTransparency)
                         {
                             GUI.DrawTexture(position, icon);
@@ -81,7 +81,7 @@ namespace Modelular.Editor
                             EditorGUI.DrawPreviewTexture(position, icon);
                         }
 
-                        EditorGUILayout.Space(20);
+                        EditorGUILayout.Space(26);
                     }
                 }
                 EditorGUILayout.Space();

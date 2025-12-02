@@ -18,20 +18,32 @@ namespace Modelular.Runtime
         }
         public override StackElement Bake(StackElement previousResult)
         {
+            if (TargetRenderer == null && previousResult.Stack != null && previousResult.Stack.Owner != null)
+            {
+                TargetRenderer = previousResult.Stack.Owner.MeshRenderer;
+            }
+
             int count = previousResult.GetSubmeshesID().Count;
 
             // Generate as many default materials as there are submeshes
-            List<Material> updatedMaterials = GenerateMaterials(count);
+            Material defaultMat = MakeDefaultMaterial();
+            previousResult.UpdateMaterials();
             if (TargetRenderer != null)
             {
                 // Make sure that only materials that are not already set in the renderer are replaced
                 for (int i = 0; i < count; i++)
                 {
-                    if (TargetRenderer.sharedMaterials.Length-1 >= i && TargetRenderer.sharedMaterials[i] != null)
-                        updatedMaterials[i] = TargetRenderer.sharedMaterials[i];
+                    if (previousResult.Materials.Count > i && previousResult.Materials[i] != null)
+                        continue;
+
+                    if (previousResult.Materials.Count <= i)
+                        previousResult.Materials.Add(defaultMat);
+                    else
+                        previousResult.Materials[i] = defaultMat;
                 }
+                TargetRenderer.sharedMaterials = previousResult.Materials.ToArray();
             }
-            previousResult.Materials = updatedMaterials;
+
             
             return previousResult;
         }

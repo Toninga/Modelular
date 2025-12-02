@@ -20,6 +20,9 @@ namespace Modelular.Runtime
         {
             var quad = Make(Size);
             previousResult.AddPolygon(quad, OutputSelectionGroup);
+            var mod = new SetColor();
+            mod.Color = Color;
+            mod.Bake(previousResult);
             return previousResult;
         }
 

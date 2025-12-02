@@ -25,6 +25,9 @@ namespace Modelular.Runtime
         {
             var sphere = MakeUVSphere(Radius, HorizontalSubdivisions, VerticalSubdivisions);
             previousResult.AddPolygons(sphere, OutputSelectionGroup);
+            var mod = new SetColor();
+            mod.Color = Color;
+            mod.Bake(previousResult);
             return previousResult;
         }
         /// <summary>

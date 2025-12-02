@@ -43,8 +43,7 @@ namespace Modelular.Editor
 
         private static string MakeModifierBoilerplate()
         {
-            var boilerplate = Resources.Load("Assets/Packages/Modelular/Core/Resources/_ModifierBoilerplate.txt");
-            string content = ((TextAsset)boilerplate).text;
+            string content = File.ReadAllText(Path.Combine(Hierarchy.BoilerplatePath, "ModifierBoilerplate.txt"));
             return content;
         }
 
@@ -55,6 +54,8 @@ namespace Modelular.Editor
             {
                 // Read your template
                 string template = MakeModifierBoilerplate();
+                if (template == null)
+                    return;
 
                 string className = Path.GetFileNameWithoutExtension(pathName);
                 string content = template.Replace("#SCRIPTNAME#", className);
