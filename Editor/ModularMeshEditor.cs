@@ -45,7 +45,9 @@ namespace Modelular.Editor
         private void DrawGeneralTab(ModularMesh data)
         {
             GUILayout.Space(10);
-            data.updateMode = (ModularMesh.EUpdateMode)EditorGUILayout.EnumPopup("Update mode", data.updateMode);
+            data.UpdateMode = (ModularMesh.EUpdateMode)EditorGUILayout.EnumPopup("Update mode", data.UpdateMode);
+            if (data.UpdateMode == ModularMesh.EUpdateMode.Manual)
+                data.IgnoreVertexLimits = EditorGUILayout.Toggle("Ignore maximum allowed vertex count", data.IgnoreVertexLimits);
         }
 
         private void DrawModifiersTab(ModularMesh data)
@@ -206,6 +208,9 @@ namespace Modelular.Editor
         {
             GUILayout.Space(5);
 
+            GUILayout.Label("Visualization can impact editor performances");
+
+            GUILayout.Space(10);
 
             data.ShowVertices = GUILayout.Toggle(data.ShowVertices, "Show vertices");
             if (data.ShowVertices)
@@ -244,6 +249,7 @@ namespace Modelular.Editor
                 GUILayout.EndVertical();
             
             }
+            GUILayout.Space(10);
         }
 
         private void AddModifier(ModularMesh data, System.Type modifierType)

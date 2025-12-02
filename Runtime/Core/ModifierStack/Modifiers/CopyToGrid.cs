@@ -21,9 +21,19 @@ namespace Modelular.Runtime
         #region Methods
         public override StackElement Bake(StackElement previousResult)
         {
+            int evc = ExpectedVertexCount(previousResult);
+            if (!IgnoreMaximumAllowedVertexCount)
+                GlobalSettings.DetectVertexCountLimitations(evc);
+
             var grid = MakeGrid(previousResult.Polygons);
             previousResult.ReplacePolygons(grid);
             return previousResult;
+        }
+
+        public int ExpectedVertexCount(StackElement previousResult)
+        {
+            int previousCount = previousResult.Vertices.Count;
+            return previousCount * Count.x * Count.y * Count.z;
         }
 
         private List<Polygon> MakeGrid(List<Polygon> mesh)

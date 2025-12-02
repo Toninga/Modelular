@@ -18,8 +18,6 @@ namespace Modelular.Runtime
         public List<Polygon> Polygons => GetBakedPolygons();
         public List<Vertex> Vertices => GetBakedVertices();
 
-        public int WarningVertexCount { get; set; } = 50000;
-        public int ErrorVertexCount { get; set; } = 300000;
         #endregion
 
         #region Events
@@ -38,15 +36,13 @@ namespace Modelular.Runtime
             foreach (var modifier in modifiers)
             {
                 modifier.Bake(current);
-                if (current.Vertices.Count >= ErrorVertexCount)
-                    throw new Exception("[Modellular] Compiling the modular mesh stack was aborted : Too much vertices were generated : " + current.Vertices.Count +
-                        ". You can override this error by modifying ModifierStack.ErrorVertexCount if you want to push the limits higher.");
+                if (current.Vertices.Count >= GlobalSettings.ErrorVertexCount && !(HasOwner && Owner.IgnoreMaximumAllowedVertexCount))
+                    GlobalSettings.MaximumVertexCountExceededException(current.Vertices.Count);
             }
 
-            if (current.Vertices.Count >= WarningVertexCount)
+            if (current.Vertices.Count >= GlobalSettings.WarningVertexCount && !(HasOwner && Owner.IgnoreMaximumAllowedVertexCount))
             {
-                Debug.LogWarning("[Modellular] Warning when compiling the modular mesh stack : The vertex count exceeds the recommended threshold (" + WarningVertexCount + ") : " +
-                    current.Vertices.Count + " vertices generated.");
+                GlobalSettings.MaximumVertexCountExceededWarning(current.Vertices.Count);
             }
 
             Output = current;

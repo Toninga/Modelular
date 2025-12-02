@@ -33,15 +33,17 @@ namespace Modelular.Runtime
             public EColorCoding FaceDisplayMode { get; set; }
             public Color FaceColor { get; set; } = new Color(1f, 0.65f, 0f, 0.5f);
 
-        
+        public bool IgnoreMaximumAllowedVertexCount => IgnoreVertexLimits && UpdateMode == EUpdateMode.Manual;
         #endregion
         #region Fields
         [Header("Parameters")]
 
         [Tooltip("Specifies if the mesh should be updated each time a value is modified")]
-        public EUpdateMode updateMode = EUpdateMode.OnChange;
+        public EUpdateMode UpdateMode = EUpdateMode.OnChange;
+        [Tooltip("If set to true, all limitations for vertex count will be ignored. This option is only available in manual refresh mode.")]
+        public bool IgnoreVertexLimits = false;
 
-        
+
 
         public double LastBakingTime;
 
@@ -53,6 +55,7 @@ namespace Modelular.Runtime
         private SaveFile _saveFile = new();
 
         private int _lastKnownModifierCount;
+        private int _failedBakingAttempts = 0;
         #endregion
 
         #region Methods
@@ -71,6 +74,7 @@ namespace Modelular.Runtime
 
         public void ApplyModifierStack()
         {
+            _failedBakingAttempts++;
             mRenderer = GetComponent<MeshRenderer>();
             mFilter = GetComponent<MeshFilter>();
             stack.Owner = this;
@@ -83,6 +87,7 @@ namespace Modelular.Runtime
                     continue;
                 model.ApplyParameters();
                 model.SetDirty(false);
+                model.underlyingModifier.IgnoreMaximumAllowedVertexCount = IgnoreMaximumAllowedVertexCount;
                 underlyingModifiers.Add(model.underlyingModifier);
             }
 
@@ -108,7 +113,7 @@ namespace Modelular.Runtime
 
             LastBakingTime = EditorApplication.timeSinceStartup;
             _lastKnownModifierCount = Modifiers.Count;
-
+            _failedBakingAttempts = 0;
         }
 
         /// <summary>
@@ -128,45 +133,47 @@ namespace Modelular.Runtime
 
         private void TryRebake()
         {
-            if (updateMode == EUpdateMode.Manual) return;
-            if (updateMode == EUpdateMode.Always)
-            {
-                ApplyModifierStack();
-                return;
-            }
-            if (updateMode == EUpdateMode.OnChange)
-            {
-                bool rebake = (stack.Output == null);
+            bool rebake = (stack.Output == null);
 
-                if (!rebake)
-                {
+            if (_failedBakingAttempts > 5)
+            {
+                rebake = false;
+            }
+
+            switch (UpdateMode)
+            {
+                case EUpdateMode.Manual:
+                    rebake = false;
+                    break;
+                case EUpdateMode.Always:
+                    rebake = !(_failedBakingAttempts > 5);
+                    break;
+                case EUpdateMode.OnChange:
                     if (Modifiers.Count != _lastKnownModifierCount)
                     {
                         rebake = true;
                     }
-                }
-
-                if (!rebake)
-                { 
-                    foreach(ModifierModel model in Modifiers)
+                    if (!rebake)
                     {
-                        if (model == null)
-                            continue;
-                        model.DetectChanges();
-                        if ((model.enabled && model.hasChanged) || (stack.HasModifier(model.underlyingModifier) && !model.enabled))
+                        foreach (ModifierModel model in Modifiers)
                         {
-                            rebake = true;
+                            if (model == null)
+                                continue;
+                            model.DetectChanges();
+                            if ((model.enabled && model.hasChanged) || (stack.HasModifier(model.underlyingModifier) && !model.enabled))
+                            {
+                                rebake = true;
+                            }
                         }
                     }
-                }
-
-                if (rebake)
-                {
-
-                    ApplyModifierStack();
-                }
-                return;
+                    break;
             }
+
+            if (rebake)
+            {
+                ApplyModifierStack();
+            }
+            return;
         }
 
         public bool Save()
