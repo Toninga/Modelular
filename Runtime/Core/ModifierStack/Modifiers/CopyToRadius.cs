@@ -1,7 +1,5 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 namespace Modelular.Runtime
 {
@@ -15,6 +13,7 @@ namespace Modelular.Runtime
         [ModelularDefaultValue("1f")]
         public float Radius { get; set; } = 1f;
         [ModelularDefaultValue("1f")]
+        [Range(0f, 1f)]
         public float Arc01 { get; set; } = 1f;
 
         [ModelularDefaultValue("true")]

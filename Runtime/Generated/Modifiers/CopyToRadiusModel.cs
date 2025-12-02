@@ -8,6 +8,7 @@ namespace Modelular.Runtime
 
 		public int Count = 8;
         public float Radius = 1f;
+        [Range(0f, 1f)]
         public float Arc01 = 1f;
         public bool FaceNormal = true;
         public EAxis Axis = EAxis.Y;

@@ -1,4 +1,3 @@
-
 using Modelular.Runtime;
 using System;
 using System.Collections.Generic;
@@ -66,7 +65,6 @@ namespace Modelular.Editor
             {
                 return;
             }
-            Debug.Log("Type " + type.Name + " is detected as a modifier model");
 
             var decoy = ScriptableObject.CreateInstance(type) as ModifierModel;
             if (decoy == null)
@@ -74,7 +72,6 @@ namespace Modelular.Editor
 
             if (typeof(IPrimitiveModifier).IsAssignableFrom(decoy.underlyingModifier.GetType()))
             {
-                Debug.Log("Type " + type.Name + " is a PRIMITIVE model");
                 primitives.Add(type);
             }
         }
@@ -198,23 +195,14 @@ namespace Modelular.Editor
                 {
                     if (type.IsSubclassOf(typeof(ModifierModel)))
                     {
-                        Debug.Log("[Modelular] : Modifier model found : " + type.Name);
                         var decoy = ScriptableObject.CreateInstance(type);
-                        if (EditorGUIUtility.GetIconForObject(decoy) != null)
+                        if (EditorGUIUtility.GetIconForObject(decoy) == null)
                         {
-                            UnityEngine.Debug.Log("[Modelular] : Icon found on modifier model : " + type.Name);
-
-                        }
-                        else
-                        {
-                            UnityEngine.Debug.Log("[Modelular] : Icon NOT found on modifier model : " + type.Name);
                             if (AssetDatabase.AssetPathExists(Path.Combine(PackagePath, "Editor/Icons", "CustomModifier.png")))
                             {
-                                Debug.Log("[Modelular] : Custom modifier icon found");
                                 Texture2D icon = AssetDatabase.LoadAssetAtPath(Path.Combine(PackagePath, "Editor/Icons", "CustomModifier.png"), typeof(Texture2D)) as Texture2D;
                                 if (icon != null)
                                 {
-                                    Debug.Log("[Modelular] : Custom modifier icon loaded successfully - Trying to assign it");
                                     EditorGUIUtility.SetIconForObject(decoy, icon);
                                 }
                             }
@@ -256,8 +244,33 @@ namespace Modelular.Editor
                     result += " = " + propertyInfo.GetAttribute<ModelularDefaultValueAttribute>().DefaultValue;
             }
             result += ";\n        //[Field]";
+            result = AddAttributesToField(result, propertyInfo);
             return result;
 
+        }
+        private static string AddAttributesToField(string field, PropertyInfo propertyInfo)
+        {
+            string result = field;
+            // Add attributes by reconstructing them individually
+            foreach (var attr in propertyInfo.CustomAttributes)
+            {
+                if (attr.AttributeType == typeof(RangeAttribute))
+                {
+                    var a = propertyInfo.GetAttribute<RangeAttribute>();
+                    result = $"[Range({a.min.ToString().Replace(",", ".")}f, {a.max.ToString().Replace(",", ".")}f)]\n        " + result;
+                }
+                else if (attr.AttributeType == typeof(MinAttribute))
+                {
+                    var a = propertyInfo.GetAttribute<MinAttribute>();
+                    result = $"[Min({a.min.ToString().Replace(",", ".")}f)]\n        " + result;
+                }
+                else if (attr.AttributeType == typeof(HideInInspector))
+                {
+                    var a = propertyInfo.GetAttribute<HideInInspector>();
+                    result = $"[HideInInspector]\n        " + result;
+                }
+            }
+            return result;
         }
         private static string ReplicatedFieldFromProperty(PropertyInfo propertyInfo) => "private " + MatchPropertyType(propertyInfo.PropertyType.Name) + " _" + propertyInfo.Name.FirstCharacterToLower() + ";\n        //[ReplicatedField]";
         private static string SetTargetProperty(PropertyInfo propertyInfo) => "target." + propertyInfo.Name + " = " + propertyInfo.Name + ";\n            //[SetProperty]";
