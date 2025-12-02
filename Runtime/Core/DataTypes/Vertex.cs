@@ -41,6 +41,8 @@ namespace Modelular.Runtime
 
         public override bool Equals(object obj)
         {
+            if (ReferenceEquals(null, obj))
+                return false;
             return obj is Vertex vertex &&
                    position.Equals(vertex.position) &&
                    normal.Equals(vertex.normal) &&
@@ -50,7 +52,7 @@ namespace Modelular.Runtime
                    UV2.Equals(vertex.UV2) &&
                    UV3.Equals(vertex.UV3) &&
                    submesh == vertex.submesh &&
-                   SelectionGroup.Equals(vertex.SelectionGroup);
+                   SelectionGroup == vertex.SelectionGroup;
         }
 
         public override int GetHashCode()
