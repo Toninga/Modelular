@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace Modelular.Runtime
 {
@@ -7,25 +8,21 @@ namespace Modelular.Runtime
     {
         public Vector3 Position { get; set; }
         public Vector3 Rotation { get; set; }
+        [ModelularDefaultValue("Vector3.one")]
         public Vector3 Scale { get; set; } = Vector3.one;
 
         public override StackElement Bake(StackElement previousResult)
         {
-            var mat = MakeMatrix(Rotation, Scale);
+            var rotator = Matrix4x4.Rotate(Quaternion.Euler(Rotation));
+            var scaler = Matrix4x4.Scale(Scale);
+            if (Scale == Vector3.zero)
+                scaler = Matrix4x4.identity;
             foreach (var polygon in previousResult.Polygons)
             {
-                polygon.ReplaceVertices((v) => (mat * v) + Position);
+                polygon.ReplaceVertices((v) => (rotator * scaler * v) + Position);
             }
             return previousResult;
         }
 
-        private Matrix4x4 MakeMatrix(Vector3 rotation, Vector3 scale)
-        {
-            Matrix4x4 result = Matrix4x4.identity;
-            var rotator = Matrix4x4.Rotate(Quaternion.Euler(rotation));
-            var scaler = Matrix4x4.Scale(scale);
-            result = rotator * scaler;
-            return result;
-        }
     }
 }

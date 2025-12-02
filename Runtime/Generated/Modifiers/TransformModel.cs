@@ -8,7 +8,7 @@ namespace Modelular.Runtime
 
 		public Vector3 Position;
         public Vector3 Rotation;
-        public Vector3 Scale;
+        public Vector3 Scale = Vector3.one;
         //[Field]
 
 		// Replicated fields for change detection
