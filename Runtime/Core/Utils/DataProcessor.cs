@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Modelular.Runtime
@@ -73,6 +74,7 @@ namespace Modelular.Runtime
             Dictionary<short, int> verticesPerSubMesh = new Dictionary<short, int>();
             Dictionary<short, int> trisPerSubMesh = new Dictionary<short, int>();
 
+            // Sort vertices by submesh
             int totalVertCount = 0;
             int totalTriCount = 0;
             foreach (var polygon in polygons)
@@ -95,13 +97,18 @@ namespace Modelular.Runtime
                 totalTriCount += polygon.triangles.Count;
             }
 
+            //Sort the submeshes
+            var submeshes = verticesPerSubMesh.Keys.ToList();
+            submeshes.Sort();
+
+            // Iterate over each submesh and assign it's vertices to a SubmeshData
             SubmeshData[] submeshDatas = new SubmeshData[verticesPerSubMesh.Count];
             int md = 0;
-            foreach (var kvp in verticesPerSubMesh)
+            foreach (short submeshIndex in submeshes)
             {
                 SubmeshData submeshData = new SubmeshData();
-                short currentSubmesh = kvp.Key;
-                int vertCount = kvp.Value; // How many vertices there are in this submesh
+                short currentSubmesh = submeshIndex;
+                int vertCount = verticesPerSubMesh[currentSubmesh]; // How many vertices there are in this submesh
                 int triCount = trisPerSubMesh[currentSubmesh]; // How many triangle indices there are in this submesh
 
                 submeshData.ID = currentSubmesh;

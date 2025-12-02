@@ -23,7 +23,8 @@ namespace Modelular.Editor
             ModifierPaths["Copy/Copy to radius"] = typeof(CopyToRadiusModel);
             ModifierPaths["UV/Tiling and offset"] = typeof(UVTilingOffsetModel);
             ModifierPaths["Color/Color gradient"] = typeof(ColorGradientModel);
-            ModifierPaths["SelectByColor"] = typeof(SelectByColorModel);
+            ModifierPaths["Select/Select by color"] = typeof(SelectByColorModel);
+            ModifierPaths["Utility/SetSubmesh"] = typeof(SetSubmeshModel);
             ModifierPaths["Material/SetTexture"] = typeof(SetTextureModel);
             //[PathMatching]
         }

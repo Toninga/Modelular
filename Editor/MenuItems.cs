@@ -9,9 +9,10 @@ namespace Modelular.Editor
 
     public class MenuItems
     {
-        
 
-        [MenuItem("Assets/Create/Modellular/New modifier script", false, 80)]
+
+        [MenuItem("Assets/Create/Modelular/New modifier script", false, -117)]
+        [MenuItem("Assets/Create/Scripting/New modelular modifier script", false, 10, secondaryPriority=0f)]
         public static void CreateModifierScript()
         {
             string path = GetSelectedPathOrFallback();

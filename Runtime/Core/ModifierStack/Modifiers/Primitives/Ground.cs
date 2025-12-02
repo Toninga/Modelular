@@ -22,20 +22,22 @@ namespace Modelular.Runtime
         #region Methods
         public override StackElement Bake(StackElement previousResult)
         {
+            StackElement ground = new();
             var quad = new Quad();
             quad.Size = Size;
             quad.Color = Color;
             quad.OutputSelectionGroup = OutputSelectionGroup;
-            quad.Bake(previousResult);
+            quad.Bake(ground);
 
             var uv = new UVTilingOffset();
             uv.Tiling = new Vector2(Size.x / 2, Size.y / 2);
             uv.Offset = new Vector2(-Size.x / 4, -Size.y / 4);
-            uv.Bake(previousResult);
+            uv.Bake(ground);
 
             var tex = new SetTexture();
             tex.Texture = AssetDatabase.LoadAssetAtPath(Path.Combine(Hierarchy.TexturesPath, "T_ModelularChecker.png"), typeof(Texture2D)) as Texture2D;
-            tex.Bake(previousResult);
+            tex.Bake(ground);
+            previousResult.AddPolygons(ground.Polygons);
             return previousResult;
         }
 

@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Modelular.Runtime
 {
-    [ModelularInterface()]
+    [ModelularInterface("Select/Select by color")]
     public class SelectByColor : Modifier, ISelector
     {
         #region Properties

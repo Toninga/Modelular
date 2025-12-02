@@ -52,7 +52,8 @@ namespace Modelular.Editor
 
         private void DrawModifiersTab(ModularMesh data)
         {
-
+            Undo.RecordObject(data, "Edit modular mesh");
+            bool requestRebake = false;
             GUIStyle darkBackground = new GUIStyle();
             darkBackground.normal.background = MakeTex(1, 1, new Color(0.16f, 0.16f, 0.16f, 1f));
             _position = GUILayout.BeginScrollView(_position, darkBackground, GUILayout.Height(200));
@@ -141,7 +142,6 @@ namespace Modelular.Editor
             GUILayout.BeginHorizontal();
             // ADD MODIFIER button
             GUILayout.ExpandWidth(true);
-            Undo.RecordObject(data, "Add modifier");
             if (GUILayout.Button("Add new modifier"))
             {
                 GenericMenu menu = new GenericMenu();
@@ -172,6 +172,7 @@ namespace Modelular.Editor
                     data.Modifiers.Insert(_selectedModifier - 1, data.Modifiers[_selectedModifier]);
                     data.Modifiers.RemoveAt(_selectedModifier + 1);
                     _selectedModifier--;
+                    requestRebake = true;
                 }
             }
             if (GUILayout.Button("Move down"))
@@ -181,6 +182,7 @@ namespace Modelular.Editor
                     data.Modifiers.Insert(_selectedModifier + 2, data.Modifiers[_selectedModifier]);
                     data.Modifiers.RemoveAt(_selectedModifier);
                     _selectedModifier++;
+                    requestRebake = true;
                 }
             }
             GUILayout.EndHorizontal();
@@ -219,12 +221,9 @@ namespace Modelular.Editor
             }
             GUILayout.EndVertical();
 
-            // Modifier list
-            /*
-            SerializedObject obj = new SerializedObject(data);
-            EditorGUILayout.PropertyField(obj.FindProperty("Modifiers"));
-            obj.ApplyModifiedProperties();
-            */
+            
+            if (requestRebake)
+                data.ApplyModifierStack();
         }
 
         private void DrawVisualizationTab(ModularMesh data)

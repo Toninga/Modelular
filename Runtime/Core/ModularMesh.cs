@@ -79,11 +79,13 @@ namespace Modelular.Runtime
             mFilter = GetComponent<MeshFilter>();
             stack.Owner = this;
 
+            CleanNullModifiers();
+
             // Retrieve the actual modifiers from the models
             underlyingModifiers.Clear();
             foreach(ModifierModel model in Modifiers)
             {
-                if (model == null || !model.enabled)
+                if (!model.enabled)
                     continue;
                 model.ApplyParameters();
                 model.SetDirty(false);
@@ -115,7 +117,21 @@ namespace Modelular.Runtime
             _lastKnownModifierCount = Modifiers.Count;
             _failedBakingAttempts = 0;
         }
-
+        public void CleanNullModifiers()
+        {
+            List<int> indexToPop = new List<int>();
+            for (int i = 0; i < Modifiers.Count; i++)
+            {
+                var model = Modifiers[i];
+                if (model == null || model.underlyingModifier == null)
+                    indexToPop.Add(i);
+            }
+            indexToPop.Reverse();
+            foreach (var index in indexToPop)
+            {
+                Modifiers.RemoveAt(index);
+            }
+        }
         /// <summary>
         /// Adds this modifier to the stack only if no modifier of this type is contained in the stack
         /// <return>Whether or not the modifier was added - if false, the modifier was already there</return>

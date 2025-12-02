@@ -24,7 +24,7 @@ namespace Modelular.Editor
         /// <summary>
         /// Regenerate scripts such as ModifierModels, the model list used for the "add modifier" button of the modular mesh component, or for the primitive menu items
         /// </summary>
-        [MenuItem("Modelular/Refresh editor scripts")]
+        [MenuItem("CONTEXT/ModularMesh/Refresh editor scripts")]
         public static void RefreshModelularScripts()
         {
             Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
