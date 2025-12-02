@@ -24,7 +24,7 @@ namespace Modelular.Editor
             ModifierPaths["UV/Tiling and offset"] = typeof(UVTilingOffsetModel);
             ModifierPaths["Color/Color gradient"] = typeof(ColorGradientModel);
             ModifierPaths["Select/Select by color"] = typeof(SelectByColorModel);
-            ModifierPaths["Utility/SetSubmesh"] = typeof(SetSubmeshModel);
+            ModifierPaths["Utility/Set Submesh"] = typeof(SetSubmeshModel);
             ModifierPaths["Material/SetTexture"] = typeof(SetTextureModel);
             //[PathMatching]
         }
