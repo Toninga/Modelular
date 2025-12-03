@@ -6,6 +6,7 @@ namespace Modelular.Runtime
     public class ColorGradient : Modifier, IModifier
     {
         #region Properties
+        public string TargetBoundingMesh { get; set; }
         public string TargetSelectionGroup { get; set; }
         [ModelularDefaultValue("Vector3.up")]
         public Vector3 Direction { get; set; } = Vector3.up;
@@ -47,7 +48,7 @@ namespace Modelular.Runtime
             float max = float.MinValue;
             left = new Vertex();
             right = new Vertex();
-            foreach (Vertex v in previousResult.Vertices)
+            foreach (Vertex v in previousResult.GetVertices(TargetBoundingMesh))
             {
                 float d = Vector3.Dot(v.position, dir);
                 if (d < min)
@@ -61,6 +62,7 @@ namespace Modelular.Runtime
                     max = d;
                 }
             }
+
         }
 
         #endregion

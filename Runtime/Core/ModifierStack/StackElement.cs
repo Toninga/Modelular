@@ -48,6 +48,7 @@ namespace Modelular.Runtime
                 Polygons.Clear();
                 return;
             }
+            DetectVertices();
         }
         /// <summary>
         /// Returns a copy of the polygons that belong to this selection. Modifications made to this list will not be reflected in the StackElement
@@ -79,13 +80,10 @@ namespace Modelular.Runtime
             {
                 if (!SelectionStacksByName.ContainsKey(targetSelectionGroup))
                     return Vertices;
-                for (int p = 0; p < Polygons.Count; p++)
+                for (int v = 0; v < Vertices.Count; v++)
                 {
-                    for (int v = 0; v < Polygons[p].vertices.Count; v++)
-                    {
-                        if (SelectionStacksByName[targetSelectionGroup].Contains(Polygons[p].vertices[v]))
-                            result.Add(Vertices[v]);
-                    }
+                    if (SelectionStacksByName[targetSelectionGroup].Contains(Vertices[v]))
+                        result.Add(Vertices[v]);
                 }
                 return result;
             }
@@ -106,7 +104,7 @@ namespace Modelular.Runtime
                     Polygons.Add(new Polygon(p, targetSelectionGroup));
             }
 
-                DetectVertices();
+            DetectVertices();
         }
         public void AddPolygon(Polygon polygon, string targetSelectionGroup = default)
         {
@@ -183,8 +181,7 @@ namespace Modelular.Runtime
             if (other.Polygons != null)
                 Polygons.AddRange(other.Polygons);
 
-            if (other.Vertices != null)
-                Vertices.AddRange(other.Vertices);
+            DetectVertices();
 
             // The mesh property isn't merged, it will be regenerated on the next rebake instead
 

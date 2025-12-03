@@ -6,7 +6,8 @@ namespace Modelular.Runtime
 	{
 		#region Fields
 
-		public string TargetSelectionGroup;
+		public string TargetBoundingMesh;
+        public string TargetSelectionGroup;
         public Vector3 Direction = Vector3.up;
         public Color ColorA = Color.black;
         public Color ColorB = Color.white;
@@ -15,7 +16,8 @@ namespace Modelular.Runtime
 
 		// Replicated fields for change detection
 		private bool _enabled;
-		private string _targetSelectionGroup;
+		private string _targetBoundingMesh;
+        private string _targetSelectionGroup;
         private Vector3 _direction;
         private Color _colorA;
         private Color _colorB;
@@ -30,7 +32,8 @@ namespace Modelular.Runtime
 		public override void ApplyParameters()
 		{
 			var target = (underlyingModifier as Modelular.Runtime.ColorGradient);
-			target.TargetSelectionGroup = TargetSelectionGroup;
+			target.TargetBoundingMesh = TargetBoundingMesh;
+            target.TargetSelectionGroup = TargetSelectionGroup;
             target.Direction = Direction;
             target.ColorA = ColorA;
             target.ColorB = ColorB;
@@ -43,7 +46,8 @@ namespace Modelular.Runtime
 			if
 			(
 			enabled != _enabled ||
-			 _targetSelectionGroup != TargetSelectionGroup ||
+			 _targetBoundingMesh != TargetBoundingMesh ||
+                 _targetSelectionGroup != TargetSelectionGroup ||
                  _direction != Direction ||
                  _colorA != ColorA ||
                  _colorB != ColorB ||
@@ -56,7 +60,8 @@ namespace Modelular.Runtime
 			}
 			// Reset the mirrored fields
 			_enabled = enabled;
-			 _targetSelectionGroup = TargetSelectionGroup;
+			 _targetBoundingMesh = TargetBoundingMesh;
+             _targetSelectionGroup = TargetSelectionGroup;
              _direction = Direction;
              _colorA = ColorA;
              _colorB = ColorB;

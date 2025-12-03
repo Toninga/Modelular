@@ -9,6 +9,7 @@ namespace Modelular.Runtime
 		public STransform Transform = STransform.Default();
         public ModularMesh LinkedMesh;
         public string TargetSelectionGroup;
+        public SelectorParameters OutputParameters;
         public bool IgnoreVertexLimits;
         //[Field]
 
@@ -17,6 +18,7 @@ namespace Modelular.Runtime
 		private STransform _transform;
         private ModularMesh _linkedMesh;
         private string _targetSelectionGroup;
+        private SelectorParameters _outputParameters;
         private bool _ignoreVertexLimits;
         //[ReplicatedField]
 
@@ -31,6 +33,7 @@ namespace Modelular.Runtime
 			target.Transform = Transform;
             target.LinkedMesh = LinkedMesh;
             target.TargetSelectionGroup = TargetSelectionGroup;
+            target.OutputParameters = OutputParameters;
             target.IgnoreVertexLimits = IgnoreVertexLimits;
             //[SetProperty]
 		}
@@ -43,6 +46,7 @@ namespace Modelular.Runtime
 			 _transform != Transform ||
                  _linkedMesh != LinkedMesh ||
                  _targetSelectionGroup != TargetSelectionGroup ||
+                 _outputParameters != OutputParameters ||
                  _ignoreVertexLimits != IgnoreVertexLimits ||
                 //[ChangeCheck]
 			false
@@ -55,6 +59,7 @@ namespace Modelular.Runtime
 			 _transform = Transform;
              _linkedMesh = LinkedMesh;
              _targetSelectionGroup = TargetSelectionGroup;
+             _outputParameters = OutputParameters;
              _ignoreVertexLimits = IgnoreVertexLimits;
             //[ReplicatedFieldReset]
 

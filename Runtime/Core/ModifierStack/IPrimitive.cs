@@ -1,6 +1,5 @@
 
-
-using UnityEngine;
+using System.Collections.Generic;
 
 namespace Modelular.Runtime
 {
@@ -19,6 +18,14 @@ namespace Modelular.Runtime
             var col = new SetColor();
             col.Color = DefaultParameters.Color;
             col.Bake(other);
+        }
+
+        public List<Polygon> ApplyDefaultParameters(List<Polygon> other)
+        {
+            StackElement elm = new StackElement();
+            elm.AddPolygons(other);
+            ApplyDefaultParameters(elm);
+            return elm.Polygons;
         }
     }
 }
