@@ -6,7 +6,9 @@ namespace Modelular.Runtime
 	{
 		#region Fields
 
-		public Vector3Int Count = Vector3Int.one * 2;
+		public string TargetSelectionGroup;
+        public SelectorParameters OutputParameters;
+        public Vector3Int Count = Vector3Int.one * 2;
         public Vector3 Distance = Vector3.one;
         public ECenterMode CenterMode = ECenterMode.Centered;
         public EGridLayoutMode GridLayout = EGridLayoutMode.FixedSize;
@@ -15,7 +17,9 @@ namespace Modelular.Runtime
 
 		// Replicated fields for change detection
 		private bool _enabled;
-		private Vector3Int _count;
+		private string _targetSelectionGroup;
+        private SelectorParameters _outputParameters;
+        private Vector3Int _count;
         private Vector3 _distance;
         private ECenterMode _centerMode;
         private EGridLayoutMode _gridLayout;
@@ -30,7 +34,9 @@ namespace Modelular.Runtime
 		public override void ApplyParameters()
 		{
 			var target = (underlyingModifier as Modelular.Runtime.CopyToGrid);
-			target.Count = Count;
+			target.TargetSelectionGroup = TargetSelectionGroup;
+            target.OutputParameters = OutputParameters;
+            target.Count = Count;
             target.Distance = Distance;
             target.CenterMode = CenterMode;
             target.GridLayout = GridLayout;
@@ -43,7 +49,9 @@ namespace Modelular.Runtime
 			if
 			(
 			enabled != _enabled ||
-			 _count != Count ||
+			 _targetSelectionGroup != TargetSelectionGroup ||
+                 _outputParameters != OutputParameters ||
+                 _count != Count ||
                  _distance != Distance ||
                  _centerMode != CenterMode ||
                  _gridLayout != GridLayout ||
@@ -56,7 +64,9 @@ namespace Modelular.Runtime
 			}
 			// Reset the mirrored fields
 			_enabled = enabled;
-			 _count = Count;
+			 _targetSelectionGroup = TargetSelectionGroup;
+             _outputParameters = OutputParameters;
+             _count = Count;
              _distance = Distance;
              _centerMode = CenterMode;
              _gridLayout = GridLayout;

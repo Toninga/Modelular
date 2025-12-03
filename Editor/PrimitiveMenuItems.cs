@@ -11,7 +11,7 @@ namespace Modelular.Editor
         public static void NewCylinder(MenuCommand menuCommand) => ModelularMeshGenerator.New(menuCommand, typeof(CylinderModel));
         [MenuItem("GameObject/3D Object/Modelular/Quad", priority = 1)]
         public static void NewQuad(MenuCommand menuCommand) => ModelularMeshGenerator.New(menuCommand, typeof(QuadModel));
-        [MenuItem("GameObject/3D Object/Modelular/UVSphere", priority = 1)]
+        [MenuItem("GameObject/3D Object/Modelular/UV Sphere", priority = 1)]
         public static void NewUVSphere(MenuCommand menuCommand) => ModelularMeshGenerator.New(menuCommand, typeof(UVSphereModel));
         //[MenuItem]
     }

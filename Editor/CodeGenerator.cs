@@ -70,7 +70,7 @@ namespace Modelular.Editor
             if (decoy == null)
                 return;
 
-            if (typeof(IPrimitiveModifier).IsAssignableFrom(decoy.underlyingModifier.GetType()))
+            if (typeof(IPrimitive).IsAssignableFrom(decoy.underlyingModifier.GetType()))
             {
                 primitives.Add(type);
             }
@@ -298,7 +298,7 @@ namespace Modelular.Editor
             string result = "";
             for (int i = 0; i < text.Length; i++)
             {
-                if (i > 0 && text[i - 1] == text.ToLower()[i - 1] && text[i] == text.ToUpper()[i])
+                if (i > 0 && i < text.Length - 1 && text[i + 1] == text.ToLower()[i + 1] && text[i] == text.ToUpper()[i])
                     result += " ";
                 result += text[i];
             }

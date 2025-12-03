@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Modelular.Runtime
 {
-    public interface IPrimitiveModifier
+    public interface IPrimitive
     {
         public DefaultPrimitiveProperties DefaultParameters {get; set;}
 
@@ -13,9 +13,7 @@ namespace Modelular.Runtime
             other.ReplacePolygons((p) => new Polygon(p, DefaultParameters.OutputSelectionGroup));
 
             var trans = new Transform();
-            trans.Position = DefaultParameters.Transform.Position;
-            trans.Rotation = DefaultParameters.Transform.Rotation;
-            trans.Scale = DefaultParameters.Transform.Scale;
+            trans.Setup(DefaultParameters.Transform);
             trans.Bake(other);
 
             var col = new SetColor();

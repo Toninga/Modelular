@@ -7,15 +7,14 @@ namespace Modelular.Runtime
     public class SelectByNormal : Modifier, ISelector
     {
         #region Parameters
-        public string OutputSelectionGroup { get; set; } = "SelectByNormal";
-        public ESelectionOperand SelectionOperand { get; set; } = ESelectionOperand.Union;
+        public SelectorParameters OutputParameters { get; private set; }
         public Vector3 Normal { get; set; } = Vector3.up;
         public float Tolerance01 { get; set; } = 0.5f;
         #endregion
         public override StackElement Bake(StackElement previousResult)
         {
             var selector = new Selector(Select);
-            previousResult.AddSelection(OutputSelectionGroup, selector);
+            previousResult.AddSelection(OutputParameters.OutputSelectionGroup, selector);
             return previousResult;
         }
 

@@ -3,7 +3,7 @@ using UnityEngine;
 namespace Modelular.Runtime
 {
     [ModelularInterface("Utility/Set Submesh")]
-    public class SetSubmesh : Modifier
+    public class SetSubmesh : Modifier, IModifier
     {
         #region Properties
         public string TargetSelectionGroup { get; set; }

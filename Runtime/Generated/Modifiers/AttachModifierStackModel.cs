@@ -6,13 +6,17 @@ namespace Modelular.Runtime
 	{
 		#region Fields
 
-		public ModularMesh LinkedMesh;
+		public STransform Transform = STransform.Default();
+        public ModularMesh LinkedMesh;
+        public string TargetSelectionGroup;
         public bool IgnoreVertexLimits;
         //[Field]
 
 		// Replicated fields for change detection
 		private bool _enabled;
-		private ModularMesh _linkedMesh;
+		private STransform _transform;
+        private ModularMesh _linkedMesh;
+        private string _targetSelectionGroup;
         private bool _ignoreVertexLimits;
         //[ReplicatedField]
 
@@ -24,7 +28,9 @@ namespace Modelular.Runtime
 		public override void ApplyParameters()
 		{
 			var target = (underlyingModifier as Modelular.Runtime.AttachModifierStack);
-			target.LinkedMesh = LinkedMesh;
+			target.Transform = Transform;
+            target.LinkedMesh = LinkedMesh;
+            target.TargetSelectionGroup = TargetSelectionGroup;
             target.IgnoreVertexLimits = IgnoreVertexLimits;
             //[SetProperty]
 		}
@@ -34,7 +40,9 @@ namespace Modelular.Runtime
 			if
 			(
 			enabled != _enabled ||
-			 _linkedMesh != LinkedMesh ||
+			 _transform != Transform ||
+                 _linkedMesh != LinkedMesh ||
+                 _targetSelectionGroup != TargetSelectionGroup ||
                  _ignoreVertexLimits != IgnoreVertexLimits ||
                 //[ChangeCheck]
 			false
@@ -44,7 +52,9 @@ namespace Modelular.Runtime
 			}
 			// Reset the mirrored fields
 			_enabled = enabled;
-			 _linkedMesh = LinkedMesh;
+			 _transform = Transform;
+             _linkedMesh = LinkedMesh;
+             _targetSelectionGroup = TargetSelectionGroup;
              _ignoreVertexLimits = IgnoreVertexLimits;
             //[ReplicatedFieldReset]
 

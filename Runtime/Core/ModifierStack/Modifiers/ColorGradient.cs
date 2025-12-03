@@ -3,23 +3,25 @@ using UnityEngine;
 namespace Modelular.Runtime
 {
     [ModelularInterface("Color/Color gradient")]
-    public class ColorGradient : Modifier
+    public class ColorGradient : Modifier, IModifier
     {
         #region Properties
+        public string TargetSelectionGroup { get; set; }
         [ModelularDefaultValue("Vector3.up")]
         public Vector3 Direction { get; set; } = Vector3.up;
-        public Color ColorA { get; set; }
+        [ModelularDefaultValue("Color.black")]
+        public Color ColorA { get; set; } = Color.black;
         [ModelularDefaultValue("Color.white")]
         public Color ColorB { get; set; } = Color.white;
 
         #endregion
 
-        
+
         #region Methods
         public override StackElement Bake(StackElement previousResult)
         {
             FindEndVertices(previousResult, out Vertex l, out Vertex r);
-            previousResult.ReplaceVertices((v) => new Vertex(v, overrideColor: NewColor(v, l, r, Direction.normalized)));
+            previousResult.ReplaceVertices((v) => new Vertex(v, overrideColor: NewColor(v, l, r, Direction.normalized)), TargetSelectionGroup);
             return previousResult;
         }
 

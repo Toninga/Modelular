@@ -1,14 +1,19 @@
+using System;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace Modelular.Runtime
 {
     [ModelularInterface("Transform", -1)]
-    public class Transform : Modifier
+    public class Transform : Modifier, IModifier
     {
+        #region Parameters
+        public string TargetSelectionGroup { get; set; }
         public Vector3 Position { get; set; }
         public Vector3 Rotation { get; set; }
         [ModelularDefaultValue("Vector3.one")]
         public Vector3 Scale { get; set; } = Vector3.one;
+        #endregion
 
         public override StackElement Bake(StackElement previousResult)
         {
@@ -16,12 +21,16 @@ namespace Modelular.Runtime
             var scaler = Matrix4x4.Scale(Scale);
             if (Scale == Vector3.zero)
                 scaler = Matrix4x4.identity;
-            foreach (var polygon in previousResult.Polygons)
-            {
-                polygon.ReplaceVertices((v) => (rotator * scaler * v) + Position);
-            }
+
+            previousResult.ReplaceVertices((v) => (rotator * scaler * v) + Position, TargetSelectionGroup);
             return previousResult;
         }
 
+        public void Setup(STransform transform)
+        {
+            Position = transform.Position;
+            Rotation = transform.Rotation;
+            Scale = transform.Scale;
+        }
     }
 }

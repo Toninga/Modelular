@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Modelular.Runtime
 {
     [ModelularInterface("Primitives/UV Sphere", 0)]
-    public class UVSphere : Modifier, IPrimitiveModifier
+    public class UVSphere : Modifier, IPrimitive
     {
         #region Parameters
         [ModelularDefaultValue("DefaultPrimitiveProperties.Default()")]
@@ -26,7 +26,7 @@ namespace Modelular.Runtime
         {
             StackElement obj = new StackElement();
             obj.AddPolygons(MakeUVSphere(Radius, HorizontalSubdivisions, VerticalSubdivisions), DefaultParameters.OutputSelectionGroup);
-            (this as IPrimitiveModifier).ApplyDefaultParameters(obj);
+            (this as IPrimitive).ApplyDefaultParameters(obj);
 
 
             previousResult.Merge(obj);

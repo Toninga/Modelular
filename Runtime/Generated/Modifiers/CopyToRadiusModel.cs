@@ -6,7 +6,9 @@ namespace Modelular.Runtime
 	{
 		#region Fields
 
-		public int Count = 8;
+		public string TargetSelectionGroup;
+        public SelectorParameters OutputParameters;
+        public int Count = 8;
         public float Radius = 1f;
         [Range(0f, 1f)]
         public float Arc01 = 1f;
@@ -17,7 +19,9 @@ namespace Modelular.Runtime
 
 		// Replicated fields for change detection
 		private bool _enabled;
-		private int _count;
+		private string _targetSelectionGroup;
+        private SelectorParameters _outputParameters;
+        private int _count;
         private float _radius;
         private float _arc01;
         private bool _faceNormal;
@@ -33,7 +37,9 @@ namespace Modelular.Runtime
 		public override void ApplyParameters()
 		{
 			var target = (underlyingModifier as Modelular.Runtime.CopyToRadius);
-			target.Count = Count;
+			target.TargetSelectionGroup = TargetSelectionGroup;
+            target.OutputParameters = OutputParameters;
+            target.Count = Count;
             target.Radius = Radius;
             target.Arc01 = Arc01;
             target.FaceNormal = FaceNormal;
@@ -47,7 +53,9 @@ namespace Modelular.Runtime
 			if
 			(
 			enabled != _enabled ||
-			 _count != Count ||
+			 _targetSelectionGroup != TargetSelectionGroup ||
+                 _outputParameters != OutputParameters ||
+                 _count != Count ||
                  _radius != Radius ||
                  _arc01 != Arc01 ||
                  _faceNormal != FaceNormal ||
@@ -61,7 +69,9 @@ namespace Modelular.Runtime
 			}
 			// Reset the mirrored fields
 			_enabled = enabled;
-			 _count = Count;
+			 _targetSelectionGroup = TargetSelectionGroup;
+             _outputParameters = OutputParameters;
+             _count = Count;
              _radius = Radius;
              _arc01 = Arc01;
              _faceNormal = FaceNormal;

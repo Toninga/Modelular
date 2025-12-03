@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Modelular.Runtime
 {
     [ModelularInterface("Primitives/Cube", 0)]
-    public class Cube : Modifier, IPrimitiveModifier
+    public class Cube : Modifier, IPrimitive
     {
         #region Parameters
         [ModelularDefaultValue("DefaultPrimitiveProperties.Default()")]
@@ -23,7 +23,7 @@ namespace Modelular.Runtime
         {
             StackElement obj = new StackElement();
             obj.AddPolygons(Make(Size), DefaultParameters.OutputSelectionGroup);
-            (this as IPrimitiveModifier).ApplyDefaultParameters(obj);
+            (this as IPrimitive).ApplyDefaultParameters(obj);
             
 
 

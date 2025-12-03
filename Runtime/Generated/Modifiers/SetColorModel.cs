@@ -6,15 +6,15 @@ namespace Modelular.Runtime
 	{
 		#region Fields
 
-		public Color Color = Color.white;
-        public string TargetSelectionGroup;
+		public string TargetSelectionGroup;
+        public Color Color = Color.white;
         public bool IgnoreVertexLimits;
         //[Field]
 
 		// Replicated fields for change detection
 		private bool _enabled;
-		private Color _color;
-        private string _targetSelectionGroup;
+		private string _targetSelectionGroup;
+        private Color _color;
         private bool _ignoreVertexLimits;
         //[ReplicatedField]
 
@@ -26,8 +26,8 @@ namespace Modelular.Runtime
 		public override void ApplyParameters()
 		{
 			var target = (underlyingModifier as Modelular.Runtime.SetColor);
-			target.Color = Color;
-            target.TargetSelectionGroup = TargetSelectionGroup;
+			target.TargetSelectionGroup = TargetSelectionGroup;
+            target.Color = Color;
             target.IgnoreVertexLimits = IgnoreVertexLimits;
             //[SetProperty]
 		}
@@ -37,8 +37,8 @@ namespace Modelular.Runtime
 			if
 			(
 			enabled != _enabled ||
-			 _color != Color ||
-                 _targetSelectionGroup != TargetSelectionGroup ||
+			 _targetSelectionGroup != TargetSelectionGroup ||
+                 _color != Color ||
                  _ignoreVertexLimits != IgnoreVertexLimits ||
                 //[ChangeCheck]
 			false
@@ -48,8 +48,8 @@ namespace Modelular.Runtime
 			}
 			// Reset the mirrored fields
 			_enabled = enabled;
-			 _color = Color;
-             _targetSelectionGroup = TargetSelectionGroup;
+			 _targetSelectionGroup = TargetSelectionGroup;
+             _color = Color;
              _ignoreVertexLimits = IgnoreVertexLimits;
             //[ReplicatedFieldReset]
 

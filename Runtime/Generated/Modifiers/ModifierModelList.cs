@@ -15,8 +15,7 @@ namespace Modelular.Editor
             ModifierPaths["Primitives/Ground"] = typeof(GroundModel);
             ModifierPaths["Primitives/Quad"] = typeof(QuadModel);
             ModifierPaths["Primitives/UV Sphere"] = typeof(UVSphereModel);
-            ModifierPaths["Normals/Flip faces"] = typeof(FlipFacesModel);
-            ModifierPaths["Normals/Flip normals"] = typeof(FlipNormalsModel);
+            ModifierPaths["Normals/Flip"] = typeof(FlipModel);
             ModifierPaths["Color/Set color"] = typeof(SetColorModel);
             ModifierPaths["Utility/Attach modifier stack"] = typeof(AttachModifierStackModel);
             ModifierPaths["Copy/Copy to grid"] = typeof(CopyToGridModel);

@@ -6,7 +6,8 @@ namespace Modelular.Runtime
 	{
 		#region Fields
 
-		public Vector3 Position;
+		public string TargetSelectionGroup;
+        public Vector3 Position;
         public Vector3 Rotation;
         public Vector3 Scale = Vector3.one;
         public bool IgnoreVertexLimits;
@@ -14,7 +15,8 @@ namespace Modelular.Runtime
 
 		// Replicated fields for change detection
 		private bool _enabled;
-		private Vector3 _position;
+		private string _targetSelectionGroup;
+        private Vector3 _position;
         private Vector3 _rotation;
         private Vector3 _scale;
         private bool _ignoreVertexLimits;
@@ -28,7 +30,8 @@ namespace Modelular.Runtime
 		public override void ApplyParameters()
 		{
 			var target = (underlyingModifier as Modelular.Runtime.Transform);
-			target.Position = Position;
+			target.TargetSelectionGroup = TargetSelectionGroup;
+            target.Position = Position;
             target.Rotation = Rotation;
             target.Scale = Scale;
             target.IgnoreVertexLimits = IgnoreVertexLimits;
@@ -40,7 +43,8 @@ namespace Modelular.Runtime
 			if
 			(
 			enabled != _enabled ||
-			 _position != Position ||
+			 _targetSelectionGroup != TargetSelectionGroup ||
+                 _position != Position ||
                  _rotation != Rotation ||
                  _scale != Scale ||
                  _ignoreVertexLimits != IgnoreVertexLimits ||
@@ -52,7 +56,8 @@ namespace Modelular.Runtime
 			}
 			// Reset the mirrored fields
 			_enabled = enabled;
-			 _position = Position;
+			 _targetSelectionGroup = TargetSelectionGroup;
+             _position = Position;
              _rotation = Rotation;
              _scale = Scale;
              _ignoreVertexLimits = IgnoreVertexLimits;

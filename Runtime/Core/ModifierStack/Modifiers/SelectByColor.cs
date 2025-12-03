@@ -7,8 +7,7 @@ namespace Modelular.Runtime
     public class SelectByColor : Modifier, ISelector
     {
         #region Properties
-        public string OutputSelectionGroup {get;set;}
-        public ESelectionOperand SelectionOperand {get;set;}
+        public SelectorParameters OutputParameters { get; set; }
         [ModelularDefaultValue("Color.white")]
         public Color Color {get;set;} = Color.white;
         public float Tolerance01 { get;set;}
@@ -19,7 +18,7 @@ namespace Modelular.Runtime
         #region Methods
         public override StackElement Bake(StackElement previousResult)
         {
-            previousResult.AddSelection(OutputSelectionGroup, new Selector(Select));
+            previousResult.AddSelection(OutputParameters.OutputSelectionGroup, new Selector(Select));
             return previousResult;
         }
 

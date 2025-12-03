@@ -41,7 +41,7 @@ namespace Modelular.Runtime
             }
             if (vertex.normal != Vector3.zero)
             {
-                Vector3 p = (Vector3)(transform.localToWorldMatrix * new Vector4(vertex.x, vertex.y, vertex.z, 1)) + transform.position;
+                Vector3 p = (Vector3)(transform.localToWorldMatrix * new Vector4(vertex.x, vertex.y, vertex.z, 1));
                 Vector4 n = vertex.normal.normalized;
                 Gizmos.DrawLine(p, p + (Vector3)(transform.rotation * n * length));
             }
@@ -95,7 +95,7 @@ namespace Modelular.Runtime
             if (color == default)
                 color = Color.white;
 
-            Vector3 p = (Vector3)(transform.localToWorldMatrix * new Vector4(vertex.x, vertex.y, vertex.z, 1)) + transform.position;
+            Vector3 p = (Vector3)(transform.localToWorldMatrix * new Vector4(vertex.x, vertex.y, vertex.z, 1));
             Camera editorCam = Camera.current;
             float s = size;
             if (editorCam != null)

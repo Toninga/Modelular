@@ -11,7 +11,7 @@ namespace Modelular.Runtime
     public class ModularMesh : MonoBehaviour
     {
         #region Properties
-
+        public SelectorParameters test = new();
         public ModifierStack Stack => stack;
         public List<ModifierModel> Modifiers = new();
         public MeshRenderer MeshRenderer => mRenderer;
@@ -32,6 +32,8 @@ namespace Modelular.Runtime
         public bool ShowFaces { get; set; }
             public EColorCoding FaceDisplayMode { get; set; }
             public Color FaceColor { get; set; } = new Color(1f, 0.65f, 0f, 0.5f);
+        public bool ShowWireframe { get; set; }
+            public Color WireframeColor { get; set; } = new Color(1f, 0.65f, 0f, 1f);
 
         public bool IgnoreMaximumAllowedVertexCount => IgnoreVertexLimits && UpdateMode == EUpdateMode.Manual;
         #endregion
@@ -230,14 +232,23 @@ namespace Modelular.Runtime
 #if UNITY_EDITOR
         private void OnDrawGizmos()
         {
-            if (ShowVertices)
+            if (ShowVertices && stack.Output != null && stack.Output.Vertices != null)
                 Visualization.DrawVertices(stack.Output.Vertices, transform, VertexDisplaySize, VertexDisplayMode, VertexColor);
-            if (ShowVertexNumber)
+
+            if (ShowVertexNumber && ShowVertices && stack.Output != null && stack.Output.Vertices != null)
                 Visualization.DrawVertexNumbers(stack.Output.Vertices, transform, VertexNumberDistance);
-            if (ShowFaces)
+
+            if (ShowFaces && stack.Output != null && stack.Output.Polygons != null)
                 Visualization.DrawFaces(stack.Output.Polygons, transform, FaceDisplayMode, FaceColor);
-            if (ShowNormals)
+
+            if (ShowNormals && stack.Output != null && stack.Output.Vertices != null)
                 Visualization.DrawNormals(stack.Output.Vertices, transform, NormalDisplaySize, NormalDisplayMode, NormalColor);
+
+            if (ShowWireframe && stack.Output != null && stack.Output.Mesh != null)
+            {
+                Gizmos.color = WireframeColor;
+                Gizmos.DrawWireMesh(stack.Output.Mesh, transform.position, transform.rotation, transform.localScale);;
+            }
         }
 #endif
 

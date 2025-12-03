@@ -2,35 +2,35 @@ using UnityEngine;
 
 namespace Modelular.Runtime
 {
-	public class UVTilingOffsetModel : ModifierModel
+	public class FlipModel : ModifierModel
 	{
 		#region Fields
 
 		public string TargetSelectionGroup;
-        public Vector2 Tiling = Vector2.one;
-        public Vector2 Offset;
+        public bool FlipFaces = true;
+        public bool FlipNormals = true;
         public bool IgnoreVertexLimits;
         //[Field]
 
 		// Replicated fields for change detection
 		private bool _enabled;
 		private string _targetSelectionGroup;
-        private Vector2 _tiling;
-        private Vector2 _offset;
+        private bool _flipFaces;
+        private bool _flipNormals;
         private bool _ignoreVertexLimits;
         //[ReplicatedField]
 
 		#endregion
-		public UVTilingOffsetModel()
+		public FlipModel()
 		{
-			underlyingModifier = new Modelular.Runtime.UVTilingOffset();
+			underlyingModifier = new Modelular.Runtime.Flip();
 		}
 		public override void ApplyParameters()
 		{
-			var target = (underlyingModifier as Modelular.Runtime.UVTilingOffset);
+			var target = (underlyingModifier as Modelular.Runtime.Flip);
 			target.TargetSelectionGroup = TargetSelectionGroup;
-            target.Tiling = Tiling;
-            target.Offset = Offset;
+            target.FlipFaces = FlipFaces;
+            target.FlipNormals = FlipNormals;
             target.IgnoreVertexLimits = IgnoreVertexLimits;
             //[SetProperty]
 		}
@@ -41,8 +41,8 @@ namespace Modelular.Runtime
 			(
 			enabled != _enabled ||
 			 _targetSelectionGroup != TargetSelectionGroup ||
-                 _tiling != Tiling ||
-                 _offset != Offset ||
+                 _flipFaces != FlipFaces ||
+                 _flipNormals != FlipNormals ||
                  _ignoreVertexLimits != IgnoreVertexLimits ||
                 //[ChangeCheck]
 			false
@@ -53,8 +53,8 @@ namespace Modelular.Runtime
 			// Reset the mirrored fields
 			_enabled = enabled;
 			 _targetSelectionGroup = TargetSelectionGroup;
-             _tiling = Tiling;
-             _offset = Offset;
+             _flipFaces = FlipFaces;
+             _flipNormals = FlipNormals;
              _ignoreVertexLimits = IgnoreVertexLimits;
             //[ReplicatedFieldReset]
 

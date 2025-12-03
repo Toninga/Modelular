@@ -6,8 +6,7 @@ namespace Modelular.Runtime
 	{
 		#region Fields
 
-		public string OutputSelectionGroup;
-        public ESelectionOperand SelectionOperand;
+		public SelectorParameters OutputParameters;
         public Color Color = Color.white;
         public float Tolerance01;
         public bool IgnoreVertexLimits;
@@ -15,8 +14,7 @@ namespace Modelular.Runtime
 
 		// Replicated fields for change detection
 		private bool _enabled;
-		private string _outputSelectionGroup;
-        private ESelectionOperand _selectionOperand;
+		private SelectorParameters _outputParameters;
         private Color _color;
         private float _tolerance01;
         private bool _ignoreVertexLimits;
@@ -30,8 +28,7 @@ namespace Modelular.Runtime
 		public override void ApplyParameters()
 		{
 			var target = (underlyingModifier as Modelular.Runtime.SelectByColor);
-			target.OutputSelectionGroup = OutputSelectionGroup;
-            target.SelectionOperand = SelectionOperand;
+			target.OutputParameters = OutputParameters;
             target.Color = Color;
             target.Tolerance01 = Tolerance01;
             target.IgnoreVertexLimits = IgnoreVertexLimits;
@@ -43,8 +40,7 @@ namespace Modelular.Runtime
 			if
 			(
 			enabled != _enabled ||
-			 _outputSelectionGroup != OutputSelectionGroup ||
-                 _selectionOperand != SelectionOperand ||
+			 _outputParameters != OutputParameters ||
                  _color != Color ||
                  _tolerance01 != Tolerance01 ||
                  _ignoreVertexLimits != IgnoreVertexLimits ||
@@ -56,8 +52,7 @@ namespace Modelular.Runtime
 			}
 			// Reset the mirrored fields
 			_enabled = enabled;
-			 _outputSelectionGroup = OutputSelectionGroup;
-             _selectionOperand = SelectionOperand;
+			 _outputParameters = OutputParameters;
              _color = Color;
              _tolerance01 = Tolerance01;
              _ignoreVertexLimits = IgnoreVertexLimits;

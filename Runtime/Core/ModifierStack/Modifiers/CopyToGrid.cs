@@ -4,9 +4,11 @@ using UnityEngine;
 namespace Modelular.Runtime
 {
     [ModelularInterface("Copy/Copy to grid", 60)]
-    public class CopyToGrid : Modifier
+    public class CopyToGrid : Modifier, IModifier, ISelector
     {
         #region Properties
+        public string TargetSelectionGroup { get; set; }
+        public SelectorParameters OutputParameters { get; set; }
         [ModelularDefaultValue("Vector3Int.one * 2")]
         public Vector3Int Count {  get; set; } = Vector3Int.one * 2;
         [ModelularDefaultValue("Vector3.one")]
@@ -25,8 +27,9 @@ namespace Modelular.Runtime
             if (!IgnoreVertexLimits)
                 GlobalSettings.DetectVertexCountLimitations(evc);
 
-            var grid = MakeGrid(previousResult.Polygons);
-            previousResult.ReplacePolygons(grid);
+            var grid = MakeGrid(previousResult.GetPolygons(TargetSelectionGroup));
+            previousResult.RemovePolygons(TargetSelectionGroup);
+            previousResult.AddPolygons(grid, OutputParameters.OutputSelectionGroup);
             return previousResult;
         }
 

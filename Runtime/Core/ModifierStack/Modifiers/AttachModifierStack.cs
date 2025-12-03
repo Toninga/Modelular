@@ -3,12 +3,13 @@
 namespace Modelular.Runtime
 {
     [ModelularInterface("Utility/Attach modifier stack", 60)]
-    public class AttachModifierStack : Modifier
+    public class AttachModifierStack : Modifier, IModifier
     {
         #region Properties
-
-
+        [ModelularDefaultValue("STransform.Default()")]
+        public STransform Transform { get; set; } = STransform.Default();
         public ModularMesh LinkedMesh { get; set; }
+        public string TargetSelectionGroup { get; set; }
 
         #endregion
 
@@ -17,7 +18,16 @@ namespace Modelular.Runtime
         public override StackElement Bake(StackElement previousResult)
         {
             if (LinkedMesh != null)
-                previousResult.AddPolygons(LinkedMesh.Stack.Polygons);
+            {
+                LinkedMesh.Stack.CompileStack();
+                StackElement current = new();
+                current.AddPolygons(LinkedMesh.Stack.Output.GetPolygons(TargetSelectionGroup));
+                var mod = new Transform();
+                mod.Setup(Transform);
+                mod.Bake(current);
+
+                previousResult.Merge(current);
+            }
 
             return previousResult;
         }

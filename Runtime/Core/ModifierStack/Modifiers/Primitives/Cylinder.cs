@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Modelular.Runtime
 {
     [ModelularInterface("Primitives/Cylinder", 0)]
-    public class Cylinder : Modifier, IPrimitiveModifier
+    public class Cylinder : Modifier, IPrimitive
     {
         #region Parameters
         [ModelularDefaultValue("DefaultPrimitiveProperties.Default()")]
@@ -28,7 +28,7 @@ namespace Modelular.Runtime
         {
             StackElement obj = new StackElement();
             obj.AddPolygons(MakeCylinder(Height, Radius, HorizontalSubdivisions, VerticalSubdivisions), DefaultParameters.OutputSelectionGroup);
-            (this as IPrimitiveModifier).ApplyDefaultParameters(obj);
+            (this as IPrimitive).ApplyDefaultParameters(obj);
 
 
             previousResult.Merge(obj);

@@ -3,7 +3,7 @@ using UnityEngine;
 namespace Modelular.Runtime
 {
     [ModelularInterface("Primitives/Quad", 0)]
-    public class Quad : Modifier, IPrimitiveModifier
+    public class Quad : Modifier, IPrimitive
     {
         #region Parameters
         [ModelularDefaultValue("DefaultPrimitiveProperties.Default()")]
@@ -19,7 +19,7 @@ namespace Modelular.Runtime
         {
             StackElement obj = new StackElement();
             obj.AddPolygon(Make(Size), DefaultParameters.OutputSelectionGroup);
-            (this as IPrimitiveModifier).ApplyDefaultParameters(obj);
+            (this as IPrimitive).ApplyDefaultParameters(obj);
 
 
             previousResult.Merge(obj);

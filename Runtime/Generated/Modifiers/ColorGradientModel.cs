@@ -6,15 +6,17 @@ namespace Modelular.Runtime
 	{
 		#region Fields
 
-		public Vector3 Direction = Vector3.up;
-        public Color ColorA;
+		public string TargetSelectionGroup;
+        public Vector3 Direction = Vector3.up;
+        public Color ColorA = Color.black;
         public Color ColorB = Color.white;
         public bool IgnoreVertexLimits;
         //[Field]
 
 		// Replicated fields for change detection
 		private bool _enabled;
-		private Vector3 _direction;
+		private string _targetSelectionGroup;
+        private Vector3 _direction;
         private Color _colorA;
         private Color _colorB;
         private bool _ignoreVertexLimits;
@@ -28,7 +30,8 @@ namespace Modelular.Runtime
 		public override void ApplyParameters()
 		{
 			var target = (underlyingModifier as Modelular.Runtime.ColorGradient);
-			target.Direction = Direction;
+			target.TargetSelectionGroup = TargetSelectionGroup;
+            target.Direction = Direction;
             target.ColorA = ColorA;
             target.ColorB = ColorB;
             target.IgnoreVertexLimits = IgnoreVertexLimits;
@@ -40,7 +43,8 @@ namespace Modelular.Runtime
 			if
 			(
 			enabled != _enabled ||
-			 _direction != Direction ||
+			 _targetSelectionGroup != TargetSelectionGroup ||
+                 _direction != Direction ||
                  _colorA != ColorA ||
                  _colorB != ColorB ||
                  _ignoreVertexLimits != IgnoreVertexLimits ||
@@ -52,7 +56,8 @@ namespace Modelular.Runtime
 			}
 			// Reset the mirrored fields
 			_enabled = enabled;
-			 _direction = Direction;
+			 _targetSelectionGroup = TargetSelectionGroup;
+             _direction = Direction;
              _colorA = ColorA;
              _colorB = ColorB;
              _ignoreVertexLimits = IgnoreVertexLimits;

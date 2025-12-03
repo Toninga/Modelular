@@ -45,15 +45,12 @@ namespace Modelular.Runtime
         {
             // Find the best target directory : The user's chosen path first, otherwise Modellular/Generated, otherwise the project root
             string finalDirectory = "";
-            string defaultDir = Hierarchy.GeneratedMeshesPath;
-            string root = Hierarchy.PackagePath;
+            string root = "Assets/";
             if (_lastPath != null || _lastPath != "")
             {
                 if (AssetDatabase.AssetPathExists(_lastPath))
                     finalDirectory = _lastPath;
             }
-            if (finalDirectory == "" && AssetDatabase.AssetPathExists(defaultDir))
-                finalDirectory = defaultDir;
             if (finalDirectory == "")
                 finalDirectory = root;
 

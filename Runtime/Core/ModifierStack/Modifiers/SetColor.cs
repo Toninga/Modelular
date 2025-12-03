@@ -3,12 +3,12 @@ using UnityEngine;
 namespace Modelular.Runtime
 {
     [ModelularInterface("Color/Set color", 20)]
-    public class SetColor : Modifier
+    public class SetColor : Modifier, IModifier
     {
         #region Properties
+        public string TargetSelectionGroup { get; set; }
         [ModelularDefaultValue("Color.white")]
         public Color Color { get; set; } = Color.white;
-        public string TargetSelectionGroup { get; set; }
 
         #endregion
 

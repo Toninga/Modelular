@@ -24,6 +24,74 @@ namespace Modelular.Runtime
         {
             Stack = owner;
         }
+        public void RemovePolygons(string selectionName = "")
+        {
+            List<int> result = new();
+            if (!string.IsNullOrEmpty(selectionName))
+            {
+                if (!SelectionStacksByName.ContainsKey(selectionName))
+                {
+                    Polygons.Clear();
+                    return;
+                }
+                for (int p = 0; p < Polygons.Count; p++)
+                {
+                    if (SelectionStacksByName[selectionName].Contains(Polygons[p]))
+                        result.Add(p);
+                }
+                result.Reverse();
+                foreach (int i in result)
+                    Polygons.RemoveAt(i);
+            }
+            else
+            {
+                Polygons.Clear();
+                return;
+            }
+        }
+        /// <summary>
+        /// Returns a copy of the polygons that belong to this selection. Modifications made to this list will not be reflected in the StackElement
+        /// </summary>
+        /// <param name="selectionName"></param>
+        /// <returns></returns>
+        public List<Polygon> GetPolygons(string selectionName="")
+        {
+            List<Polygon> result = new();
+            if (!string.IsNullOrEmpty(selectionName))
+            {
+                if (!SelectionStacksByName.ContainsKey(selectionName))
+                    return Polygons;
+                for (int p = 0; p < Polygons.Count; p++)
+                {
+                    if (SelectionStacksByName[selectionName].Contains(Polygons[p]))
+                        result.Add(Polygons[p]);
+                    
+                }
+                return result;
+            }
+            else
+                return Polygons;
+        }
+        public List<Vertex> GetVertices(string targetSelectionGroup)
+        {
+            List<Vertex> result = new();
+            if (!string.IsNullOrEmpty(targetSelectionGroup))
+            {
+                if (!SelectionStacksByName.ContainsKey(targetSelectionGroup))
+                    return Vertices;
+                for (int p = 0; p < Polygons.Count; p++)
+                {
+                    for (int v = 0; v < Polygons[p].vertices.Count; v++)
+                    {
+                        if (SelectionStacksByName[targetSelectionGroup].Contains(Polygons[p].vertices[v]))
+                            result.Add(Vertices[v]);
+                    }
+                }
+                return result;
+            }
+            else
+                return Vertices;
+        }
         public void AddPolygons(List<Polygon> polygons, string targetSelectionGroup = default)
         {
             EnforceSelectionStack(targetSelectionGroup);
@@ -56,18 +124,18 @@ namespace Modelular.Runtime
                 SelectionStacksByName.Remove (selectionName);
         }
         public void ClearSelections() => SelectionStacksByName = new();
-        public void ReplaceVertices(Func<Vertex, Vertex> operation, string selectionName = default)
+        public void ReplaceVertices(Func<Vertex, Vertex> operation, string targetSelectionGroup = default)
         {
-            EnforceSelectionStack(selectionName);
-            if (!string.IsNullOrEmpty(selectionName))
+            EnforceSelectionStack(targetSelectionGroup);
+            if (!string.IsNullOrEmpty(targetSelectionGroup))
             {
-                if (!SelectionStacksByName.ContainsKey(selectionName))
+                if (!SelectionStacksByName.ContainsKey(targetSelectionGroup))
                     return;
                 for (int p = 0; p < Polygons.Count; p++)
                 {
                     for (int v = 0; v < Polygons[p].vertices.Count; v++)
                     {
-                        if (SelectionStacksByName[selectionName].Contains(Polygons[p].vertices[v]))
+                        if (SelectionStacksByName[targetSelectionGroup].Contains(Polygons[p].vertices[v]))
                             Polygons[p].vertices[v] = operation(Polygons[p].vertices[v]);
                     }
                 }
@@ -78,16 +146,16 @@ namespace Modelular.Runtime
 
             DetectVertices();
         }
-        public void ReplacePolygons(Func<Polygon, Polygon> operation, string selectionName = default)
+        public void ReplacePolygons(Func<Polygon, Polygon> operation, string targetSelectionGroup = default)
         {
-            EnforceSelectionStack(selectionName);
-            if (!string.IsNullOrEmpty(selectionName))
+            EnforceSelectionStack(targetSelectionGroup);
+            if (!string.IsNullOrEmpty(targetSelectionGroup))
             {
-                if (!SelectionStacksByName.ContainsKey(selectionName))
+                if (!SelectionStacksByName.ContainsKey(targetSelectionGroup))
                     return;
                 for (int p = 0; p < Polygons.Count; p++)
                 {
-                    if (SelectionStacksByName[selectionName].Contains(Polygons[p]))
+                    if (SelectionStacksByName[targetSelectionGroup].Contains(Polygons[p]))
                         Polygons[p] = operation(Polygons[p]);
                 }
             }

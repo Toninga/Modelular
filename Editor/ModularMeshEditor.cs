@@ -44,6 +44,7 @@ namespace Modelular.Editor
             data.UpdateMode = (ModularMesh.EUpdateMode)EditorGUILayout.EnumPopup("Update mode", data.UpdateMode);
             if (data.UpdateMode == ModularMesh.EUpdateMode.Manual)
                 data.IgnoreVertexLimits = EditorGUILayout.Toggle("Ignore vertex limits", data.IgnoreVertexLimits);
+
         }
 
         private void DrawModifiersTab(ModularMesh data)
@@ -100,8 +101,8 @@ namespace Modelular.Editor
                 if (_selectedModifier < data.Modifiers.Count)
                 {
                     data.Modifiers.RemoveAt(_selectedModifier);
-                    if (_selectedModifier == data.Modifiers.Count)
-                        _selectedModifier = data.Modifiers.Count - 1;
+                    if (_selectedModifier > 0)
+                        _selectedModifier = _selectedModifier - 1;
                 }
             }
             if (GUILayout.Button("Move up"))
@@ -126,7 +127,7 @@ namespace Modelular.Editor
             }
             GUILayout.EndHorizontal();
 
-
+            // Draw modifier list
             GUIStyle greyBackground = new GUIStyle();
             greyBackground.normal.background = MakeTex(1, 1, new Color(0.18f, 0.18f, 0.18f, 1f));
             GUILayout.BeginVertical(greyBackground);
@@ -176,7 +177,8 @@ namespace Modelular.Editor
         {
             GUIStyle darkBackground = new GUIStyle();
             darkBackground.normal.background = MakeTex(1, 1, new Color(0.16f, 0.16f, 0.16f, 1f));
-            _position = GUILayout.BeginScrollView(_position, darkBackground, GUILayout.Height(200));
+            //_position = GUILayout.BeginScrollView(_position, darkBackground, GUILayout.Height(200));
+            GUILayout.BeginVertical(darkBackground);
             if (data.Modifiers != null && data.Modifiers.Count > _selectedModifier)
             {
                 var modifier = data.Modifiers[_selectedModifier];
@@ -184,7 +186,9 @@ namespace Modelular.Editor
 
                 string name = modifier.GetType().Name;
                 name = name.Replace("Model", "");
+                EditorGUI.indentLevel += 2;
                 GUILayout.Label(name, EditorStyles.boldLabel);
+                EditorGUI.indentLevel -= 2;
                 EditorGUILayout.BeginHorizontal();
                 EditorGUILayout.Space();
 
@@ -194,7 +198,7 @@ namespace Modelular.Editor
                     var icon = EditorGUIUtility.GetIconForObject(modifier);
                     if (icon != null)
                     {
-                        Rect position = new Rect(6, EditorGUIUtility.singleLineHeight + 3, 24, 24);
+                        Rect position = new Rect(40, EditorGUIUtility.singleLineHeight * 3 + 6, 24, 24);
                         if (icon.alphaIsTransparency)
                         {
                             GUI.DrawTexture(position, icon);
@@ -229,7 +233,9 @@ namespace Modelular.Editor
                 EditorGUI.indentLevel--;
                 obj.ApplyModifiedProperties();
             }
-            GUILayout.EndScrollView();
+            GUILayout.Space(10);
+            GUILayout.EndVertical();
+            //GUILayout.EndScrollView();
         }
 
         private void DrawVisualizationTab(ModularMesh data)
@@ -256,7 +262,8 @@ namespace Modelular.Editor
                 GUILayout.EndVertical();
             }
 
-            data.ShowFaces = GUILayout.Toggle(data.ShowFaces, "Show faces");
+            // Uncomment the following line to enable Face visualization from the editor
+            //data.ShowFaces = GUILayout.Toggle(data.ShowFaces, "Show faces");
             if (data.ShowFaces)
             {
                 GUILayout.BeginVertical(EditorStyles.helpBox);
@@ -273,6 +280,15 @@ namespace Modelular.Editor
                 data.NormalDisplayMode = (EColorCoding)EditorGUILayout.EnumPopup("Color coding", data.NormalDisplayMode);
                 if (data.NormalDisplayMode == EColorCoding.Custom)
                     data.NormalColor = EditorGUILayout.ColorField("Color", data.NormalColor);
+
+                GUILayout.EndVertical();
+            
+            }
+            data.ShowWireframe = GUILayout.Toggle(data.ShowWireframe, "Show wireframe");
+            if (data.ShowWireframe)
+            {
+                GUILayout.BeginVertical(EditorStyles.helpBox);
+                data.WireframeColor = EditorGUILayout.ColorField("Color", data.WireframeColor);
 
                 GUILayout.EndVertical();
             

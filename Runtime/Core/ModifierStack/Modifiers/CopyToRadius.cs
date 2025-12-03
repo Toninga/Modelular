@@ -4,10 +4,12 @@ using UnityEngine;
 namespace Modelular.Runtime
 {
     [ModelularInterface("Copy/Copy to radius", 60)]
-    public class CopyToRadius : Modifier
+    public class CopyToRadius : Modifier, IModifier,  ISelector
     {
         // TODO : Add a mode with a fixed angle offset
         #region Properties
+        public string TargetSelectionGroup { get; set; }
+        public SelectorParameters OutputParameters { get; set; }
         [ModelularDefaultValue("8")]
         public int Count { get; set; } = 8;
         [ModelularDefaultValue("1f")]
@@ -31,8 +33,9 @@ namespace Modelular.Runtime
             if (!IgnoreVertexLimits)
                 GlobalSettings.DetectVertexCountLimitations(evc);
 
-            var radial = MakeRadialLayout(previousResult.Polygons);
-            previousResult.ReplacePolygons(radial);
+            var radial = MakeRadialLayout(previousResult.GetPolygons(TargetSelectionGroup));
+            previousResult.RemovePolygons(TargetSelectionGroup);
+            previousResult.AddPolygons(radial, OutputParameters.OutputSelectionGroup);
             return previousResult;
         }
 
