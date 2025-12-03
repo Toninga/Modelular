@@ -19,7 +19,8 @@ namespace Modelular.Runtime
         {
             if (LinkedMesh != null)
             {
-                LinkedMesh.Stack.CompileStack();
+                LinkedMesh.ApplyModifierStack();
+
                 StackElement current = new();
                 current.AddPolygons(LinkedMesh.Stack.Output.GetPolygons(TargetSelectionGroup));
                 var mod = new Transform();

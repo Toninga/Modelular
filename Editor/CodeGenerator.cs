@@ -27,6 +27,7 @@ namespace Modelular.Editor
         [MenuItem("CONTEXT/ModularMesh/Refresh editor scripts")]
         public static void RefreshModelularScripts()
         {
+            EmptyDirectory(GeneratedModelsPath);
             Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
 
             Dictionary<int, List<Type>> modifiers = new ();
@@ -45,7 +46,7 @@ namespace Modelular.Editor
             var sortedTypes = SortTypesByPriority(modifiers);
 
             var modelList = GenerateModelList(sortedTypes);
-            TrySaveToFile(GeneratedModelsPath, "ModifierModelList.cs", modelList);
+            TrySaveToFile(Hierarchy.GeneratedPath, "ModifierModelList.cs", modelList);
 
             var primitiveMenuItems = GenerateMenuItemsForPrimitives(primitiveModels);
             TrySaveToFile(EditorPath, "PrimitiveMenuItems.cs", primitiveMenuItems);
@@ -95,6 +96,11 @@ namespace Modelular.Editor
                 content = content.Replace("CLASSNAME", decoy.underlyingModifier.GetType().Name);
             }
             return content;
+        }
+        private static void EmptyDirectory(string path)
+        {
+            if (Directory.Exists(path)) { Directory.Delete(path, true); }
+            Directory.CreateDirectory(path);
         }
         /// <summary>
         /// Generate the text content for the model list

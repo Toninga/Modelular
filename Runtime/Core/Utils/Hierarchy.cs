@@ -8,6 +8,7 @@ namespace Modelular.Runtime
         public static string DefaultPackagePath = "Assets/Packages/Modelular";
         public static string BoilerplatePath => Path.Combine(PackagePath, "Editor/Boilerplate");
         public static string GeneratedModelsPath => Path.Combine(PackagePath, "Runtime/Generated/Modifiers");
+        public static string GeneratedPath => Path.Combine(PackagePath, "Runtime/Generated");
         public static string GeneratedMeshesPath => Path.Combine(PackagePath, "Runtime/Generated/Meshes");
         public static string EditorPath => Path.Combine(PackagePath, "Editor");
         public static string TexturesPath => Path.Combine(PackagePath, "Runtime/Core/Graphics/Textures");
