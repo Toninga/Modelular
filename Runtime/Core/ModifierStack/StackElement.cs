@@ -1,3 +1,4 @@
+using Codice.Client.Common.WebApi.Responses;
 using Modelular.Runtime;
 using System;
 using System.Collections.Generic;
@@ -101,6 +102,30 @@ namespace Modelular.Runtime
             foreach(var poly in newPolygons)
                 Polygons.Add(poly);
             DetectVertices();
+        }
+        public void Merge(StackElement other)
+        {
+            if (other == null) return;
+
+            MeshData += other.MeshData;
+
+            if (other.Materials != null)
+                Materials.AddRange(other.Materials);
+
+            if (other.Polygons != null)
+                Polygons.AddRange(other.Polygons);
+
+            if (other.Vertices != null)
+                Vertices.AddRange(other.Vertices);
+
+            // The mesh property isn't merged, it will be regenerated on the next rebake instead
+
+            if (other.SelectionStacksByName != null)
+                foreach (var kvp in other.SelectionStacksByName)
+                {
+                    if (!SelectionStacksByName.TryAdd(kvp.Key, kvp.Value) && SelectionStacksByName[kvp.Key] != null)
+                        SelectionStacksByName[kvp.Key].Merge(other.SelectionStacksByName[kvp.Key]);
+                }
         }
         public List<Vertex> DetectVertices()
         {

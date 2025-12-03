@@ -7,9 +7,8 @@ namespace Modelular.Runtime
     public class UVSphere : Modifier, IPrimitiveModifier
     {
         #region Parameters
-        [ModelularDefaultValue("Color.white")]
-        public Color Color { get; set; } = Color.white;
-        public string OutputSelectionGroup { get; set; }
+        [ModelularDefaultValue("DefaultPrimitiveProperties.Default()")]
+        public DefaultPrimitiveProperties DefaultParameters { get; set; } = DefaultPrimitiveProperties.Default();
         [ModelularDefaultValue("0.5f")]
         public float Radius { get; set; } = 0.5f;
         [ModelularDefaultValue("8")]
@@ -25,11 +24,12 @@ namespace Modelular.Runtime
         #region Methods
         public override StackElement Bake(StackElement previousResult)
         {
-            var sphere = MakeUVSphere(Radius, HorizontalSubdivisions, VerticalSubdivisions);
-            previousResult.AddPolygons(sphere, OutputSelectionGroup);
-            var mod = new SetColor();
-            mod.Color = Color;
-            mod.Bake(previousResult);
+            StackElement obj = new StackElement();
+            obj.AddPolygons(MakeUVSphere(Radius, HorizontalSubdivisions, VerticalSubdivisions), DefaultParameters.OutputSelectionGroup);
+            (this as IPrimitiveModifier).ApplyDefaultParameters(obj);
+
+
+            previousResult.Merge(obj);
             return previousResult;
         }
         /// <summary>

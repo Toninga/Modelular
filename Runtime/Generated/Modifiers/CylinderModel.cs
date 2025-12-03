@@ -6,8 +6,7 @@ namespace Modelular.Runtime
 	{
 		#region Fields
 
-		public Color Color = Color.white;
-        public string OutputSelectionGroup;
+		public DefaultPrimitiveProperties DefaultParameters = DefaultPrimitiveProperties.Default();
         public float Height = 1f;
         public float Radius = 0.5f;
         public int HorizontalSubdivisions;
@@ -19,8 +18,7 @@ namespace Modelular.Runtime
 
 		// Replicated fields for change detection
 		private bool _enabled;
-		private Color _color;
-        private string _outputSelectionGroup;
+		private DefaultPrimitiveProperties _defaultParameters;
         private float _height;
         private float _radius;
         private int _horizontalSubdivisions;
@@ -38,8 +36,7 @@ namespace Modelular.Runtime
 		public override void ApplyParameters()
 		{
 			var target = (underlyingModifier as Modelular.Runtime.Cylinder);
-			target.Color = Color;
-            target.OutputSelectionGroup = OutputSelectionGroup;
+			target.DefaultParameters = DefaultParameters;
             target.Height = Height;
             target.Radius = Radius;
             target.HorizontalSubdivisions = HorizontalSubdivisions;
@@ -55,8 +52,7 @@ namespace Modelular.Runtime
 			if
 			(
 			enabled != _enabled ||
-			 _color != Color ||
-                 _outputSelectionGroup != OutputSelectionGroup ||
+			 _defaultParameters != DefaultParameters ||
                  _height != Height ||
                  _radius != Radius ||
                  _horizontalSubdivisions != HorizontalSubdivisions ||
@@ -72,8 +68,7 @@ namespace Modelular.Runtime
 			}
 			// Reset the mirrored fields
 			_enabled = enabled;
-			 _color = Color;
-             _outputSelectionGroup = OutputSelectionGroup;
+			 _defaultParameters = DefaultParameters;
              _height = Height;
              _radius = Radius;
              _horizontalSubdivisions = HorizontalSubdivisions;

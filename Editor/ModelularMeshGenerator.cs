@@ -9,7 +9,7 @@ namespace Modelular.Editor
     {
         public static ModularMesh New(MenuCommand menuCommand, params System.Type[] modifiers)
         {
-            ModularMesh go = new GameObject("New modellular mesh", typeof(ModularMesh)).GetComponent<ModularMesh>();
+            ModularMesh go = new GameObject("New modelular mesh", typeof(ModularMesh)).GetComponent<ModularMesh>();
             var currentScene = SceneManager.GetActiveScene();
             if (currentScene != null)
             {

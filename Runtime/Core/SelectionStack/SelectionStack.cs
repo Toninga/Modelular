@@ -7,15 +7,17 @@ namespace Modelular.Runtime
     public class SelectionStack
     {
         #region Properties
-        
+        public List<Selector> Selectors => _selectors;
         #endregion
 
         #region Fields
         private List<Selector> _selectors = new();
+        private int myInt;
         #endregion
 
         #region Methods
-
+        public void Merge(SelectionStack other) => _selectors.AddRange(other.Selectors);
+        public void AddSelectors(IEnumerable<Selector> selectors) => _selectors.AddRange(selectors);
         public void AddSelector(Selector selector) => _selectors.Add(selector);
         public void ClearSelectors() => _selectors.Clear();
         public void ClearPolygonSelectors()

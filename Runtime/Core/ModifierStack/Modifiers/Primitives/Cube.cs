@@ -7,9 +7,9 @@ namespace Modelular.Runtime
     public class Cube : Modifier, IPrimitiveModifier
     {
         #region Parameters
-        [ModelularDefaultValue("Color.white")]
-        public Color Color { get; set; }
-        public string OutputSelectionGroup { get; set; }
+        [ModelularDefaultValue("DefaultPrimitiveProperties.Default()")]
+        public DefaultPrimitiveProperties DefaultParameters { get; set; } = DefaultPrimitiveProperties.Default();
+
         [ModelularDefaultValue("Vector3.one")]
         public Vector3 Size {  get; set; }
 
@@ -21,10 +21,13 @@ namespace Modelular.Runtime
 
         public override StackElement Bake(StackElement previousResult)
         {
-            previousResult.AddPolygons(Make(Size), OutputSelectionGroup);
-            var mod = new SetColor();
-            mod.Color = Color;
-            mod.Bake(previousResult);
+            StackElement obj = new StackElement();
+            obj.AddPolygons(Make(Size), DefaultParameters.OutputSelectionGroup);
+            (this as IPrimitiveModifier).ApplyDefaultParameters(obj);
+            
+
+
+            previousResult.Merge(obj);
             return previousResult;
         }
 

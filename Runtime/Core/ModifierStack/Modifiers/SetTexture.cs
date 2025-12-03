@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Modelular.Runtime
 {
-    [ModelularInterface("Material/SetTexture")]
+    [ModelularInterface("Material/Set Texture")]
     public class SetTexture : Modifier
     {
         #region Properties

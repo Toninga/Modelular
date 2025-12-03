@@ -5,11 +5,10 @@ using UnityEngine;
 namespace Modelular.Runtime
 {
     [ModelularInterface("Primitives/Ground", 0)]
-    public class Ground : Modifier, IPrimitiveModifier
+    public class Ground : Modifier
     {
-        [ModelularDefaultValue("Color.white")]
-        public Color Color {get; set;} = Color.white;
-        public string OutputSelectionGroup {get; set;}
+        [ModelularDefaultValue("DefaultPrimitiveProperties.Default()")]
+        public DefaultPrimitiveProperties DefaultParameters { get; set; } = DefaultPrimitiveProperties.Default();
         [ModelularDefaultValue("Vector2.one * 100f")]
         public Vector2 Size { get; set;} = Vector2.one * 100f;
         #region Properties
@@ -25,8 +24,6 @@ namespace Modelular.Runtime
             StackElement ground = new();
             var quad = new Quad();
             quad.Size = Size;
-            quad.Color = Color;
-            quad.OutputSelectionGroup = OutputSelectionGroup;
             quad.Bake(ground);
 
             var uv = new UVTilingOffset();
@@ -37,7 +34,8 @@ namespace Modelular.Runtime
             var tex = new SetTexture();
             tex.Texture = AssetDatabase.LoadAssetAtPath(Path.Combine(Hierarchy.TexturesPath, "T_ModelularChecker.png"), typeof(Texture2D)) as Texture2D;
             tex.Bake(ground);
-            previousResult.AddPolygons(ground.Polygons);
+
+            previousResult.Merge(ground);
             return previousResult;
         }
 

@@ -6,16 +6,14 @@ namespace Modelular.Runtime
 	{
 		#region Fields
 
-		public Color Color = Color.white;
-        public string OutputSelectionGroup;
+		public DefaultPrimitiveProperties DefaultParameters = DefaultPrimitiveProperties.Default();
         public Vector3 Size = Vector3.one;
         public bool IgnoreVertexLimits;
         //[Field]
 
 		// Replicated fields for change detection
 		private bool _enabled;
-		private Color _color;
-        private string _outputSelectionGroup;
+		private DefaultPrimitiveProperties _defaultParameters;
         private Vector3 _size;
         private bool _ignoreVertexLimits;
         //[ReplicatedField]
@@ -28,8 +26,7 @@ namespace Modelular.Runtime
 		public override void ApplyParameters()
 		{
 			var target = (underlyingModifier as Modelular.Runtime.Cube);
-			target.Color = Color;
-            target.OutputSelectionGroup = OutputSelectionGroup;
+			target.DefaultParameters = DefaultParameters;
             target.Size = Size;
             target.IgnoreVertexLimits = IgnoreVertexLimits;
             //[SetProperty]
@@ -40,8 +37,7 @@ namespace Modelular.Runtime
 			if
 			(
 			enabled != _enabled ||
-			 _color != Color ||
-                 _outputSelectionGroup != OutputSelectionGroup ||
+			 _defaultParameters != DefaultParameters ||
                  _size != Size ||
                  _ignoreVertexLimits != IgnoreVertexLimits ||
                 //[ChangeCheck]
@@ -52,8 +48,7 @@ namespace Modelular.Runtime
 			}
 			// Reset the mirrored fields
 			_enabled = enabled;
-			 _color = Color;
-             _outputSelectionGroup = OutputSelectionGroup;
+			 _defaultParameters = DefaultParameters;
              _size = Size;
              _ignoreVertexLimits = IgnoreVertexLimits;
             //[ReplicatedFieldReset]

@@ -50,58 +50,7 @@ namespace Modelular.Editor
         {
             Undo.RecordObject(data, "Edit modular mesh");
             bool requestRebake = false;
-            GUIStyle darkBackground = new GUIStyle();
-            darkBackground.normal.background = MakeTex(1, 1, new Color(0.16f, 0.16f, 0.16f, 1f));
-            _position = GUILayout.BeginScrollView(_position, darkBackground, GUILayout.Height(200));
-            if (data.Modifiers != null && data.Modifiers.Count > _selectedModifier)
-            {
-                var modifier = data.Modifiers[_selectedModifier];
-                SerializedObject obj = new SerializedObject(modifier);
-
-                string name = modifier.GetType().Name;
-                name = name.Replace("Model", "");
-                GUILayout.Label(name, EditorStyles.boldLabel);
-                EditorGUILayout.BeginHorizontal();
-                EditorGUILayout.Space();
-
-                if (EditorGUIUtility.GetIconForObject(modifier))
-                {
-                    var icon = EditorGUIUtility.GetIconForObject(modifier);
-                    if (icon != null)
-                    {
-                        Rect position = new Rect(6,EditorGUIUtility.singleLineHeight+  3,24,24);
-                        if (icon.alphaIsTransparency)
-                        {
-                            GUI.DrawTexture(position, icon);
-                            //EditorGUI.DrawTextureTransparent(position, icon);
-                        }
-                        else
-                        {
-                            EditorGUI.DrawPreviewTexture(position, icon);
-                        }
-
-                        EditorGUILayout.Space(26);
-                    }
-                }
-                EditorGUILayout.Space();
-                EditorGUILayout.EndHorizontal();
-
-                obj.UpdateIfRequiredOrScript();
-                SerializedProperty iterator = obj.GetIterator();
-                bool enterChildren = true;
-                while (iterator.NextVisible(enterChildren))
-                {
-                    if ("m_Script" != iterator.propertyPath)
-                    {
-                        EditorGUILayout.PropertyField(iterator, true);
-                    }
-
-                    enterChildren = false;
-                }
-
-                obj.ApplyModifiedProperties();
-            }
-            GUILayout.EndScrollView();
+            DrawModifierParameters(data);
 
             GUILayout.Label("Last baked " + Mathf.Round((float)(EditorApplication.timeSinceStartup - data.LastBakingTime)) + "s ago", EditorStyles.boldLabel);
 
@@ -117,7 +66,7 @@ namespace Modelular.Editor
             if (GUILayout.Button("Clear stack"))
             {
                 data.ClearModifierStack();
-                data.ApplyModifierStack();
+                requestRebake = true;
             }
             // SAVE BUTTON
             if (GUILayout.Button("Save file"))
@@ -126,12 +75,6 @@ namespace Modelular.Editor
             }
             GUILayout.EndHorizontal();
 
-            if (_requireSave)
-            {
-                _requireSave = false;
-                data.ApplyModifierStack();
-                data.Save();
-            }
 
             GUILayout.Space(15);
 
@@ -173,7 +116,7 @@ namespace Modelular.Editor
             }
             if (GUILayout.Button("Move down"))
             {
-                if (_selectedModifier < data.Modifiers.Count -1)
+                if (_selectedModifier < data.Modifiers.Count - 1)
                 {
                     data.Modifiers.Insert(_selectedModifier + 2, data.Modifiers[_selectedModifier]);
                     data.Modifiers.RemoveAt(_selectedModifier);
@@ -217,9 +160,76 @@ namespace Modelular.Editor
             }
             GUILayout.EndVertical();
 
-            
+
             if (requestRebake)
                 data.ApplyModifierStack();
+
+            if (_requireSave)
+            {
+                _requireSave = false;
+                data.ApplyModifierStack();
+                data.Save();
+            }
+        }
+
+        private void DrawModifierParameters(ModularMesh data)
+        {
+            GUIStyle darkBackground = new GUIStyle();
+            darkBackground.normal.background = MakeTex(1, 1, new Color(0.16f, 0.16f, 0.16f, 1f));
+            _position = GUILayout.BeginScrollView(_position, darkBackground, GUILayout.Height(200));
+            if (data.Modifiers != null && data.Modifiers.Count > _selectedModifier)
+            {
+                var modifier = data.Modifiers[_selectedModifier];
+                SerializedObject obj = new SerializedObject(modifier);
+
+                string name = modifier.GetType().Name;
+                name = name.Replace("Model", "");
+                GUILayout.Label(name, EditorStyles.boldLabel);
+                EditorGUILayout.BeginHorizontal();
+                EditorGUILayout.Space();
+
+                // Draw icon
+                if (EditorGUIUtility.GetIconForObject(modifier))
+                {
+                    var icon = EditorGUIUtility.GetIconForObject(modifier);
+                    if (icon != null)
+                    {
+                        Rect position = new Rect(6, EditorGUIUtility.singleLineHeight + 3, 24, 24);
+                        if (icon.alphaIsTransparency)
+                        {
+                            GUI.DrawTexture(position, icon);
+                            //EditorGUI.DrawTextureTransparent(position, icon);
+                        }
+                        else
+                        {
+                            EditorGUI.DrawPreviewTexture(position, icon);
+                        }
+
+                        EditorGUILayout.Space(26);
+                    }
+                }
+                EditorGUILayout.Space();
+                EditorGUILayout.EndHorizontal();
+
+                // Automatic property layout
+                obj.UpdateIfRequiredOrScript();
+                SerializedProperty iterator = obj.GetIterator();
+                bool enterChildren = true;
+                EditorGUI.indentLevel++;
+                while (iterator.NextVisible(enterChildren))
+                {
+                    if ("m_Script" != iterator.propertyPath)
+                    {
+                        EditorGUILayout.PropertyField(iterator, true);
+                    }
+
+                    enterChildren = false;
+                }
+
+                EditorGUI.indentLevel--;
+                obj.ApplyModifiedProperties();
+            }
+            GUILayout.EndScrollView();
         }
 
         private void DrawVisualizationTab(ModularMesh data)
@@ -272,9 +282,19 @@ namespace Modelular.Editor
 
         private void AddModifier(ModularMesh data, System.Type modifierType)
         {
-            data.AddModifier(modifierType);
+            var mod = data.MakeNewModifier(modifierType);
+            if (_selectedModifier >= 0 && _selectedModifier < data.Modifiers.Count)
+            {
+                data.Modifiers.Insert(_selectedModifier +1, mod);
+                _selectedModifier = _selectedModifier + 1;
+            }
+            else
+            {
+                data.Modifiers.Add(mod);
+                _selectedModifier = data.Modifiers.Count - 1;
+            }
             data.ApplyModifierStack();
-            _selectedModifier = data.Modifiers.Count - 1;
+            
         }
         private Texture2D MakeTex(int width, int height, Color col)
         {

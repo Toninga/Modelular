@@ -7,7 +7,7 @@ namespace Modelular.Runtime
     [ExecuteAlways]
     [RequireComponent(typeof(MeshFilter))]
     [RequireComponent(typeof(MeshRenderer))]
-    [AddComponentMenu("Modellular/Modular Mesh")]
+    [AddComponentMenu("Modelular/Modular Mesh")]
     public class ModularMesh : MonoBehaviour
     {
         #region Properties
@@ -200,16 +200,24 @@ namespace Modelular.Runtime
         }
         public void AddModifier<T>() where T : ModifierModel
         {
-            Modifiers.Add(ScriptableObject.CreateInstance(typeof(T)) as ModifierModel);
+            Modifiers.Add(MakeNewModifier<T>());
         }
         public bool AddModifier(System.Type modifierModel)
         {
             if (modifierModel.IsSubclassOf(typeof(ModifierModel)))
             {
-                Modifiers.Add(ScriptableObject.CreateInstance(modifierModel) as ModifierModel);
+                Modifiers.Add(MakeNewModifier(modifierModel));
                 return true;
             }
             return false;
+        }
+        public ModifierModel MakeNewModifier<T>() where T : ModifierModel
+        {
+            return ScriptableObject.CreateInstance(typeof(T)) as ModifierModel;
+        }
+        public ModifierModel MakeNewModifier(System.Type modifierModel)
+        {
+            return ScriptableObject.CreateInstance(modifierModel) as ModifierModel;
         }
 
         public void ClearModifierStack()

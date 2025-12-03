@@ -6,8 +6,7 @@ namespace Modelular.Runtime
 	{
 		#region Fields
 
-		public Color Color = Color.white;
-        public string OutputSelectionGroup;
+		public DefaultPrimitiveProperties DefaultParameters = DefaultPrimitiveProperties.Default();
         public float Radius = 0.5f;
         [Min(1f)]
         public int HorizontalSubdivisions = 8;
@@ -19,8 +18,7 @@ namespace Modelular.Runtime
 
 		// Replicated fields for change detection
 		private bool _enabled;
-		private Color _color;
-        private string _outputSelectionGroup;
+		private DefaultPrimitiveProperties _defaultParameters;
         private float _radius;
         private int _horizontalSubdivisions;
         private int _verticalSubdivisions;
@@ -36,8 +34,7 @@ namespace Modelular.Runtime
 		public override void ApplyParameters()
 		{
 			var target = (underlyingModifier as Modelular.Runtime.UVSphere);
-			target.Color = Color;
-            target.OutputSelectionGroup = OutputSelectionGroup;
+			target.DefaultParameters = DefaultParameters;
             target.Radius = Radius;
             target.HorizontalSubdivisions = HorizontalSubdivisions;
             target.VerticalSubdivisions = VerticalSubdivisions;
@@ -51,8 +48,7 @@ namespace Modelular.Runtime
 			if
 			(
 			enabled != _enabled ||
-			 _color != Color ||
-                 _outputSelectionGroup != OutputSelectionGroup ||
+			 _defaultParameters != DefaultParameters ||
                  _radius != Radius ||
                  _horizontalSubdivisions != HorizontalSubdivisions ||
                  _verticalSubdivisions != VerticalSubdivisions ||
@@ -66,8 +62,7 @@ namespace Modelular.Runtime
 			}
 			// Reset the mirrored fields
 			_enabled = enabled;
-			 _color = Color;
-             _outputSelectionGroup = OutputSelectionGroup;
+			 _defaultParameters = DefaultParameters;
              _radius = Radius;
              _horizontalSubdivisions = HorizontalSubdivisions;
              _verticalSubdivisions = VerticalSubdivisions;

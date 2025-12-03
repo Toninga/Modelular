@@ -6,9 +6,8 @@ namespace Modelular.Runtime
     public class Quad : Modifier, IPrimitiveModifier
     {
         #region Parameters
-        [ModelularDefaultValue("Color.white")]
-        public Color Color { get; set; }
-        public string OutputSelectionGroup { get; set; }
+        [ModelularDefaultValue("DefaultPrimitiveProperties.Default()")]
+        public DefaultPrimitiveProperties DefaultParameters { get; set; } = DefaultPrimitiveProperties.Default();
         [ModelularDefaultValue("Vector2.one")]
         public Vector2 Size { get; set; } = Vector2.one;
         #endregion
@@ -18,11 +17,12 @@ namespace Modelular.Runtime
         #region Methods
         public override StackElement Bake(StackElement previousResult)
         {
-            var quad = Make(Size);
-            previousResult.AddPolygon(quad, OutputSelectionGroup);
-            var mod = new SetColor();
-            mod.Color = Color;
-            mod.Bake(previousResult);
+            StackElement obj = new StackElement();
+            obj.AddPolygon(Make(Size), DefaultParameters.OutputSelectionGroup);
+            (this as IPrimitiveModifier).ApplyDefaultParameters(obj);
+
+
+            previousResult.Merge(obj);
             return previousResult;
         }
 
