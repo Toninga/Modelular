@@ -13,7 +13,7 @@ namespace Modelular.Editor
             var currentScene = SceneManager.GetActiveScene();
             if (currentScene != null)
             {
-                var selected = (GameObject)Selection.activeObject;
+                var selected = Selection.activeObject as GameObject;
                 if (selected != null)
                 {
                     go.transform.parent = selected.transform;
