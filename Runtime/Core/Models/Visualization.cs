@@ -51,7 +51,7 @@ namespace Modelular.Runtime
         {
             if (faces == null || faces.Count == 0) return;
             if (color == default)
-                color = Color.orange;
+                color = new Color(1f, 0.6470588f, 0f, 1f);
 
             foreach (Polygon p in faces)
             {
@@ -62,7 +62,7 @@ namespace Modelular.Runtime
         public static void DrawFace(Polygon face, UnityEngine.Transform transform = default, EColorCoding colorCoding = EColorCoding.VertexColor, Color color = default)
         {
             if (color == default)
-                color = Color.orange;
+                color = new Color(1f, 0.6470588f, 0f, 1f); ;
 
             switch (colorCoding)
             {
