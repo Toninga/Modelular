@@ -31,7 +31,7 @@ namespace Modelular.Editor
             Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
 
             Dictionary<int, List<Type>> modifiers = new ();
-            List<Type> primitiveModels = new();
+            List<string> primitiveModels = new();
 
             foreach (Assembly assembly in assemblies)
             {
@@ -60,20 +60,16 @@ namespace Modelular.Editor
         /// </summary>
         /// <param name="type"></param>
         /// <param name="primitives"></param>
-        private static void DetectPrimitive(Type type, List<Type> primitives)
+        private static void DetectPrimitive(Type type, List<string> primitives)
         {
-            if (!type.IsSubclassOf(typeof(ModifierModel)))
+            if (!type.IsSubclassOf(typeof(Modifier)))
             {
                 return;
             }
 
-            var decoy = ScriptableObject.CreateInstance(type) as ModifierModel;
-            if (decoy == null)
-                return;
-
-            if (typeof(IPrimitive).IsAssignableFrom(decoy.underlyingModifier.GetType()))
+            if (typeof(IPrimitive).IsAssignableFrom(type) && type.HasAttribute<ModelularInterfaceAttribute>())
             {
-                primitives.Add(type);
+                primitives.Add(type.Name);
             }
         }
         /// <summary>
@@ -81,19 +77,16 @@ namespace Modelular.Editor
         /// </summary>
         /// <param name="types"></param>
         /// <returns></returns>
-        private static string GenerateMenuItemsForPrimitives(List<Type> types)
+        private static string GenerateMenuItemsForPrimitives(List<string> types)
         {
             string content = GetBoilerplate(PrimitiveMenuItemsBoilerplate);
 
             foreach (var type in types)
             {
-                var decoy = ScriptableObject.CreateInstance(type) as ModifierModel;
-                if (decoy == null)
-                    continue;
-                content = content.Replace("//[MenuItem]", "[MenuItem(\"GameObject/3D Object/Modelular/CLASSNAMEWITHSPACES\", priority = 1)]\r\n        public static void NewCLASSNAME(MenuCommand menuCommand) => ModelularMeshGenerator.New(menuCommand, typeof(CLASSNAMEMODEL));\r\n        //[MenuItem]");
-                content = content.Replace("CLASSNAMEMODEL", type.Name);
-                content = content.Replace("CLASSNAMEWITHSPACES", InsertSpacesBetweenWords( decoy.underlyingModifier.GetType().Name));
-                content = content.Replace("CLASSNAME", decoy.underlyingModifier.GetType().Name);
+                content = content.Replace("//[MenuItem]", "[MenuItem(\"GameObject/3D Object/Modelular/CLASSNAMEWITHSPACES\", priority = 1)]\r\n        public static void NewCLASSNAME(MenuCommand menuCommand) => ModelularMeshGenerator.New(menuCommand, \"New CLASSNAME\", typeof(CLASSNAMEMODEL));\r\n        //[MenuItem]");
+                content = content.Replace("CLASSNAMEMODEL", type + "Model");
+                content = content.Replace("CLASSNAMEWITHSPACES", InsertSpacesBetweenWords( type));
+                content = content.Replace("CLASSNAME", type);
             }
             return content;
         }

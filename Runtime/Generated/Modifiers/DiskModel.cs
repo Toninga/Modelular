@@ -2,23 +2,17 @@ using UnityEngine;
 
 namespace Modelular.Runtime
 {
-	public class TorusModel : ModifierModel
+	public class DiskModel : ModifierModel
 	{
 		#region Fields
 
 		public DefaultPrimitiveProperties DefaultParameters = DefaultPrimitiveProperties.Default();
         [Min(0f)]
-        public float Radius = 1f;
-        [Min(0f)]
-        public float Thickness = 0.5f;
+        public float Radius = 0.5f;
         [Min(3f)]
-        public int RadialSubdiv = 32;
-        [Min(3f)]
-        public int ThicknessSubdiv = 24;
+        public int Subdivisions = 16;
         [Range(0f, 1f)]
         public float Arc = 1f;
-        public EAxis Axis = EAxis.Y;
-        public bool Caps = true;
         public bool IgnoreVertexLimits;
         //[Field]
 
@@ -26,31 +20,23 @@ namespace Modelular.Runtime
 		private bool _enabled;
 		private DefaultPrimitiveProperties _defaultParameters;
         private float _radius;
-        private float _thickness;
-        private int _radialSubdiv;
-        private int _thicknessSubdiv;
+        private int _subdivisions;
         private float _arc;
-        private EAxis _axis;
-        private bool _caps;
         private bool _ignoreVertexLimits;
         //[ReplicatedField]
 
 		#endregion
-		public TorusModel()
+		public DiskModel()
 		{
-			underlyingModifier = new Modelular.Runtime.Torus();
+			underlyingModifier = new Modelular.Runtime.Disk();
 		}
 		public override void ApplyParameters()
 		{
-			var target = (underlyingModifier as Modelular.Runtime.Torus);
+			var target = (underlyingModifier as Modelular.Runtime.Disk);
 			target.DefaultParameters = DefaultParameters;
             target.Radius = Radius;
-            target.Thickness = Thickness;
-            target.RadialSubdiv = RadialSubdiv;
-            target.ThicknessSubdiv = ThicknessSubdiv;
+            target.Subdivisions = Subdivisions;
             target.Arc = Arc;
-            target.Axis = Axis;
-            target.Caps = Caps;
             target.IgnoreVertexLimits = IgnoreVertexLimits;
             //[SetProperty]
 		}
@@ -62,12 +48,8 @@ namespace Modelular.Runtime
 			enabled != _enabled ||
 			 _defaultParameters != DefaultParameters ||
                  _radius != Radius ||
-                 _thickness != Thickness ||
-                 _radialSubdiv != RadialSubdiv ||
-                 _thicknessSubdiv != ThicknessSubdiv ||
+                 _subdivisions != Subdivisions ||
                  _arc != Arc ||
-                 _axis != Axis ||
-                 _caps != Caps ||
                  _ignoreVertexLimits != IgnoreVertexLimits ||
                 //[ChangeCheck]
 			false
@@ -79,12 +61,8 @@ namespace Modelular.Runtime
 			_enabled = enabled;
 			 _defaultParameters = DefaultParameters;
              _radius = Radius;
-             _thickness = Thickness;
-             _radialSubdiv = RadialSubdiv;
-             _thicknessSubdiv = ThicknessSubdiv;
+             _subdivisions = Subdivisions;
              _arc = Arc;
-             _axis = Axis;
-             _caps = Caps;
              _ignoreVertexLimits = IgnoreVertexLimits;
             //[ReplicatedFieldReset]
 

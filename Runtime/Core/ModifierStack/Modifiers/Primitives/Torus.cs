@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Modelular.Runtime
 {
-    [ModelularInterface("Torus")]
+    [ModelularInterface("Primitives/Torus")]
     public class Torus : Modifier, IPrimitive
     {
         #region Properties

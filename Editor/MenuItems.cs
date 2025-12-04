@@ -3,6 +3,7 @@ using UnityEditor;
 using UnityEditor.ProjectWindowCallback;
 using UnityEngine;
 using Modelular.Runtime;
+using System;
 
 namespace Modelular.Editor
 {
@@ -19,9 +20,29 @@ namespace Modelular.Editor
             string fileName = "NewModifier.cs";
             string fullPath = AssetDatabase.GenerateUniqueAssetPath(Path.Combine(path, fileName));
 
+            var action = ScriptableObject.CreateInstance<CreateScriptAction>();
+            action.BoilerplateMaker = MakeModifierBoilerplate;
             ProjectWindowUtil.StartNameEditingIfProjectWindowExists(
                 0,
-                ScriptableObject.CreateInstance<CreateModifierScriptAction>(),
+                action,
+                fullPath,
+                null,
+                null // You can pass template metadata, not needed here
+            );
+        }
+
+        [MenuItem("Assets/Create/Modelular/New primitive script", false, -116)]
+        public static void CreatePrimitiveScript()
+        {
+            string path = GetSelectedPathOrFallback();
+            string fileName = "NewPrimitive.cs";
+            string fullPath = AssetDatabase.GenerateUniqueAssetPath(Path.Combine(path, fileName));
+
+            var action = ScriptableObject.CreateInstance<CreateScriptAction>();
+            action.BoilerplateMaker = MakePrimitiveBoilerplate;
+            ProjectWindowUtil.StartNameEditingIfProjectWindowExists(
+                0,
+                action,
                 fullPath,
                 null,
                 null // You can pass template metadata, not needed here
@@ -42,19 +63,17 @@ namespace Modelular.Editor
             return path;
         }
 
-        private static string MakeModifierBoilerplate()
-        {
-            string content = File.ReadAllText(Path.Combine(Hierarchy.BoilerplatePath, "ModifierBoilerplate.txt"));
-            return content;
-        }
+        private static string MakeModifierBoilerplate() => File.ReadAllText(Path.Combine(Hierarchy.BoilerplatePath, "ModifierBoilerplate.txt"));
+        private static string MakePrimitiveBoilerplate() => File.ReadAllText(Path.Combine(Hierarchy.BoilerplatePath, "PrimitiveBoilerplate.txt"));
 
         // I used ChatGPT for this, sorry father for I have sinned
-        public class CreateModifierScriptAction : EndNameEditAction
+        public class CreateScriptAction : EndNameEditAction
         {
+            public Func<string> BoilerplateMaker;
             public override void Action(int instanceId, string pathName, string resourceFile)
             {
                 // Read your template
-                string template = MakeModifierBoilerplate();
+                string template = BoilerplateMaker();
                 if (template == null)
                     return;
 
@@ -67,7 +86,7 @@ namespace Modelular.Editor
                 AssetDatabase.Refresh();
 
                 // Ping the created asset
-                var asset = AssetDatabase.LoadAssetAtPath<Object>(pathName);
+                var asset = AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(pathName);
                 ProjectWindowUtil.ShowCreatedAsset(asset);
             }
         }
