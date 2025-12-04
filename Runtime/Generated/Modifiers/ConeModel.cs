@@ -16,6 +16,8 @@ namespace Modelular.Runtime
         public float Fill = 1f;
         [Range(0f, 1f)]
         public float Arc = 1f;
+        public bool Caps = true;
+        public bool SectionCaps = true;
         public bool IgnoreVertexLimits;
         //[Field]
 
@@ -27,6 +29,8 @@ namespace Modelular.Runtime
         private int _faceCount;
         private float _fill;
         private float _arc;
+        private bool _caps;
+        private bool _sectionCaps;
         private bool _ignoreVertexLimits;
         //[ReplicatedField]
 
@@ -44,6 +48,8 @@ namespace Modelular.Runtime
             target.FaceCount = FaceCount;
             target.Fill = Fill;
             target.Arc = Arc;
+            target.Caps = Caps;
+            target.SectionCaps = SectionCaps;
             target.IgnoreVertexLimits = IgnoreVertexLimits;
             //[SetProperty]
 		}
@@ -59,6 +65,8 @@ namespace Modelular.Runtime
                  _faceCount != FaceCount ||
                  _fill != Fill ||
                  _arc != Arc ||
+                 _caps != Caps ||
+                 _sectionCaps != SectionCaps ||
                  _ignoreVertexLimits != IgnoreVertexLimits ||
                 //[ChangeCheck]
 			false
@@ -74,6 +82,8 @@ namespace Modelular.Runtime
              _faceCount = FaceCount;
              _fill = Fill;
              _arc = Arc;
+             _caps = Caps;
+             _sectionCaps = SectionCaps;
              _ignoreVertexLimits = IgnoreVertexLimits;
             //[ReplicatedFieldReset]
 

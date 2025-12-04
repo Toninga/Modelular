@@ -24,6 +24,8 @@ namespace Modelular.Runtime
         public float Arc { get; set; } = 1f;
         [ModelularDefaultValue("true")]
         public bool Caps {  get; set; } = true;
+        [ModelularDefaultValue("true")]
+        public bool SectionCaps {  get; set; } = true;
 
         #endregion
 
@@ -81,7 +83,8 @@ namespace Modelular.Runtime
             if (Caps)
             {
                 result.Add(new Polygon(bot));
-                result.Add(new Polygon(top));
+                if (Fill < 1)
+                    result.Add(new Polygon(top));
             }
 
             // Make the shell polygons
@@ -89,9 +92,11 @@ namespace Modelular.Runtime
             {
                 // Retrieve the corresponding vertices
                 int a = i + arc;
-                int b = (i + 1) % FaceCount + arc;
-                int c = FaceCount - i - 1 + arc;
-                int d = (FaceCount * 2 - i - 2 ) % FaceCount + arc;
+                int b = (i + 1 + arc) % (FaceCount + arc*2);
+                int c = (FaceCount - i + arc) % (FaceCount + arc*2);
+                int d = (FaceCount - i-1 + arc) % (FaceCount + arc*2);
+
+                Debug.Log(a + ":" + bot.Length + " ; " + b + ":" + bot.Length + " ; " + c + ":" + top.Length + " ; " + d + ":" + top.Length);
 
                 Vertex A = new Vertex(bot[a]);
                 Vertex B = new Vertex(top[c]);
@@ -124,6 +129,28 @@ namespace Modelular.Runtime
                 
                 Polygon p = new Polygon(A, B, C, D);
                 result.Add(p);
+            }
+
+            if (SectionCaps)
+            {
+                // Make the caps inside the cone when the arc isn't complete
+                if (Arc < 1)
+                {
+                    result.Add(new Polygon(
+                        new Vertex(bot[1], overrideNormal:Vector3.back),
+                        new Vertex(bot[0], overrideNormal: Vector3.back),
+                        new Vertex(top[0], overrideNormal:Vector3.back),
+                        new Vertex(top[FaceCount + arc], overrideNormal:Vector3.back)
+                        ));
+                    Vector3 normal = Quaternion.Euler(0f, Mathf.Lerp(360f, 0f, Arc), 0f) * Vector3.forward;
+                    result.Add(new Polygon(
+                        new Vertex(bot[0], overrideNormal: normal),
+                        new Vertex(bot[FaceCount + arc], overrideNormal: normal),
+                        new Vertex(top[1], overrideNormal:normal),
+                        new Vertex(top[0], overrideNormal:normal)
+                        ));
+
+                }
             }
 
             return result;
