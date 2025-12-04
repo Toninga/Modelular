@@ -25,6 +25,8 @@ namespace Modelular.Runtime
         [Range(0f, 1f)]
         public float Arc { get; set; } = 1f;
         public EAxis Axis { get; set; }
+        [ModelularDefaultValue("true")]
+        public bool Caps { get; set; } = true;
 
 
         #endregion
@@ -46,30 +48,56 @@ namespace Modelular.Runtime
             RadialSubdiv = Mathf.Max(RadialSubdiv, 3);
             ThicknessSubdiv = Mathf.Max(ThicknessSubdiv, 3);
 
+            Vector3 up = AxisUtility.GetAxisDirection(Axis);
+            Vector3 rotationAxis = AxisUtility.SwitchOnAxis(
+                Axis,
+                Vector3.zero,
+                Vector3.zero,
+                Vector3.right,
+                Vector3.right,
+                Vector3.zero,
+                Vector3.zero
+                );
+            Vector3 right = AxisUtility.SwitchOnAxis
+                (
+                Axis,
+                Vector3.forward,
+                Vector3.back,
+                Vector3.right,
+                Vector3.left,
+                Vector3.left,
+                Vector3.right
+                );
+            int lastRing = 0;
+            if (Arc != 1)
+                lastRing = 1;
+
             List<Polygon> result = new();
 
             Vertex[] vertices = new Vertex[ExpectedVertexCount()];
 
-            for (int r = 0; r < RadialSubdiv; r++)
+            // Generate the vertices
+            for (int r = 0; r < RadialSubdiv + lastRing; r++)
             {
                 for (int t = 0; t < ThicknessSubdiv; t++)
                 {
                     Vertex v = Vertex.VertexFromPolarCoord(Thickness, 0, (t * 2f * Mathf.PI) / ThicknessSubdiv);
-                    v = Quaternion.Euler(90f, 0,0) * v;
-                    v.x += Radius;
-                    v = Quaternion.Euler(0, (r * 360f) / RadialSubdiv * Arc, 0) * v;
+
+                    v = Quaternion.Euler(rotationAxis * 90f) * v;
+                    v = v + right * Radius;
+                    
+                    float a = (r * 360f) / (RadialSubdiv) * Arc;
+                    v = Quaternion.Euler(up * a) * v;
                     vertices[r * ThicknessSubdiv + t] = v;
                 }
             }
 
-            int skipLastRing = 0;
-            if (Arc != 1)
-                skipLastRing = 1;
-            for (int r = 0; r < RadialSubdiv - skipLastRing; r++)
+            // Generate the donut's polygons
+            for (int r = 0; r < RadialSubdiv; r++)
             {
                 for (int t = 0; t < ThicknessSubdiv; t++)
                 {
-                    int rs = RadialSubdiv;
+                    int rs = RadialSubdiv + lastRing;
                     int ts = ThicknessSubdiv;
                     int curr = r * ThicknessSubdiv + t;
                     int a = curr;
@@ -96,6 +124,23 @@ namespace Modelular.Runtime
                 }
             }
 
+            // Generate the caps
+            if (Caps && Arc < 1)
+            {
+                List<Vertex> verts0 = new();
+
+                for (int i = 0; i < ThicknessSubdiv; i++)
+                    verts0.Add(new Vertex(vertices[ThicknessSubdiv - 1 - i], overrideNormal:Vector3.up));
+                Polygon cap0 = new Polygon(verts0);
+
+                List<Vertex> verts1 = new();
+                for (int i = 0; i < ThicknessSubdiv; i++)
+                    verts1.Add(new Vertex(vertices[vertices.Length - ThicknessSubdiv + i], overrideNormal:Vector3.up));
+                Polygon cap1 = new Polygon(verts1);
+
+                result.Add(cap0);
+                result.Add(cap1);
+            }
 
             return result;
 
@@ -103,7 +148,10 @@ namespace Modelular.Runtime
 
         private int ExpectedVertexCount()
         {
-            return RadialSubdiv * ThicknessSubdiv;
+            int lastRing = 0;
+            if (Arc != 1)
+                lastRing = 1;
+            return (RadialSubdiv + lastRing) * ThicknessSubdiv;
         }
         
 

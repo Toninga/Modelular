@@ -18,6 +18,7 @@ namespace Modelular.Runtime
         [Range(0f, 1f)]
         public float Arc = 1f;
         public EAxis Axis;
+        public bool Caps = true;
         public bool IgnoreVertexLimits;
         //[Field]
 
@@ -30,6 +31,7 @@ namespace Modelular.Runtime
         private int _thicknessSubdiv;
         private float _arc;
         private EAxis _axis;
+        private bool _caps;
         private bool _ignoreVertexLimits;
         //[ReplicatedField]
 
@@ -48,6 +50,7 @@ namespace Modelular.Runtime
             target.ThicknessSubdiv = ThicknessSubdiv;
             target.Arc = Arc;
             target.Axis = Axis;
+            target.Caps = Caps;
             target.IgnoreVertexLimits = IgnoreVertexLimits;
             //[SetProperty]
 		}
@@ -64,6 +67,7 @@ namespace Modelular.Runtime
                  _thicknessSubdiv != ThicknessSubdiv ||
                  _arc != Arc ||
                  _axis != Axis ||
+                 _caps != Caps ||
                  _ignoreVertexLimits != IgnoreVertexLimits ||
                 //[ChangeCheck]
 			false
@@ -80,6 +84,7 @@ namespace Modelular.Runtime
              _thicknessSubdiv = ThicknessSubdiv;
              _arc = Arc;
              _axis = Axis;
+             _caps = Caps;
              _ignoreVertexLimits = IgnoreVertexLimits;
             //[ReplicatedFieldReset]
 
