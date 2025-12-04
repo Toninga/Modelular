@@ -6,18 +6,18 @@ namespace Modelular.Runtime
 	{
 		#region Fields
 
-		public DefaultPrimitiveProperties DefaultParameters;
+		public DefaultPrimitiveProperties DefaultParameters = DefaultPrimitiveProperties.Default();
         [Min(0f)]
         public float Radius = 1f;
         [Min(0f)]
         public float Thickness = 0.1f;
         [Min(3f)]
-        public int RadialSubdiv = 3;
+        public int RadialSubdiv = 32;
         [Min(3f)]
-        public int ThicknessSubdiv = 3;
+        public int ThicknessSubdiv = 24;
         [Range(0f, 1f)]
         public float Arc = 1f;
-        public EAxis Axis;
+        public EAxis Axis = EAxis.Y;
         public bool Caps = true;
         public bool IgnoreVertexLimits;
         //[Field]

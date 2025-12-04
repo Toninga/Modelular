@@ -7,24 +7,26 @@ namespace Modelular.Runtime
     public class Torus : Modifier, IPrimitive
     {
         #region Properties
-        public DefaultPrimitiveProperties DefaultParameters { get; set; }
+        [ModelularDefaultValue("DefaultPrimitiveProperties.Default()")]
+        public DefaultPrimitiveProperties DefaultParameters { get; set; } = DefaultPrimitiveProperties.Default();
 
         [ModelularDefaultValue("1f")]
         [Min(0f)]
-        public float Radius { get; set; } = 1f;
-        [ModelularDefaultValue("0.1f")]
+        public float Radius { get; set; } = 0.5f;
+        [ModelularDefaultValue("0.5f")]
         [Min(0f)]
-        public float Thickness { get; set; } = 0.1f;
-        [ModelularDefaultValue("3")]
+        public float Thickness { get; set; } = 0.5f;
+        [ModelularDefaultValue("32")]
         [Min(3)]
-        public int RadialSubdiv { get; set; } = 3;
-        [ModelularDefaultValue("3")]
+        public int RadialSubdiv { get; set; } = 32;
+        [ModelularDefaultValue("24")]
         [Min(3)]
-        public int ThicknessSubdiv { get; set; } = 3;
+        public int ThicknessSubdiv { get; set; } = 24;
         [ModelularDefaultValue("1f")]
         [Range(0f, 1f)]
         public float Arc { get; set; } = 1f;
-        public EAxis Axis { get; set; }
+        [ModelularDefaultValue("EAxis.Y")]
+        public EAxis Axis { get; set; } = EAxis.Y;
         [ModelularDefaultValue("true")]
         public bool Caps { get; set; } = true;
 
