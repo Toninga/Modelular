@@ -53,7 +53,6 @@ namespace Modelular.Runtime
             result.CombineMeshes(ci,false);
             return result;
         }
-
         public static void PolygonToMeshData(Polygon polygon, out MeshData meshData) => PolygonsToMeshData(new List<Polygon> { polygon }, out meshData);
         public static MeshData PolygonToMeshData(Polygon p)
         {
@@ -218,7 +217,39 @@ namespace Modelular.Runtime
             meshData = new(submeshDatas);
 
         }
+        public static List<Polygon> MeshToPolygons(Mesh mesh, short submesh=0)
+        {
+            List<Polygon> result = new();
+            if (mesh == null) return result;
 
+            var v = mesh.vertices;
+            var n = mesh.normals;
+            var c = mesh.colors;
+            var uv = mesh.uv;
+            var uv2 = mesh.uv2;
+            var uv3 = mesh.uv3;
+            var uv4 = mesh.uv4;
+
+            if (n.Length == 0) n = new Vector3[v.Length];
+            if (c.Length == 0) c = new Color[v.Length];
+            if (uv.Length == 0) uv = new Vector2[v.Length];
+            if (uv2.Length == 0) uv2 = new Vector2[v.Length];
+            if (uv3.Length == 0) uv3 = new Vector2[v.Length];
+            if (uv4.Length == 0) uv4 = new Vector2[v.Length];
+
+            for (int i = 0; i < mesh.triangles.Length/3; i++)
+            {
+                int curr0 = mesh.triangles[i * 3 + 0];
+                int curr1 = mesh.triangles[i * 3 + 1];
+                int curr2 = mesh.triangles[i * 3 + 2];
+
+                Vertex v0 = new Vertex(v[curr0], n[curr0], c[curr0], submesh, uv[curr0], uv2[curr0], uv3[curr0], uv4[curr0]);
+                Vertex v1 = new Vertex(v[curr1], n[curr1], c[curr1], submesh, uv[curr1], uv2[curr1], uv3[curr1], uv4[curr1]);
+                Vertex v2 = new Vertex(v[curr2], n[curr2], c[curr2], submesh, uv[curr2], uv2[curr2], uv3[curr2], uv4[curr2]);
+                result.Add(new Polygon(v0, v1, v2));
+            }
+            return result;
+        }
         public static EVertexFlags DetectFlags(Vertex vert)
         {
             EVertexFlags flags = EVertexFlags.None;

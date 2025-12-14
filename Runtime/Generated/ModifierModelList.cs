@@ -15,19 +15,20 @@ namespace Modelular.Editor
             ModifierPaths["Primitives/Ground"] = typeof(GroundModel);
             ModifierPaths["Primitives/Quad"] = typeof(QuadModel);
             ModifierPaths["Primitives/UV Sphere"] = typeof(UVSphereModel);
-            ModifierPaths["Normals/Flip"] = typeof(FlipModel);
             ModifierPaths["Color/Set color"] = typeof(SetColorModel);
-            ModifierPaths["Utility/Attach modifier stack"] = typeof(AttachModifierStackModel);
+            ModifierPaths["Normals/Flip"] = typeof(FlipModel);
             ModifierPaths["Copy/Copy to grid"] = typeof(CopyToGridModel);
             ModifierPaths["Copy/Copy to radius"] = typeof(CopyToRadiusModel);
+            ModifierPaths["Utility/Attach modifier stack"] = typeof(AttachModifierStackModel);
             ModifierPaths["UV/Tiling and offset"] = typeof(UVTilingOffsetModel);
             ModifierPaths["Color/Color gradient"] = typeof(ColorGradientModel);
+            ModifierPaths["Material/Set Texture"] = typeof(SetTextureModel);
             ModifierPaths["Primitives/Cone"] = typeof(ConeModel);
             ModifierPaths["Primitives/Disk"] = typeof(DiskModel);
             ModifierPaths["Primitives/Torus"] = typeof(TorusModel);
             ModifierPaths["Select/Select by color"] = typeof(SelectByColorModel);
+            ModifierPaths["Utility/AttachMesh"] = typeof(AttachMeshModel);
             ModifierPaths["Utility/Set Submesh"] = typeof(SetSubmeshModel);
-            ModifierPaths["Material/Set Texture"] = typeof(SetTextureModel);
             //[PathMatching]
         }
     }

@@ -96,7 +96,7 @@ namespace Modelular.Runtime
                 int c = (FaceCount - i + arc) % (FaceCount + arc*2);
                 int d = (FaceCount - i-1 + arc) % (FaceCount + arc*2);
 
-                Debug.Log(a + ":" + bot.Length + " ; " + b + ":" + bot.Length + " ; " + c + ":" + top.Length + " ; " + d + ":" + top.Length);
+                //Debug.Log(a + ":" + bot.Length + " ; " + b + ":" + bot.Length + " ; " + c + ":" + top.Length + " ; " + d + ":" + top.Length);
 
                 Vertex A = new Vertex(bot[a]);
                 Vertex B = new Vertex(top[c]);

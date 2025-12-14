@@ -1,5 +1,4 @@
-using System;
-using System.Runtime.CompilerServices;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Modelular.Runtime
@@ -31,6 +30,16 @@ namespace Modelular.Runtime
             Position = transform.Position;
             Rotation = transform.Rotation;
             Scale = transform.Scale;
+        }
+
+        public static List<Polygon> Apply(List<Polygon> l, STransform transform)
+        {
+            StackElement se = new();
+            se.AddPolygons(l);
+            Transform t = new();
+            t.Setup(transform);
+            t.Bake(se);
+            return se.Polygons;
         }
     }
 }
