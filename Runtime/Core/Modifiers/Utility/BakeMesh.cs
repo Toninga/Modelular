@@ -12,6 +12,13 @@ namespace Modelular.Runtime
             previousResult.Mesh = result;
             return previousResult;
         }
+
+        public static Mesh BakeToMesh(StackElement previousResult)
+        {
+            previousResult.MeshData = DataProcessor.PolygonsToMeshData(previousResult.Polygons);
+            Mesh result = DataProcessor.MeshDataToMesh(previousResult.MeshData);
+            return result;
+        }
     }
 
 }

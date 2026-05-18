@@ -26,7 +26,7 @@ namespace Modelular.Runtime
         [Range(0f, 1f)]
         public float Arc { get; set; } = 1f;
         [ModelularDefaultValue("EAxis.Y")]
-        public EAxis Axis { get; set; } = EAxis.Y;
+        public Axis Axis { get; set; } = Axis.Y;
         [ModelularDefaultValue("true")]
         public bool Caps { get; set; } = true;
 
@@ -47,10 +47,11 @@ namespace Modelular.Runtime
 
         private List<Polygon> Make()
         {
+            Arc = Mathf.Clamp(Arc, 0f, 1f);
             RadialSubdiv = Mathf.Max(RadialSubdiv, 3);
             ThicknessSubdiv = Mathf.Max(ThicknessSubdiv, 3);
 
-            Vector3 up = AxisUtility.GetAxisDirection(Axis);
+            Vector3 up = AxisUtility.ForwardFromAxis(Axis);
             Vector3 rotationAxis = AxisUtility.SwitchOnAxis(
                 Axis,
                 Vector3.zero,

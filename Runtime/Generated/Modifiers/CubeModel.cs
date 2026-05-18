@@ -8,6 +8,7 @@ namespace Modelular.Runtime
 
 		public DefaultPrimitiveProperties DefaultParameters = DefaultPrimitiveProperties.Default();
         public Vector3 Size = Vector3.one;
+        public Vector3Int Subdivisions = Vector3Int.zero;
         public bool IgnoreVertexLimits;
         //[Field]
 
@@ -15,6 +16,7 @@ namespace Modelular.Runtime
 		private bool _enabled;
 		private DefaultPrimitiveProperties _defaultParameters;
         private Vector3 _size;
+        private Vector3Int _subdivisions;
         private bool _ignoreVertexLimits;
         //[ReplicatedField]
 
@@ -28,6 +30,7 @@ namespace Modelular.Runtime
 			var target = (underlyingModifier as Modelular.Runtime.Cube);
 			target.DefaultParameters = DefaultParameters;
             target.Size = Size;
+            target.Subdivisions = Subdivisions;
             target.IgnoreVertexLimits = IgnoreVertexLimits;
             //[SetProperty]
 		}
@@ -39,6 +42,7 @@ namespace Modelular.Runtime
 			enabled != _enabled ||
 			 _defaultParameters != DefaultParameters ||
                  _size != Size ||
+                 _subdivisions != Subdivisions ||
                  _ignoreVertexLimits != IgnoreVertexLimits ||
                 //[ChangeCheck]
 			false
@@ -50,6 +54,7 @@ namespace Modelular.Runtime
 			_enabled = enabled;
 			 _defaultParameters = DefaultParameters;
              _size = Size;
+             _subdivisions = Subdivisions;
              _ignoreVertexLimits = IgnoreVertexLimits;
             //[ReplicatedFieldReset]
 

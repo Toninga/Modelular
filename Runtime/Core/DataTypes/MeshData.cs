@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace Modelular.Runtime
 {
@@ -11,6 +12,7 @@ namespace Modelular.Runtime
 
         #region Methods
 
+        public Mesh ToMesh() => DataProcessor.MeshDataToMesh(this);
         public SubmeshData GetSubmeshByID(int ID)
         {
             if (SubmeshesByID.ContainsKey(ID))

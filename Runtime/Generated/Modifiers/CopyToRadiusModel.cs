@@ -13,7 +13,7 @@ namespace Modelular.Runtime
         [Range(0f, 1f)]
         public float Arc01 = 1f;
         public bool FaceNormal = true;
-        public EAxis Axis = EAxis.Y;
+        public Axis Axis = Axis.Y;
         public bool IgnoreVertexLimits;
         //[Field]
 
@@ -25,7 +25,7 @@ namespace Modelular.Runtime
         private float _radius;
         private float _arc01;
         private bool _faceNormal;
-        private EAxis _axis;
+        private Axis _axis;
         private bool _ignoreVertexLimits;
         //[ReplicatedField]
 

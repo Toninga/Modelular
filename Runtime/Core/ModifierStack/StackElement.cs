@@ -1,5 +1,3 @@
-using Codice.Client.Common.WebApi.Responses;
-using Modelular.Runtime;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,10 +11,20 @@ namespace Modelular.Runtime
         public List<Material> Materials { get; set; } = new();
         public List<Polygon> Polygons { get;} = new();
         public List<Vertex> Vertices { get; } = new();
-        public Mesh Mesh { get; set; }
+        public Mesh Mesh
+        {
+            get
+            {
+                if (_mesh == null)
+                    _mesh = BakeMesh.BakeToMesh(this);
+                return _mesh;
+            }
+            set => _mesh = value;
+        }
         public ModifierStack Stack { get; set; }
         public bool HasStackOwner => Stack != null;
         public Dictionary<string, SelectionStack> SelectionStacksByName { get; set; } = new();
+        private Mesh _mesh;
 
         #region Methods
         public StackElement() { }
@@ -221,7 +229,7 @@ namespace Modelular.Runtime
                 {
                     SelectionStacksByName[selectionName] = new();
                     SelectionStacksByName[selectionName].AddSelector(new Selector((Polygon p) => p.SelectionGroup == selectionName));
-                    SelectionStacksByName[selectionName].AddSelector(new Selector((Vertex v) => v.SelectionGroup == selectionName));
+                    //SelectionStacksByName[selectionName].AddSelector(new Selector((Vertex v) => v.SelectionGroup == selectionName));
                 }
                 return SelectionStacksByName[selectionName];
             }

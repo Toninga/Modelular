@@ -17,7 +17,7 @@ namespace Modelular.Runtime
         public int ThicknessSubdiv = 24;
         [Range(0f, 1f)]
         public float Arc = 1f;
-        public EAxis Axis = EAxis.Y;
+        public Axis Axis = Axis.Y;
         public bool Caps = true;
         public bool IgnoreVertexLimits;
         //[Field]
@@ -30,7 +30,7 @@ namespace Modelular.Runtime
         private int _radialSubdiv;
         private int _thicknessSubdiv;
         private float _arc;
-        private EAxis _axis;
+        private Axis _axis;
         private bool _caps;
         private bool _ignoreVertexLimits;
         //[ReplicatedField]

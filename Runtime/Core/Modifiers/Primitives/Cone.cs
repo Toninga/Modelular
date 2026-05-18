@@ -45,9 +45,7 @@ namespace Modelular.Runtime
             // Add your polygons to this list
             List<Polygon> result = new();
 
-            int arc = 0;
-            if (Arc < 1)
-                arc = 1;
+            int arc = (Arc < 1) ? 1 : 0;
             Vertex[] bot = new Vertex[FaceCount + arc * 2];
             Vertex[] top = new Vertex[FaceCount + arc * 2];
             // Create your primitive (vertices + polygons) here
@@ -91,42 +89,57 @@ namespace Modelular.Runtime
             for (int i = 0; i < FaceCount; i++)
             {
                 // Retrieve the corresponding vertices
-                int a = i + arc;
+                // Okay the maths are sketchy but I think they work
+                int a = (i + arc) % (FaceCount + arc * 2);
                 int b = (i + 1 + arc) % (FaceCount + arc*2);
-                int c = (FaceCount - i + arc) % (FaceCount + arc*2);
-                int d = (FaceCount - i-1 + arc) % (FaceCount + arc*2);
-
-                //Debug.Log(a + ":" + bot.Length + " ; " + b + ":" + bot.Length + " ; " + c + ":" + top.Length + " ; " + d + ":" + top.Length);
+                int c = (FaceCount*2 - FaceCount * arc - i + arc *2-1) % (FaceCount + arc*2);
+                int d = (FaceCount*2 - FaceCount * arc - i -1 + arc *2-1) % (FaceCount + arc*2);
 
                 Vertex A = new Vertex(bot[a]);
                 Vertex B = new Vertex(top[c]);
                 Vertex C = new Vertex(top[d]);
                 Vertex D = new Vertex(bot[b]);
 
+                
                 // Fix their normals
                 Vector3 O2R; // Origin to Radius
                 Vector3 R2T; // Radius to Top
                 Vector3 rotAxis; // Rotation axis (cross product of O2R and R2T)
                 Vector3 normal; // Resultant normal
-                
+
                 // First normal
                 O2R = A.position.normalized;
                 R2T = (B.position - A.position).normalized;
-                rotAxis = Vector3.Cross(O2R, R2T);
-                rotAxis.Normalize();
-                normal = Quaternion.AngleAxis(-90, rotAxis) * R2T.normalized;
+                rotAxis = Vector3.Cross(O2R, R2T).normalized;
+                normal = Vector3.Cross(R2T.normalized, rotAxis).normalized;
                 A.normal = normal.normalized;
                 B.normal = normal.normalized;
 
                 // Second normal
                 O2R = D.position.normalized;
                 R2T = (C.position - D.position).normalized;
-                rotAxis = Vector3.Cross(O2R, R2T);
-                rotAxis.Normalize();
-                normal = Quaternion.AngleAxis(-90, rotAxis) * R2T.normalized;
+                rotAxis = Vector3.Cross(O2R, R2T).normalized;
+                normal = Vector3.Cross(R2T.normalized, rotAxis).normalized;
+
                 D.normal = normal.normalized;
                 C.normal = normal.normalized;
-                
+
+                /*
+                Vector3 slantA = (B.position - A.position).normalized;
+                Vector3 slantD = (C.position - D.position).normalized;
+
+                Vector3 tangentA = new Vector3(-A.position.z, 0, A.position.x).normalized;
+                Vector3 tangentD = new Vector3(-D.position.z, 0, D.position.x).normalized;
+
+                Vector3 normalA = Vector3.Cross(slantA, tangentA).normalized;
+                Vector3 normalD = Vector3.Cross(slantD, tangentD).normalized;
+
+                A.normal = normalA;
+                B.normal = normalA;
+                D.normal = normalD;
+                C.normal = normalD;
+                */
+
                 Polygon p = new Polygon(A, B, C, D);
                 result.Add(p);
             }

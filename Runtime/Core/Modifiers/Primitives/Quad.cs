@@ -10,6 +10,8 @@ namespace Modelular.Runtime
         public DefaultPrimitiveProperties DefaultParameters { get; set; } = DefaultPrimitiveProperties.Default();
         [ModelularDefaultValue("Vector2.one")]
         public Vector2 Size { get; set; } = Vector2.one;
+        [ModelularDefaultValue("Vector2Int.zero")]
+        public Vector2Int Subdivisions { get; set; }
         #endregion
 
 
@@ -28,7 +30,7 @@ namespace Modelular.Runtime
 
         protected Polygon Make(Vector2 size)
         {
-            return Polygon.Quad(size);
+            return MeshUtility.MakeGrid(size, Subdivisions, Vector3.up);
         }
         #endregion
     }

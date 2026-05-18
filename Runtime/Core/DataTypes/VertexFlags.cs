@@ -3,7 +3,7 @@ using System;
 namespace Modelular.Runtime
 {
 
-    [Flags] public enum EVertexFlags
+    [Flags] public enum VertexFlags
     {
         None = 0,
         Position = 1,

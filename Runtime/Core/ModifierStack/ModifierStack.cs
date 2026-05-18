@@ -11,6 +11,11 @@ namespace Modelular.Runtime
         #region Properties
         public ModularMesh Owner { get; set; }
         public bool HasOwner => Owner != null;
+        /// <summary>
+        /// <see cref="BakedMesh"/> is short for <see cref="CompileStack"/>.<see cref="StackElement.Mesh"/>.
+        /// Calling BakedMesh will instantly trigger a bake, which can be costly. Consider caching your results for better performance.
+        /// </summary>
+        public Mesh BakedMesh => CompileStack().Mesh;
         public MeshData MeshData {  get; private set; }
         public List<Modifier> Modifiers => modifiers;
         protected List<Modifier> modifiers = new();
@@ -35,6 +40,8 @@ namespace Modelular.Runtime
             StackElement current = new StackElement(this);
             foreach (var modifier in modifiers)
             {
+                if (!modifier.Enabled)
+                    continue;
                 modifier.Bake(current);
                 if (current.Vertices.Count >= GlobalSettings.ErrorVertexCount && !(HasOwner && Owner.IgnoreMaximumAllowedVertexCount))
                     GlobalSettings.MaximumVertexCountExceededException(current.Vertices.Count);

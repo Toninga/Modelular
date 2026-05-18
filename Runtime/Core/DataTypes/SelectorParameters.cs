@@ -9,6 +9,12 @@ namespace Modelular.Runtime
         public string OutputSelectionGroup;
         public ESelectionOperand SelectionOperand;
 
+        public SelectorParameters(string outputSelectionGroup, ESelectionOperand selectionOperand)
+        {
+            OutputSelectionGroup = outputSelectionGroup;
+            SelectionOperand = selectionOperand;
+        }
+
 
         public static bool operator == ( SelectorParameters left, SelectorParameters right ) => left.Equals ( right );
         public static bool operator != ( SelectorParameters left, SelectorParameters right ) { return !left.Equals ( right ); }

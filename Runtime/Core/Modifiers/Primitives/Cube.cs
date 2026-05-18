@@ -12,6 +12,8 @@ namespace Modelular.Runtime
 
         [ModelularDefaultValue("Vector3.one")]
         public Vector3 Size {  get; set; }
+        [ModelularDefaultValue("Vector3Int.zero")]
+        public Vector3Int Subdivisions {  get; set; }
 
 
         #endregion
@@ -22,7 +24,7 @@ namespace Modelular.Runtime
         public override StackElement Bake(StackElement previousResult)
         {
             StackElement obj = new StackElement();
-            obj.AddPolygons(Make(Size), DefaultParameters.OutputSelectionGroup);
+            obj.AddPolygons(Make(Size, Subdivisions), DefaultParameters.OutputSelectionGroup);
             (this as IPrimitive).ApplyDefaultParameters(obj);
             
 
@@ -31,20 +33,28 @@ namespace Modelular.Runtime
             return previousResult;
         }
 
-        protected List<Polygon> Make(Vector3 size)
+        protected List<Polygon> Make(Vector3 size, Vector3Int subdiv)
         {
             size = new Vector3(Mathf.Abs(size.x), Mathf.Abs(size.y), Mathf.Abs(size.z));
             List<Polygon> result = new List<Polygon>();
             Vector2 upSize = new Vector2(size.x, size.z);
             Vector2 frontSize = new Vector2(size.x, size.y);
-            Vector2 leftSize = new Vector2(size.y, size.z);
+            Vector2 leftSize = new Vector2(size.z, size.y);
+            subdiv = new Vector3Int(Mathf.Max(0, subdiv.x), Mathf.Max(0, subdiv.y), Mathf.Max(0, subdiv.z));
+            Vector2Int upSubdiv = new(subdiv.x, subdiv.z);
+            Vector2Int frontSubdiv = new(subdiv.x, subdiv.y);
+            Vector2Int leftSubdiv = new(subdiv.z, subdiv.y);
+
+            Vector3 up = Vector3.up * size.y / 2;
+            Vector3 fw = Vector3.forward * size.z / 2;
+            Vector3 lf = Vector3.left * size.x / 2;
             
-            result.Add(Vector3.up * size.y / 2 + Polygon.Quad(upSize));
-            result.Add(Vector3.forward * size.z / 2 + Quaternion.Euler(90,0,0) * Polygon.Quad(frontSize));
-            result.Add(Vector3.forward * size.z / 2 - Quaternion.Euler(-90,0,0) * Polygon.Quad(frontSize));
-            result.Add(Vector3.left * size.x / 2 + Quaternion.Euler(0,0,90) * Polygon.Quad(leftSize));
-            result.Add(Vector3.left * size.x / 2 - Quaternion.Euler(0,0,-90) * Polygon.Quad(leftSize));
-            result.Add(Vector3.up * size.y / 2 - Quaternion.Euler(180,0,0) * Polygon.Quad(upSize));
+            result.Add(MeshUtility.MakeGrid(upSize, upSubdiv, Vector3.up) + up);
+            result.Add(MeshUtility.MakeGrid(upSize, upSubdiv, -Vector3.up) - up);
+            result.Add(MeshUtility.MakeGrid(frontSize, frontSubdiv, Vector3.forward) + fw);
+            result.Add(MeshUtility.MakeGrid(frontSize, frontSubdiv, -Vector3.forward) - fw);
+            result.Add(MeshUtility.MakeGrid(leftSize, leftSubdiv, Vector3.left) + lf);
+            result.Add(MeshUtility.MakeGrid(leftSize, leftSubdiv, -Vector3.left) - lf);
 
             return result;
         }

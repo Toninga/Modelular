@@ -14,7 +14,7 @@ namespace Modelular.Runtime
         public Vector2[] UV3;
         public int[] triangles;
         public short ID;
-        public EVertexFlags vertexFlags;
+        public VertexFlags vertexFlags;
 
         public SubmeshData(
             Vector3[] positions,
@@ -26,7 +26,7 @@ namespace Modelular.Runtime
             Vector2[] UV3=default,
             int[] triangles=default,
             short submesh = default,
-            EVertexFlags vertexFlags=default
+            VertexFlags vertexFlags=default
             )
         {
             this.positions = positions;

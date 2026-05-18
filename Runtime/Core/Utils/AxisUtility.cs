@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Modelular.Runtime
 {
-    public enum EAxis
+    public enum Axis
     {
         X,
         XMinus,
@@ -15,42 +15,42 @@ namespace Modelular.Runtime
 
     public static class AxisUtility
     {
-        public static T SwitchOnAxis<T>(EAxis axis, T xPlus, T xMinus, T yPlus, T yMinus, T zPlus, T zMinus)
+        public static T SwitchOnAxis<T>(Axis axis, T xPlus, T xMinus, T yPlus, T yMinus, T zPlus, T zMinus)
         {
             switch (axis)
             {
-                case EAxis.X:
+                case Axis.X:
                     return xPlus;
-                case EAxis.Y:
+                case Axis.Y:
                     return yPlus;
-                case EAxis.Z:
+                case Axis.Z:
                     return zPlus;
-                case EAxis.XMinus:
+                case Axis.XMinus:
                     return xMinus;
-                case EAxis.YMinus:
+                case Axis.YMinus:
                     return yMinus;
-                case EAxis.ZMinus:
+                case Axis.ZMinus:
                     return zMinus;
                 default : 
                     return default;
             }
         }
 
-        public static Vector3 GetAxisDirection(EAxis axis)
+        public static Vector3 ForwardFromAxis(Axis axis)
         {
             switch (axis)
             {
-                case EAxis.X:
+                case Axis.X:
                     return Vector3.right;
-                case EAxis.Y:
+                case Axis.Y:
                     return Vector3.up;
-                case EAxis.Z:
+                case Axis.Z:
                     return Vector3.forward;
-                case EAxis.XMinus:
+                case Axis.XMinus:
                     return Vector3.left;
-                case EAxis.YMinus:
+                case Axis.YMinus:
                     return Vector3.down;
-                case EAxis.ZMinus:
+                case Axis.ZMinus:
                     return Vector3.back;
                 default :
                     return default;

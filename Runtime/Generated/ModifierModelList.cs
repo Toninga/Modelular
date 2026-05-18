@@ -10,6 +10,7 @@ namespace Modelular.Editor
         {
             ModifierPaths["Transform"] = typeof(TransformModel);
             ModifierPaths["Transform"] = typeof(TransformModel);
+            ModifierPaths["Primitives/Capsule"] = typeof(CapsuleModel);
             ModifierPaths["Primitives/Cube"] = typeof(CubeModel);
             ModifierPaths["Primitives/Cylinder"] = typeof(CylinderModel);
             ModifierPaths["Primitives/Ground"] = typeof(GroundModel);

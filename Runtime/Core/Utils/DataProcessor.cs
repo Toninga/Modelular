@@ -22,22 +22,22 @@ namespace Modelular.Runtime
                 if (!submeshes.ContainsKey(sm.ID))
                     submeshes[sm.ID] = new();
 
-                if (sm.vertexFlags.HasFlag(EVertexFlags.Position) && sm.positions.Length >= UInt16.MaxValue)
+                if (sm.vertexFlags.HasFlag(VertexFlags.Position) && sm.positions.Length >= UInt16.MaxValue)
                     submeshes[sm.ID].indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
 
-                if (sm.vertexFlags.HasFlag(EVertexFlags.Position))
+                if (sm.vertexFlags.HasFlag(VertexFlags.Position))
                     submeshes[sm.ID].SetVertices(sm.positions);
                 else
                 {
                     Debug.LogWarning("[Modellular] : Vertices weren't generated properly, mesh baking was aborted.");
                     return null;
                 }
-                if (sm.vertexFlags.HasFlag(EVertexFlags.Normal)) submeshes[sm.ID].SetNormals(sm.normals);
-                if (sm.vertexFlags.HasFlag(EVertexFlags.Color)) submeshes[sm.ID].SetColors(sm.colors);
-                if (sm.vertexFlags.HasFlag(EVertexFlags.UV0)) submeshes[sm.ID].SetUVs(0, sm.UV0);
-                if (sm.vertexFlags.HasFlag(EVertexFlags.UV1)) submeshes[sm.ID].SetUVs(1, sm.UV0);
-                if (sm.vertexFlags.HasFlag(EVertexFlags.UV2)) submeshes[sm.ID].SetUVs(2, sm.UV0);
-                if (sm.vertexFlags.HasFlag(EVertexFlags.UV3)) submeshes[sm.ID].SetUVs(3, sm.UV0);
+                if (sm.vertexFlags.HasFlag(VertexFlags.Normal)) submeshes[sm.ID].SetNormals(sm.normals);
+                if (sm.vertexFlags.HasFlag(VertexFlags.Color)) submeshes[sm.ID].SetColors(sm.colors);
+                if (sm.vertexFlags.HasFlag(VertexFlags.UV0)) submeshes[sm.ID].SetUVs(0, sm.UV0);
+                if (sm.vertexFlags.HasFlag(VertexFlags.UV1)) submeshes[sm.ID].SetUVs(1, sm.UV0);
+                if (sm.vertexFlags.HasFlag(VertexFlags.UV2)) submeshes[sm.ID].SetUVs(2, sm.UV0);
+                if (sm.vertexFlags.HasFlag(VertexFlags.UV3)) submeshes[sm.ID].SetUVs(3, sm.UV0);
 
                 submeshes[sm.ID].SetTriangles(sm.triangles, 0);
                 submeshes[sm.ID].RecalculateBounds();
@@ -140,49 +140,49 @@ namespace Modelular.Runtime
                         // Set flags
                         submeshData.vertexFlags = submeshData.vertexFlags | DetectFlags(vertex);
 
-                        if (submeshData.vertexFlags.HasFlag(EVertexFlags.Position))
+                        if (submeshData.vertexFlags.HasFlag(VertexFlags.Position))
                         {
                             if (submeshData.positions == null)
                                 submeshData.positions = new Vector3[vertCount];
                             submeshData.positions[v] = vertex.position;
                         }
 
-                        if (submeshData.vertexFlags.HasFlag(EVertexFlags.Normal))
+                        if (submeshData.vertexFlags.HasFlag(VertexFlags.Normal))
                         {
                             if (submeshData.normals == null)
                                 submeshData.normals = new Vector3[vertCount];
                             submeshData.normals[v] = vertex.normal;
                         }
 
-                        if (submeshData.vertexFlags.HasFlag(EVertexFlags.Color))
+                        if (submeshData.vertexFlags.HasFlag(VertexFlags.Color))
                         {
                             if (submeshData.colors == null)
                                 submeshData.colors = new Color[vertCount];
                             submeshData.colors[v] = vertex.color;
                         }
 
-                        if (submeshData.vertexFlags.HasFlag(EVertexFlags.UV0))
+                        if (submeshData.vertexFlags.HasFlag(VertexFlags.UV0))
                         {
                             if (submeshData.UV0 == null)
                                 submeshData.UV0 = new Vector2[vertCount];
                             submeshData.UV0[v] = vertex.UV0;
                         }
 
-                        if (submeshData.vertexFlags.HasFlag(EVertexFlags.UV1))
+                        if (submeshData.vertexFlags.HasFlag(VertexFlags.UV1))
                         {
                             if (submeshData.UV1 == null)
                                 submeshData.UV1 = new Vector2[vertCount];
                             submeshData.UV1[v] = vertex.UV1;
                         }
 
-                        if (submeshData.vertexFlags.HasFlag(EVertexFlags.UV2))
+                        if (submeshData.vertexFlags.HasFlag(VertexFlags.UV2))
                         {
                             if (submeshData.UV2 == null)
                                 submeshData.UV2 = new Vector2[vertCount];
                             submeshData.UV2[v] = vertex.UV2;
                         }
 
-                        if (submeshData.vertexFlags.HasFlag(EVertexFlags.UV3))
+                        if (submeshData.vertexFlags.HasFlag(VertexFlags.UV3))
                         {
                             if (submeshData.UV3 == null)
                                 submeshData.UV3 = new Vector2[vertCount];
@@ -196,8 +196,7 @@ namespace Modelular.Runtime
                     }
                     foreach(int tri in polygon.triangles)
                     {
-                        int triangle = submeshData.triangles[tri];
-                        if (polygon.vertices[triangle].submesh != currentSubmesh)
+                        if (polygon.vertices[tri].submesh != currentSubmesh)
                             continue;
                         submeshData.triangles[t] = newVertexIndex[tri];
                         t++;
@@ -250,17 +249,17 @@ namespace Modelular.Runtime
             }
             return result;
         }
-        public static EVertexFlags DetectFlags(Vertex vert)
+        public static VertexFlags DetectFlags(Vertex vert)
         {
-            EVertexFlags flags = EVertexFlags.None;
+            VertexFlags flags = VertexFlags.None;
             Vertex defaultVertex = new Vertex(Vector3.zero);
-            if (vert.position != defaultVertex.position) flags = flags | EVertexFlags.Position;
-            if (vert.normal != defaultVertex.normal) flags = flags | EVertexFlags.Normal;
-            if (vert.color != defaultVertex.color) flags = flags | EVertexFlags.Color;
-            if (vert.UV0 != defaultVertex.UV0) flags = flags | EVertexFlags.UV0;
-            if (vert.UV1 != defaultVertex.UV1) flags = flags | EVertexFlags.UV1;
-            if (vert.UV2 != defaultVertex.UV2) flags = flags | EVertexFlags.UV2;
-            if (vert.UV3 != defaultVertex.UV3) flags = flags | EVertexFlags.UV3;
+            if (vert.position != defaultVertex.position) flags = flags | VertexFlags.Position;
+            if (vert.normal != defaultVertex.normal) flags = flags | VertexFlags.Normal;
+            if (vert.color != defaultVertex.color) flags = flags | VertexFlags.Color;
+            if (vert.UV0 != defaultVertex.UV0) flags = flags | VertexFlags.UV0;
+            if (vert.UV1 != defaultVertex.UV1) flags = flags | VertexFlags.UV1;
+            if (vert.UV2 != defaultVertex.UV2) flags = flags | VertexFlags.UV2;
+            if (vert.UV3 != defaultVertex.UV3) flags = flags | VertexFlags.UV3;
 
             return flags;
         }
@@ -278,6 +277,34 @@ namespace Modelular.Runtime
                 overrides.UV2 == default ? v.UV2 : overrides.UV2,
                 overrides.UV3 == default ? v.UV3 : overrides.UV3
                 );
+        }
+        public static SubmeshData VertexArrayToSubmeshData(Vertex[] vertices)
+        {
+            SubmeshData result = new SubmeshData(
+                new Vector3[vertices.Length],
+                new Vector3[vertices.Length],
+                new Color[vertices.Length],
+                new Vector2[vertices.Length],
+                new Vector2[vertices.Length],
+                new Vector2[vertices.Length],
+                new Vector2[vertices.Length],
+                null,
+                0,
+                0
+                );
+
+            for (int i = 0; i < vertices.Count(); i++)
+            {
+                result.positions[i] = vertices[i].position;
+                result.normals[i] = vertices[i].normal;
+                result.colors[i] = vertices[i].color;
+                result.UV0[i] = vertices[i].UV0;
+                result.UV1[i] = vertices[i].UV1;
+                result.UV2[i] = vertices[i].UV2;
+                result.UV3[i] = vertices[i].UV3;
+            }
+
+            return result;
         }
 
         #endregion

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -16,6 +17,7 @@ namespace Modelular.Runtime
         public List<ModifierModel> Modifiers = new();
         public MeshRenderer MeshRenderer => mRenderer;
         public MeshFilter MeshFilter => mFilter;
+        public Action<Mesh> OnMeshUpdate;
 
         // Visualization
         public bool ShowVertices { get; set; }
@@ -110,6 +112,7 @@ namespace Modelular.Runtime
             {
                 mesh.name = "Generated mesh";
                 mFilter.sharedMesh = mesh;
+                OnMeshUpdate?.Invoke(mesh);
 
                 mRenderer.sharedMaterials = stack.Output.Materials.ToArray();
             }

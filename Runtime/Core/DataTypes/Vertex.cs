@@ -17,7 +17,6 @@ namespace Modelular.Runtime
         public Vector2 UV2;
         public Vector2 UV3;
         public short submesh;
-        public string SelectionGroup;
 
         /// <summary>
         /// Returns a new vertex of a sphere
@@ -37,7 +36,7 @@ namespace Modelular.Runtime
             Vector2 UV = new Vector2(latitude * 2 / Mathf.PI + 1, longitude / 2 / Mathf.PI);
             return new Vertex(pos, normal);
         }
-        public Vertex Flipped() => new Vertex(position, -normal, color, submesh, UV0, UV1, UV2, UV3, SelectionGroup);
+        public Vertex Flipped() => new Vertex(position, -normal, color, submesh, UV0, UV1, UV2, UV3);
 
         public override bool Equals(object obj)
         {
@@ -51,8 +50,8 @@ namespace Modelular.Runtime
                    UV1.Equals(vertex.UV1) &&
                    UV2.Equals(vertex.UV2) &&
                    UV3.Equals(vertex.UV3) &&
-                   submesh == vertex.submesh &&
-                   SelectionGroup == vertex.SelectionGroup;
+                   submesh == vertex.submesh
+                   ;
         }
 
         public override int GetHashCode()
@@ -68,8 +67,7 @@ namespace Modelular.Runtime
             Vector2 UV0 = default,
             Vector2 UV1 = default,
             Vector2 UV2 = default,
-            Vector2 UV3 = default,
-            string selectionGroup = default)
+            Vector2 UV3 = default)
         {
             this.position = position;
             this.normal = normal;
@@ -79,7 +77,6 @@ namespace Modelular.Runtime
             this.UV2 = UV2;
             this.UV3 = UV3;
             this.submesh = submesh;
-            this.SelectionGroup = selectionGroup;
         }
 
         public Vertex(Vertex reference)
@@ -92,7 +89,6 @@ namespace Modelular.Runtime
             this.UV2 = reference.UV2;
             this.UV3 = reference.UV3;
             this.submesh = reference.submesh;
-            this.SelectionGroup = reference.SelectionGroup;
         }
 
         public Vertex(Vertex reference,
@@ -103,8 +99,7 @@ namespace Modelular.Runtime
             Vector2 overrideUV0 = default,
             Vector2 overrideUV1 = default,
             Vector2 overrideUV2 = default,
-            Vector2 overrideUV3 = default,
-            string overrideSelectionGroup = default)
+            Vector2 overrideUV3 = default)
         {
             this.position = overridePosition == default ? reference.position : overridePosition ;
             this.normal = overrideNormal == default ? reference.normal : overrideNormal ;
@@ -114,7 +109,6 @@ namespace Modelular.Runtime
             this.UV2 = overrideUV2 == default ? reference.UV2 : overrideUV2;
             this.UV3 = overrideUV3 == default ? reference.UV3 : overrideUV3;
             this.submesh = overrideSubmesh == default ? reference.submesh : overrideSubmesh;
-            this.SelectionGroup = string.IsNullOrEmpty(overrideSelectionGroup) ? reference.SelectionGroup : overrideSelectionGroup;
         }
 
         public static bool operator ==(Vertex l, Vertex r) => 
@@ -125,8 +119,8 @@ namespace Modelular.Runtime
             (l.UV1 == r.UV1) && 
             (l.UV2 == r.UV2) && 
             (l.UV3 == r.UV3) && 
-            (l.submesh == r.submesh) &&
-            (l.SelectionGroup == r.SelectionGroup);
+            (l.submesh == r.submesh)
+            ;
 
         public static implicit operator string(Vertex v)
         {
@@ -135,7 +129,6 @@ namespace Modelular.Runtime
             result += "\nNormal : " + v.normal.ToString();
             result += "\nColor : " + v.color.ToString();
             result += "\nUV0 : " + v.UV0.ToString();
-            result += "\nSelection group : " + v.SelectionGroup;
             return result;
         }
         public override string ToString()

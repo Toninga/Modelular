@@ -93,7 +93,7 @@ namespace Modelular.Runtime
             this.triangles = new();
             this.SelectionGroup = string.IsNullOrEmpty(overrideSelectionGroup) ? p.SelectionGroup : overrideSelectionGroup;
             foreach (Vertex v in p.vertices)
-                this.vertices.Add(new Vertex(v, overrideSelectionGroup:SelectionGroup));
+                this.vertices.Add(new Vertex(v));
             foreach(int i in p.triangles)
                 this.triangles.Add(i);
         }

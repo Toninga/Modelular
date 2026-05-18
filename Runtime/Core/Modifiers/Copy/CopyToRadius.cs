@@ -21,7 +21,7 @@ namespace Modelular.Runtime
         [ModelularDefaultValue("true")]
         public bool FaceNormal { get; set; } = true; // Not implemented
         [ModelularDefaultValue("EAxis.Y")]
-        public EAxis Axis { get; set; } = EAxis.Y;
+        public Axis Axis { get; set; } = Axis.Y;
 
         #endregion
 
@@ -70,7 +70,7 @@ namespace Modelular.Runtime
         private Vector3 Offset(Vector3 p, float angle, float radius)
         {
             Vector3 result;
-            Vector3 dir = AxisUtility.GetAxisDirection(Axis);
+            Vector3 dir = AxisUtility.ForwardFromAxis(Axis);
             Vector3 right = new Vector3(dir.y, dir.z, dir.x);
             Quaternion rotator = Quaternion.Euler(dir * angle / Mathf.PI * 180);
             if (FaceNormal)
