@@ -1,11 +1,9 @@
 using Modelular.Runtime;
-using NUnit.Framework.Internal;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
 public class AnimatedMesh : MonoBehaviour
@@ -19,8 +17,8 @@ public class AnimatedMesh : MonoBehaviour
     /// <summary>
     /// The list of modifiers that are to be added to <see cref="stack"/>.
     /// </summary>
-    protected Dictionary<string, Modifier> modifiers;
-    protected List<(Action<Modifier, float> anim, Modifier target, float duration)> animations;
+    protected Dictionary<string, Modifier> modifiers = new();
+    protected List<(Action<Modifier, float> anim, Modifier target, float duration)> animations = new();
     protected bool isPlaying;
     protected MeshFilter meshFilter;
 
@@ -39,7 +37,7 @@ public class AnimatedMesh : MonoBehaviour
     /// <summary>
     /// Start the animation
     /// </summary>
-    public void Play()
+    public virtual void Play()
     {
         isPlaying = true;
         Action combinedAnimations = OnAnimationEnd;
@@ -76,6 +74,30 @@ public class AnimatedMesh : MonoBehaviour
             return null;
         return modifiers[ID];
     }
+    public virtual T Add<T>() where T : Modifier, new()
+    {
+        T modifier = new T();
+        modifiers.Add(modifiers.Count.ToString(), modifier);
+        return modifier;
+    }
+    public virtual T Add<T>(Action<T, float> anim, float duration, AnimationCurve curve) where T : Modifier, new()
+    {
+        T modifier = new T();
+        modifiers.Add(modifiers.Count.ToString(), modifier);
+        animations.Add((new Action<Modifier, float>((target, t) => anim?.Invoke((T)target, curve.Evaluate(t))), modifier, duration));
+        return modifier;
+    }
+    public virtual T Add<T>(Action<T, float> anim, float duration=1f) where T : Modifier, new()
+    {
+        T modifier = new T();
+        modifiers.Add(modifiers.Count.ToString(), modifier);
+        animations.Add((new Action<Modifier, float>((target, t) => anim?.Invoke((T)target, t)), modifier, duration));
+        return modifier;
+    }
+    public virtual void Add<T>(Action<T, float> anim, T target, float duration=1f) where T : Modifier, new()
+    {
+        animations.Add((new Action<Modifier, float>((mod, t) => anim?.Invoke((T)mod, t)), target, duration));
+    }
 
     /// <summary>
     /// Init() is called on Awake. All the setup that does not rely on other objects being initialized should be done here.
@@ -107,8 +129,7 @@ public class AnimatedMesh : MonoBehaviour
             for (float elapsed = 0; elapsed < duration; elapsed += Time.deltaTime)
             {
                 animation?.Invoke(target, elapsed/duration);
-                StackElement result = stack.CompileStack();
-                meshFilter.sharedMesh = result.Mesh;
+                Apply();
                 /*
                 Debug.Log("Compiled mesh is '" + result.Mesh + "'."
                     + " The stack has " + stack.Modifiers.Count + " modifier(s)."
@@ -119,8 +140,14 @@ public class AnimatedMesh : MonoBehaviour
             }
         }
         animation?.Invoke(target, 1);
-        meshFilter.sharedMesh = stack.CompileStack().Mesh;
+        Apply();
 
         OnEnd?.Invoke();
     }
+    
+    public virtual void Apply()
+    {
+        meshFilter.sharedMesh = stack.CompileStack().Mesh;
+    }
+
 }
