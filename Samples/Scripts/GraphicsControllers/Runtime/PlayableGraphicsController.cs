@@ -5,6 +5,7 @@ public abstract class PlayableGraphicsController : GraphicsController
 {
     [Header("Playable options")]
     public EAnimationMode AnimationMode;
+    [Tooltip("If the duration is inferior to a frame's time budget, the animation won't play. For example, if the duration is 0.01 (10ms), and a frame takes 16ms, the animation will be ignored.")]
     public float Duration = 1f;
     public float Delay = 0f;
     [SerializeField] protected bool PlayOnAwake = true;
@@ -21,6 +22,8 @@ public abstract class PlayableGraphicsController : GraphicsController
             else OnStop?.Invoke();
         }
     }
+    public bool IsDelayOver => DelayTimeElapsed >= Delay;
+    public bool IsPlayingAndDelayOver => IsPlaying && IsDelayOver;
     private bool _isPlaying;
     public Action OnStart;
     public Action OnStop;
@@ -31,6 +34,9 @@ public abstract class PlayableGraphicsController : GraphicsController
     protected bool IsReversed;
 
     protected float Dt => Time.deltaTime * (IsReversed ? -1 : 1);
+    /// <summary>
+    /// Animation progression, between 0 and 1
+    /// </summary>
     protected float T => Curve.Evaluate(TimeElapsed / Duration);
 
     protected virtual void Start()
@@ -39,9 +45,20 @@ public abstract class PlayableGraphicsController : GraphicsController
             Play();
     }
 
-    protected virtual void Update()
+    protected void Update()
     {
         ProcessElapsedTime();
+        if (IsPlayingAndDelayOver)
+            Apply(T);
+    }
+
+    /// <summary>
+    /// Put the animation logic here.
+    /// </summary>
+    /// <param name="t">Progression of the animation between 0 and 1.</param>
+    protected virtual void Apply(float t)
+    {
+
     }
 
     public virtual void Play(bool skipDelay=false)
@@ -91,6 +108,7 @@ public abstract class PlayableGraphicsController : GraphicsController
                 {
                     IsPlaying = false;
                     TimeElapsed = Duration;
+                    Apply(1);
                 }
                 break;
 
@@ -107,6 +125,7 @@ public abstract class PlayableGraphicsController : GraphicsController
                 {
                     IsPlaying = false;
                     TimeElapsed = 0;
+                    Apply(0);
                 }
                 break;
 

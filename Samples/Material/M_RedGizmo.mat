@@ -95,7 +95,7 @@ Material:
     - _ExcludeFromTUAndAA: 0
     - _MaterialID: 1
     - _MaterialTypeMask: 2
-    - _Opacity: 1
+    - _Opacity: 0
     - _OpaqueCullMode: 2
     - _PerPixelSorting: 0
     - _QueueControl: 0
@@ -119,6 +119,7 @@ Material:
     - _StencilWriteMaskMV: 43
     - _SupportDecals: 1
     - _SurfaceType: 0
+    - _TextureOpacity: 1
     - _Thickness: 0
     - _TransmissionEnable: 1
     - _TransparentBackfaceEnable: 0

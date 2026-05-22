@@ -13,11 +13,8 @@ public class QuadAnim : PlayableGraphicsController
         _mm = GetComponent<ModularMesh>();
         _model = _mm.Modifiers.Where(model => model is QuadModel).FirstOrDefault() as QuadModel;
     }
-    protected override void Update()
+    protected override void Apply(float t)
     {
-        base.Update();
-        if (!IsPlaying) return;
-
         _model.Size.x = Mathf.Round(Mathf.SmoothStep(2.5f, 1, Mathf.Abs((T - 1 / 6f) * 6))*100) / 100;
         _model.Size.y = Mathf.Round(Mathf.SmoothStep(0.3f, 1, Mathf.Abs((T - 2 / 6f) * 6))*100) / 100;
 

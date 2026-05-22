@@ -6,12 +6,8 @@ public class TranslationPlayable : PlayableGraphicsController
     [SerializeField] Transform _startPosition;
     [SerializeField] Transform _endPosition;
 
-    protected override void Update()
+    protected override void Apply(float t)
     {
-        base.Update();
-        if (!IsPlaying || DelayTimeElapsed < Delay)
-            return;
-
         UpdatePosition();
     }
 

@@ -17,6 +17,7 @@ namespace Modelular.Runtime
         #region Methods
         public override StackElement Bake(StackElement previousResult)
         {
+            Debug.Log("Submesh set to " + SubmeshID + " for selection group " + TargetSelectionGroup);
             previousResult.ReplaceVertices((v) => (new Vertex(v, overrideSubmesh:(short)SubmeshID)), TargetSelectionGroup);
             return previousResult;
         }

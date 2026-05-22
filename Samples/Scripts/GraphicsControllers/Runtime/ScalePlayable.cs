@@ -13,9 +13,8 @@ public class ScalePlayable : PlayableGraphicsController
         _defaultScale = transform.localScale;
     }
 
-    protected override void Update()
+    protected override void Apply(float t)
     {
-        base.Update();
         transform.localScale = Vector3.Lerp(_startScale, _endScale, T);
     }
 }

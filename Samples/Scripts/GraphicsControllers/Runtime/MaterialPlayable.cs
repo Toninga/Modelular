@@ -1,5 +1,4 @@
 using UnityEngine;
-using static MaterialPlayable;
 
 public class MaterialPlayable : PlayableGraphicsController
 {
@@ -17,12 +16,8 @@ public class MaterialPlayable : PlayableGraphicsController
     [SerializeField] public Color _endColor = Color.white;
 
 
-    protected override void Update()
+    protected override void Apply(float t)
     {
-        base.Update();
-        if (!IsPlaying)
-            return;
-
         Apply();
     }
     void Apply()
@@ -71,7 +66,7 @@ public class MaterialPlayable : PlayableGraphicsController
         switch (TargetMaterialProperty)
         {
             case ETargetMaterialProperty.Float:
-                sharedMaterial.SetFloat(_targetMaterialPropertyName, T);
+                sharedMaterial.SetFloat(_targetMaterialPropertyName, T * (_floatRange.y - _floatRange.x) + _floatRange.x);
                 break;
 
             case ETargetMaterialProperty.Vector:

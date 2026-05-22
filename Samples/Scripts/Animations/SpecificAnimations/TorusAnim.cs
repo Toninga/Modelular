@@ -13,11 +13,8 @@ public class TorusAnim : PlayableGraphicsController
         _mm = GetComponent<ModularMesh>();
         _model = _mm.Modifiers.Where(model => model is TorusModel).FirstOrDefault() as TorusModel;
     }
-    protected override void Update()
+    protected override void Apply(float t)
     {
-        base.Update();
-        if (!IsPlaying) return;
-
         _model.Radius = Mathf.Round(Mathf.SmoothStep(0.4f, 0.7f, Mathf.Abs((T - 1 / 8f) * 8))*100) / 100;
         _model.Thickness = Mathf.Round(Mathf.SmoothStep(0.3f, 0.2f, Mathf.Abs((T - 2 / 8f) * 8))*100) / 100;
 

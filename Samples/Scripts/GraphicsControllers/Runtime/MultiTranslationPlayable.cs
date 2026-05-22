@@ -15,12 +15,8 @@ public class MultiTranslationPlayable : PlayableGraphicsController
     int _currentTarget;
     float _secondaryDelay;
 
-    protected override void Update()
+    protected override void Apply(float t)
     {
-        base.Update();
-        if (!IsPlaying || DelayTimeElapsed < Delay)
-            return;
-
         UpdatePosition();
     }
 

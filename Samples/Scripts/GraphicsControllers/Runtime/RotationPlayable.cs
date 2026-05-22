@@ -6,13 +6,8 @@ public class RotationPlayable : PlayableGraphicsController
     [SerializeField] Vector3 _startRotation;
     [SerializeField] Vector3 _endRotation = new(0,360,0);
 
-    protected override void Update()
-    {
-        base.Update();
-
-        if (!IsPlaying)
-            return;
-        
+    protected override void Apply(float t)
+    {        
         transform.rotation = GetInterpolatedQuaternion(T);
     }
     

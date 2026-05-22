@@ -17,11 +17,8 @@ public class CubeAnim : PlayableGraphicsController
         _mm = GetComponent<ModularMesh>();
         _model = _mm.Modifiers.Where(model => model is CubeModel).FirstOrDefault() as CubeModel; 
     }
-    protected override void Update()
+    protected override void Apply(float t)
     {
-        base.Update();
-        if (!IsPlaying) return;
-        
         _model.Subdivisions.x = (int)(Mathf.SmoothStep(0, 1, T * 6) * MaxSubdiv);
         _model.Subdivisions.y = (int)(Mathf.SmoothStep(0, 1, (T - 1 / 6f) * 6) * MaxSubdiv);
         _model.Subdivisions.z = (int)(Mathf.SmoothStep(0, 1, (T - 2 / 6f) * 6) * MaxSubdiv);

@@ -11,13 +11,8 @@ public class HoverPlayable : PlayableGraphicsController
     private Vector3 OffsetVector => Vector3.up * _currentOffset * EffectMultiplier;
     private float _currentOffset;
 
-    protected override void Update()
+    protected override void Apply(float t)
     {
-        base.Update();
-
-        if (!IsPlaying)
-            return;
-
         if (transform.position != _lastPosition)
             _defaultPosition = transform.position - OffsetVector;
         ApplyCurrentOffset();

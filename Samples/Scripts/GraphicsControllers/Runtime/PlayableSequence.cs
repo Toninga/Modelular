@@ -28,7 +28,7 @@ public class PlayableSequence : PlayableGraphicsController
         for (int i = 0; i < PlayableTargets.Count - 1; i++)
         {
             int index = i; // Used to prevent the lambda expression to capture a reference to i, and pass it a value instead;
-            if (PlayableTargets[i] == null || PlayableTargets[i + 1] == null)
+            if (PlayableTargets[i] == null || PlayableTargets[i + 1] == null || !PlayableTargets[i].enabled)
                 continue;
             //Debug.Log("Bind playable anim '" + i + "' (" + PlayableTargets[i].name + ") with '" + (i + 1) + "' (" + PlayableTargets[i+1].name + ")");
             PlayableTargets[i].OnStop += () => PlayableTargets[index + 1].Play();

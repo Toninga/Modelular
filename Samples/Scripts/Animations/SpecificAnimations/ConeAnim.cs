@@ -14,9 +14,8 @@ public class ConeAnim : PlayableGraphicsController
         _mm = GetComponent<ModularMesh>();
         _model = _mm.Modifiers.Where((model) => model is ConeModel).FirstOrDefault() as ConeModel;
     }
-    override protected void Update()
+    override protected void Apply(float t)
     {
-        base.Update();
         _model.Fill = Mathf.Round(Mathf.SmoothStep(0.1f, 1f, Mathf.Abs((T - 1 / 3f) * 3))*100) / 100;
         _model.Arc = Mathf.Round(Mathf.SmoothStep(0.3f, 1f, Mathf.Abs((T - 2 / 3f) * 3))*100) / 100;
     }
