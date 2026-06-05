@@ -7,7 +7,7 @@ public abstract class GraphicsController : MonoBehaviour
     public Action OnEnable;
     public Action OnDisable;
 
-    [SerializeField] protected float transitionDurationWhenDisabledOrEnabled = 0.1f;
+    protected float transitionDurationWhenDisabledOrEnabled = 0.1f;
     protected Coroutine CurrentCoroutine;
     protected float EffectMultiplier = 1;
 

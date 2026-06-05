@@ -115,14 +115,9 @@ namespace Modelular.Runtime
                     else if (t == ts - 1)
                         d = curr + 1;
                         Polygon p = new();
-                    try
-                    {
-                        p = new Polygon(vertices[a], vertices[b], vertices[d], vertices[c]);
-                    }
-                    catch
-                    {
-                        Debug.LogWarning("" + a + "  " + b + "  " + c + "  " + d + "  total is " + ExpectedVertexCount());
-                    }
+                    
+                    p = new Polygon(vertices[a], vertices[b], vertices[d], vertices[c]);
+                    
                     result.Add(p);
                 }
             }

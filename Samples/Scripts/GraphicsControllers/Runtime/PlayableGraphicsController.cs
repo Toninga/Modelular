@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Events;
 
 public abstract class PlayableGraphicsController : GraphicsController
 {
@@ -10,8 +11,9 @@ public abstract class PlayableGraphicsController : GraphicsController
     public float Delay = 0f;
     [SerializeField] protected bool PlayOnAwake = true;
     public AnimationCurve Curve = AnimationCurve.Linear(0, 0, 1, 1);
+    public PlayableCallbacks Callbacks = new PlayableCallbacks();
 
-    [HideInInspector] public bool IsPlaying
+    public bool IsPlaying
     {
         get => _isPlaying;
         set
@@ -22,12 +24,24 @@ public abstract class PlayableGraphicsController : GraphicsController
             else OnStop?.Invoke();
         }
     }
-    public bool IsDelayOver => DelayTimeElapsed >= Delay;
-    public bool IsPlayingAndDelayOver => IsPlaying && IsDelayOver;
     private bool _isPlaying;
     public Action OnStart;
     public Action OnStop;
-    public Action OnDelayOver;
+
+    public bool IsWaiting
+    {
+        get => _isWaiting;
+        set
+        {
+            if (_isWaiting == value) return;
+            _isWaiting = value;
+            if (value) OnDelayStart?.Invoke();
+            else OnDelayStop?.Invoke();
+        }
+    }
+    private bool _isWaiting;
+    public Action OnDelayStart;
+    public Action OnDelayStop;
 
     protected float TimeElapsed;
     protected float DelayTimeElapsed;
@@ -43,12 +57,17 @@ public abstract class PlayableGraphicsController : GraphicsController
     {
         if (PlayOnAwake)
             Play();
+
+        OnDelayStart += Callbacks.OnDelayStart.Invoke;
+        OnDelayStop += Callbacks.OnDelayStop.Invoke;
+        OnStart += Callbacks.OnAnimStart.Invoke;
+        OnStop += Callbacks.OnAnimStop.Invoke;
     }
 
     protected void Update()
     {
         ProcessElapsedTime();
-        if (IsPlayingAndDelayOver)
+        if (IsPlaying)
             Apply(T);
     }
 
@@ -60,14 +79,19 @@ public abstract class PlayableGraphicsController : GraphicsController
     {
 
     }
-
+    public void StartDelay()
+    {
+        DelayTimeElapsed = 0;
+        IsWaiting = true;
+    }
+    public void Play() => Play(false);
     public virtual void Play(bool skipDelay=false)
     {
         IsReversed = false;
-        IsPlaying = true;
-        DelayTimeElapsed = 0;
         if (skipDelay)
-            DelayTimeElapsed = Delay;
+            IsPlaying = true;
+        else
+            StartDelay();
     }
     public virtual void PlayOnce(bool skipDelay = false)
     {
@@ -87,57 +111,58 @@ public abstract class PlayableGraphicsController : GraphicsController
 
     protected virtual void ProcessElapsedTime()
     {
-        if (!IsPlaying)
+        if (!IsPlaying && !IsWaiting)
             return;
 
-        if (DelayTimeElapsed < Delay)
+        if (IsWaiting && DelayTimeElapsed < Delay)
         {
             DelayTimeElapsed += Time.deltaTime;
-            if (DelayTimeElapsed >= Delay)
-            {
-                OnDelayOver?.Invoke();
-            }
             return;
         }
-
-        switch (AnimationMode)
+        else
         {
-            case EAnimationMode.PlayOnce:
-                TimeElapsed += Dt;
-                if (TimeElapsed >= Duration)
-                {
-                    IsPlaying = false;
-                    TimeElapsed = Duration;
-                    Apply(1);
-                }
-                break;
-
-            case EAnimationMode.Loop:
-                TimeElapsed += Dt;
-                TimeElapsed %= Duration;
-                break;
-
-            case EAnimationMode.PingPongOnce:
-                TimeElapsed += Dt;
-                if (TimeElapsed >= Duration)
-                    IsReversed = !IsReversed;
-                if (TimeElapsed <= 0)
-                {
-                    IsPlaying = false;
-                    TimeElapsed = 0;
-                    Apply(0);
-                }
-                break;
-
-            case EAnimationMode.PingPongLoop:
-                TimeElapsed += Dt;
-                if (TimeElapsed >= Duration || TimeElapsed <= 0)
-                {
-                    IsReversed = !IsReversed;
-                    TimeElapsed = Mathf.Clamp(TimeElapsed, 0, Duration);
-                }
-                break;
+            IsWaiting = false;
+            IsPlaying = true;
         }
+
+            switch (AnimationMode)
+            {
+                case EAnimationMode.PlayOnce:
+                    TimeElapsed += Dt;
+                    if (TimeElapsed >= Duration)
+                    {
+                        IsPlaying = false;
+                        TimeElapsed = Duration;
+                        Apply(1);
+                    }
+                    break;
+
+                case EAnimationMode.Loop:
+                    TimeElapsed += Dt;
+                    TimeElapsed %= Duration;
+                    break;
+
+                case EAnimationMode.PingPongOnce:
+                    TimeElapsed += Dt;
+                    if (TimeElapsed >= Duration)
+                        IsReversed = !IsReversed;
+                    if (TimeElapsed <= 0)
+                    {
+                        IsPlaying = false;
+                        TimeElapsed = 0;
+                        Apply(0);
+                    }
+                    break;
+
+                case EAnimationMode.PingPongLoop:
+                    TimeElapsed += Dt;
+                    if (TimeElapsed >= Duration || TimeElapsed <= 0)
+                    {
+                        IsReversed = !IsReversed;
+                        TimeElapsed = Mathf.Clamp(TimeElapsed, 0, Duration);
+                    }
+                    break;
+            }
     }
 
     public enum EAnimationMode
@@ -146,5 +171,14 @@ public abstract class PlayableGraphicsController : GraphicsController
         Loop,
         PingPongOnce,
         PingPongLoop
+    }
+
+    [System.Serializable]
+    public struct PlayableCallbacks
+    {
+        public UnityEvent OnDelayStart;
+        public UnityEvent OnDelayStop;
+        public UnityEvent OnAnimStart;
+        public UnityEvent OnAnimStop;
     }
 }

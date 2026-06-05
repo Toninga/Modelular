@@ -14,7 +14,7 @@ public class PlayableSequence : PlayableGraphicsController
         {
             if (Delay > 0)
             {
-                OnDelayOver += () => PlayableTargets[0].Play();
+                OnDelayStop += () => PlayableTargets[0].Play();
             }
             else
             {
